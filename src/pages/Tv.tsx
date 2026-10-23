@@ -1,4 +1,4 @@
-import { Cast, Clapperboard, ExternalLink, MonitorSmartphone, Radio, Router, Tv as TvIcon, Laptop, Smartphone } from "lucide-react";
+﻿import { Cast, Clapperboard, ExternalLink, MonitorSmartphone, Radio, Router, Tv as TvIcon, Laptop, Smartphone } from "lucide-react";
 import PlanCarousel from "../components/PlanCarousel";
 import ProductShot from "../components/ProductShot";
 import { Rise } from "../components/Lines";
@@ -66,7 +66,7 @@ export default function Tv() {
 
       <Section tag="Receptor INET TV" title={["Funciona até em", "TV que não é smart."]}>
         <div className="grid items-center gap-10 lg:grid-cols-2">
-          <ProductShot src="/inet-tv-receptor.webp" alt="Receptor INET TV com controle remoto" width={760} height={794} glow="#38B000" className="mx-auto w-full max-w-[460px] lg:order-2" />
+          <ProductShot src="/inet-tv-receptor.webp" alt="Receptor INET TV com controle remoto" width={760} height={732} glow="#38B000" className="mx-auto w-full max-w-[460px] lg:order-2" />
           <div>
             <Rise>
               <p className="lead">
