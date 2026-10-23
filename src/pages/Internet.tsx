@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { BrickWall, Gauge, Router, Wifi, Network, Signal } from "lucide-react";
+import { BrickWall, Cctv, Gauge, Lightbulb, Router, Speaker, Wifi, Network, Signal } from "lucide-react";
 import PlanCarousel from "../components/PlanCarousel";
+import ProductShot from "../components/ProductShot";
 import SlideToSubscribe from "../components/SlideToSubscribe";
 import { Rise } from "../components/Lines";
-import { CtaBand, Faq, FeatureCard, PageHero, Section, usePageMeta } from "../components/ui";
+import { CtaBand, Faq, FeatureCard, Note, PageHero, Section, usePageMeta } from "../components/ui";
 import { waLink, type Plan } from "../data/inet";
 
 export default function Internet() {
@@ -54,6 +55,38 @@ export default function Internet() {
               <div className="card p-5"><Wifi size={20} aria-hidden="true" className="card-icon text-lime" /><p className="mt-3 text-sm text-white/70">Com mesh, você se conecta sempre ao ponto mais próximo.</p></div>
             </div>
           </Rise>
+        </div>
+      </Section>
+
+      <Section id="casa-inteligente" tag="Casa inteligente" title={["Sua casa conectada", <span className="italic text-lime">100% com você.</span>]}>
+        <div className="grid items-center gap-10 lg:grid-cols-2">
+          <ProductShot src="/casa-inteligente.webp" alt="Câmeras Wi-Fi e assistente virtual Alexa" width={900} height={616} glow="#0062EC" className="mx-auto w-full max-w-[560px]" />
+          <div>
+            <Rise>
+              <p className="lead">Conheça os produtos que deixam a sua casa conectada: planos com câmera Wi-Fi para acompanhar tudo pelo smartphone, assistente virtual Alexa e kit de sala inteligente.</p>
+            </Rise>
+            <div className="mt-8 grid gap-3">
+              {[
+                { icon: Cctv, title: "INET Casa Segura", text: "400 Mega + câmera Wi-Fi que transmite imagens para o seu smartphone." },
+                { icon: Speaker, title: "INET Casa Inteligente", text: "700 Mega + assistente virtual Alexa para comandar a casa pela voz." },
+                { icon: Lightbulb, title: "INET Sala Inteligente", text: "400 Mega + lâmpada, tomada e controle infravermelho inteligentes." },
+              ].map((c, i) => (
+                <Rise key={c.title} delay={i * 0.06}>
+                  <div className="card flex items-start gap-4 p-5">
+                    <span className="card-icon flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-electric/20 text-lime"><c.icon size={20} aria-hidden="true" /></span>
+                    <span>
+                      <span className="block font-display text-lg">{c.title}</span>
+                      <span className="block text-sm text-white/65">{c.text}</span>
+                    </span>
+                  </div>
+                </Rise>
+              ))}
+            </div>
+            <Rise delay={0.2}>
+              <a href="#planos" className="btn-lime mt-8">Ver planos casa inteligente</a>
+            </Rise>
+            <Note>Imagem ilustrativa. Os equipamentos incluídos podem variar conforme o plano e a disponibilidade em estoque; confirme o modelo com o atendimento.</Note>
+          </div>
         </div>
       </Section>
 

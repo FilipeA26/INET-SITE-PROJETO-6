@@ -1,5 +1,6 @@
 import { Cast, Clapperboard, ExternalLink, MonitorSmartphone, Radio, Router, Tv as TvIcon, Laptop, Smartphone } from "lucide-react";
 import PlanCarousel from "../components/PlanCarousel";
+import ProductShot from "../components/ProductShot";
 import { Rise } from "../components/Lines";
 import { CtaBand, Faq, FeatureCard, Note, PageHero, Section, usePageMeta } from "../components/ui";
 import { NETFIBRA, waLink } from "../data/inet";
@@ -63,23 +64,26 @@ export default function Tv() {
         </div>
       </Section>
 
-      <Section tag="Receptor NetFibra TV" title={["Funciona até em", "TV que não é smart."]}>
-        <div className="grid items-center gap-8 lg:grid-cols-2">
-          <Rise>
-            <p className="lead">
-              O receptor da NetFibra TV traz mais conforto para usar em qualquer tipo de TV, mesmo quando ela não é smart. Leve o receptor para onde quiser: basta conectá-lo a uma rede Wi-Fi, pegar o controle remoto e curtir a programação.
-            </p>
-          </Rise>
-          <Rise delay={0.1}>
-            <div className="card flex items-center gap-6 p-8">
-              <Router size={40} aria-hidden="true" className="card-icon shrink-0 text-lime" />
-              <div>
-                <p className="text-sm text-white/60">Receptor em comodato</p>
-                <p className="font-display text-4xl">R$ {NETFIBRA.receiverPrice}<span className="text-base text-white/50">/mês</span></p>
-                <p className="mt-1 text-xs text-white/45">Valor do site anterior; confirme com o atendimento.</p>
+      <Section tag="Receptor INET TV" title={["Funciona até em", "TV que não é smart."]}>
+        <div className="grid items-center gap-10 lg:grid-cols-2">
+          <ProductShot src="/inet-tv-receptor.webp" alt="Receptor INET TV com controle remoto" width={760} height={794} glow="#38B000" className="mx-auto w-full max-w-[460px] lg:order-2" />
+          <div>
+            <Rise>
+              <p className="lead">
+                O receptor da NetFibra TV traz mais conforto para usar em qualquer tipo de TV, mesmo quando ela não é smart. Leve o receptor para onde quiser: basta conectá-lo a uma rede Wi-Fi, pegar o controle remoto e curtir a programação.
+              </p>
+            </Rise>
+            <Rise delay={0.1}>
+              <div className="card mt-8 flex items-center gap-6 p-7">
+                <Router size={36} aria-hidden="true" className="card-icon shrink-0 text-lime" />
+                <div>
+                  <p className="text-sm text-white/60">Receptor em comodato</p>
+                  <p className="font-display text-4xl">R$ {NETFIBRA.receiverPrice}<span className="text-base text-white/50">/mês</span></p>
+                  <p className="mt-1 text-xs text-white/45">Valor do site anterior; confirme com o atendimento.</p>
+                </div>
               </div>
-            </div>
-          </Rise>
+            </Rise>
+          </div>
         </div>
       </Section>
 
