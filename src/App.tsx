@@ -4,6 +4,8 @@ import Lenis from "lenis";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import BackToTop from "./components/BackToTop";
+import SideRails from "./components/SideRails";
+import WhatsAppButton from "./components/WhatsAppButton";
 import Home from "./pages/Home";
 
 // páginas internas carregadas sob demanda (o mapa e os medidores não pesam na inicial)
@@ -16,6 +18,7 @@ const Velocidade = lazy(() => import("./pages/Velocidade"));
 const Cobertura = lazy(() => import("./pages/Cobertura"));
 const Suporte = lazy(() => import("./pages/Suporte"));
 const FaleConosco = lazy(() => import("./pages/FaleConosco"));
+const Eventos = lazy(() => import("./pages/Eventos"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 let lenis: Lenis | null = null;
@@ -74,7 +77,9 @@ function Layout() {
         </Suspense>
       </main>
       <Footer />
+      <SideRails />
       <BackToTop />
+      <WhatsAppButton />
     </div>
   );
 }
@@ -93,6 +98,7 @@ export default function App() {
         <Route path="cobertura" element={<Cobertura />} />
         <Route path="suporte" element={<Suporte />} />
         <Route path="fale-conosco" element={<FaleConosco />} />
+        <Route path="eventos" element={<Eventos />} />
         <Route path="*" element={<NotFound />} />
       </Route>
     </Routes>

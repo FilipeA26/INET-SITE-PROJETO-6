@@ -1,9 +1,9 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
 import { AnimatePresence, motion, useScroll, useSpring } from "framer-motion";
-import { ChevronDown, Menu, UserRound, X } from "lucide-react";
+import { ChevronDown, Menu, Sparkles, UserRound, X } from "lucide-react";
 import { DUR, EASE, SPRING } from "../motion";
-import { COMPANY } from "../data/inet";
+import { COMPANY, waLink } from "../data/inet";
 
 export const SERVICES = [
   { to: "/internet", label: "Internet e Wi-Fi", text: "Fibra óptica e Wi-Fi Mesh" },
@@ -15,8 +15,64 @@ export const SERVICES = [
 const MAIN = [
   { to: "/teste-de-velocidade", label: "Velocidade" },
   { to: "/cobertura", label: "Cobertura" },
-  { to: "/suporte", label: "Suporte" },
 ];
+
+type Opt = { label: string; text: string; to?: string; href?: string };
+
+/** Atendimento por setor: financeiro na central do cliente, suporte e comercial. */
+export const ATENDIMENTO: Opt[] = [
+  { label: "Financeiro", text: "Faturas, segunda via e pagamentos", href: COMPANY.clientArea },
+  { label: "Suporte", text: "Atendimento técnico 24 horas", to: "/suporte" },
+  { label: "Comercial", text: "Contratar ou mudar de plano", href: waLink("Olá! Quero falar com o comercial da INET.") },
+];
+
+/** Menu suspenso de vidro usado por "Serviços" e "Atendimento". */
+function Dropdown({ id, label, options, active, open, onToggle, align = "left" }: {
+  id: string; label: string; options: Opt[]; active: boolean; open: boolean; onToggle: () => void; align?: "left" | "right";
+}) {
+  return (
+    <div className="relative hidden lg:block" data-dropdown>
+      <button
+        aria-expanded={open}
+        aria-controls={id}
+        onClick={onToggle}
+        className={`flex items-center gap-1 rounded-full px-4 py-2 text-[13px] transition-colors duration-500 ${active || open ? "bg-white/10 text-white" : "text-white/65 hover:text-white"}`}
+      >
+        {label} <ChevronDown size={14} aria-hidden="true" className={`transition-transform duration-500 ${open ? "rotate-180" : ""}`} />
+      </button>
+      <AnimatePresence>
+        {open && (
+          <motion.ul
+            id={id}
+            initial={{ opacity: 0, y: -8, filter: "blur(6px)" }}
+            animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+            exit={{ opacity: 0, y: -8, filter: "blur(6px)" }}
+            transition={{ duration: 0.5, ease: EASE }}
+            className={`absolute top-[calc(100%+12px)] w-72 rounded-3xl border border-white/10 bg-navy-ink/90 p-2 backdrop-blur-xl ${align === "right" ? "right-0" : "left-0"}`}
+          >
+            {options.map((o) => {
+              const body = (
+                <>
+                  <span className="block text-sm font-semibold">{o.label}</span>
+                  <span className="block text-xs text-white/55">{o.text}</span>
+                </>
+              );
+              return (
+                <li key={o.label}>
+                  {o.to ? (
+                    <NavLink to={o.to} className={({ isActive }) => `block rounded-2xl px-4 py-3 transition-colors duration-500 hover:bg-white/5 ${isActive ? "bg-white/10" : ""}`}>{body}</NavLink>
+                  ) : (
+                    <a href={o.href} target="_blank" rel="noreferrer" className="block rounded-2xl px-4 py-3 transition-colors duration-500 hover:bg-white/5">{body}</a>
+                  )}
+                </li>
+              );
+            })}
+          </motion.ul>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
 
 /**
  * Menu flutuante: pílula de vidro quase transparente que acompanha a tela inteira
@@ -26,19 +82,19 @@ export default function Header() {
   const { scrollYProgress } = useScroll();
   const progress = useSpring(scrollYProgress, SPRING);
   const { pathname } = useLocation();
-  const [drop, setDrop] = useState(false);
+  const [drop, setDrop] = useState<"servicos" | "atendimento" | null>(null);
   const [mobile, setMobile] = useState(false);
-  const dropRef = useRef<HTMLDivElement>(null);
   const servicesActive = SERVICES.some((s) => pathname.startsWith(s.to));
+  const toggle = (d: "servicos" | "atendimento") => setDrop((cur) => (cur === d ? null : d));
 
   useEffect(() => {
-    setDrop(false);
+    setDrop(null);
     setMobile(false);
   }, [pathname]);
 
   useEffect(() => {
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && (setDrop(false), setMobile(false));
-    const onClick = (e: MouseEvent) => dropRef.current && !dropRef.current.contains(e.target as Node) && setDrop(false);
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && (setDrop(null), setMobile(false));
+    const onClick = (e: MouseEvent) => !(e.target as HTMLElement).closest("[data-dropdown]") && setDrop(null);
     document.addEventListener("keydown", onKey);
     document.addEventListener("mousedown", onClick);
     return () => {
@@ -72,46 +128,16 @@ export default function Header() {
             <img src="/inet-logo-branca.png" alt="INET" width={68} height={24} className="h-6 w-auto" />
           </Link>
 
-          <div ref={dropRef} className="relative hidden lg:block">
-            <button
-              aria-expanded={drop}
-              aria-controls="menu-servicos"
-              onClick={() => setDrop((d) => !d)}
-              className={`flex items-center gap-1 rounded-full px-4 py-2 text-[13px] transition-colors duration-500 ${servicesActive || drop ? "bg-white/10 text-white" : "text-white/65 hover:text-white"}`}
-            >
-              Serviços <ChevronDown size={14} aria-hidden="true" className={`transition-transform duration-500 ${drop ? "rotate-180" : ""}`} />
-            </button>
-            <AnimatePresence>
-              {drop && (
-                <motion.ul
-                  id="menu-servicos"
-                  initial={{ opacity: 0, y: -8, filter: "blur(6px)" }}
-                  animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                  exit={{ opacity: 0, y: -8, filter: "blur(6px)" }}
-                  transition={{ duration: 0.5, ease: EASE }}
-                  className="absolute left-0 top-[calc(100%+12px)] w-72 rounded-3xl border border-white/10 bg-navy-ink/90 p-2 backdrop-blur-xl"
-                >
-                  {SERVICES.map((s) => (
-                    <li key={s.to}>
-                      <NavLink to={s.to} className={({ isActive }) => `block rounded-2xl px-4 py-3 transition-colors duration-500 hover:bg-white/5 ${isActive ? "bg-white/10" : ""}`}>
-                        <span className="block text-sm font-semibold">{s.label}</span>
-                        <span className="block text-xs text-white/55">{s.text}</span>
-                      </NavLink>
-                    </li>
-                  ))}
-                </motion.ul>
-              )}
-            </AnimatePresence>
-          </div>
-
+          <Dropdown id="menu-servicos" label="Serviços" options={SERVICES.map((x) => ({ ...x }))} active={servicesActive} open={drop === "servicos"} onToggle={() => toggle("servicos")} />
+          <NavLink to="/eventos" className={({ isActive }) => `group relative hidden items-center gap-1.5 rounded-full px-4 py-2 text-[13px] transition-colors duration-500 lg:flex ${isActive ? "bg-white/10 text-white" : "text-white/65 hover:text-white"}`}>
+            <Sparkles size={13} aria-hidden="true" className="text-lime transition-transform duration-700 group-hover:rotate-12" /> INET Eventos
+          </NavLink>
           {MAIN.map((m) => (
             <NavLink key={m.to} to={m.to} className={(s) => `${item(s)} hidden lg:block`}>
               {m.label}
             </NavLink>
           ))}
-          <a href={COMPANY.clientArea} target="_blank" rel="noreferrer" className="hidden items-center gap-1.5 rounded-full px-4 py-2 text-[13px] text-white/65 transition-colors duration-500 hover:text-white xl:flex">
-            <UserRound size={14} aria-hidden="true" /> Central do Cliente
-          </a>
+          <Dropdown id="menu-atendimento" label="Atendimento" options={ATENDIMENTO} active={pathname.startsWith("/suporte")} open={drop === "atendimento"} onToggle={() => toggle("atendimento")} align="right" />
           <Link to="/fale-conosco" className="rounded-full bg-lime/90 px-4 py-2 text-[13px] font-semibold text-navy-ink transition-colors duration-500 hover:bg-lime">
             Fale conosco
           </Link>
@@ -153,16 +179,21 @@ export default function Header() {
               transition={{ staggerChildren: 0.05, delayChildren: 0.1 }}
               className="px-5 pb-10 pt-8"
             >
-              {[{ to: "/", label: "Início" }, ...SERVICES, ...MAIN, { to: "/fale-conosco", label: "Fale conosco" }].map((l) => (
+              {[{ to: "/", label: "Início" }, ...SERVICES, { to: "/eventos", label: "INET Eventos" }, ...MAIN, { to: "/suporte", label: "Suporte" }, { to: "/fale-conosco", label: "Fale conosco" }].map((l) => (
                 <motion.div key={l.to} variants={{ h: { opacity: 0, y: 14 }, s: { opacity: 1, y: 0 } }} transition={{ duration: 0.6, ease: EASE }}>
                   <NavLink end to={l.to} className={({ isActive }) => `block border-b border-white/10 py-4 font-display text-2xl ${isActive ? "text-lime" : "text-white"}`}>
                     {l.label}
                   </NavLink>
                 </motion.div>
               ))}
-              <a href={COMPANY.clientArea} target="_blank" rel="noreferrer" className="btn-ghost mt-8 w-full">
-                <UserRound size={16} /> Central do Cliente
-              </a>
+              <p className="tag mt-10">Atendimento</p>
+              <div className="mt-4 grid gap-3">
+                {ATENDIMENTO.filter((o) => o.href).map((o) => (
+                  <a key={o.label} href={o.href} target="_blank" rel="noreferrer" className="btn-ghost w-full">
+                    {o.label === "Financeiro" && <UserRound size={16} />} {o.label} · {o.text}
+                  </a>
+                ))}
+              </div>
             </motion.nav>
           </motion.div>
         )}

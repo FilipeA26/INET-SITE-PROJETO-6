@@ -19,7 +19,7 @@ export default function BackToTop() {
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: 16, scale: 0.9 }}
           transition={{ duration: 0.8, ease: EASE }}
-          className="fixed bottom-5 right-5 z-50 flex h-12 w-12 items-center justify-center rounded-full border border-white/15 bg-white/[0.06] text-white backdrop-blur-md transition-colors duration-500 hover:border-lime hover:bg-lime hover:text-navy-ink"
+          className="fixed bottom-[5.75rem] right-6 z-50 flex h-12 w-12 items-center justify-center rounded-full border border-white/15 bg-white/[0.06] text-white backdrop-blur-md transition-colors duration-500 hover:border-lime hover:bg-lime hover:text-navy-ink"
         >
           <ArrowUp size={18} />
         </motion.a>
