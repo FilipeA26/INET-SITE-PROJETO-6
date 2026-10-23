@@ -11,77 +11,55 @@ type App = {
   status: string;
   text: string;
   tone: string;
-  wide?: boolean;
   pending?: boolean;
   slides: Slide[];
 };
 
-// Imagens provisórias do Wikimedia Commons (licenças e autores em public/apps/FONTES.md).
-// Pôsteres oficiais e fotos promocionais exigem licença dos titulares para uso comercial.
+// Backdrops de filmes do TMDB (crédito "Imagem: TMDB") e fotos de shows do Unsplash.
+// Origem de cada arquivo em public/apps/FONTES.md.
+const TMDB = "Imagem: TMDB";
 const APPS: App[] = [
   {
     name: "HBO Max",
-    kind: "Séries e filmes",
-    status: "No plano INET HBO Max",
-    text: "Fantasia épica, dramas premiados e originais exclusivos para maratonar.",
+    kind: "Filmes e séries",
+    status: "No plano INET 800 Mega",
+    text: "Blockbusters, clássicos do cinema e originais exclusivos para maratonar.",
     tone: "#7B2FF7",
-    wide: true,
     slides: [
-      { src: "/apps/hbo-1.jpg", label: "Dubrovnik, cenário de Game of Thrones", credit: "Kigsz · CC BY-SA 3.0" },
-      { src: "/apps/hbo-2.jpg", label: "Emilia Clarke", credit: "condenastrussia · CC BY 3.0" },
-      { src: "/apps/hbo-3.jpg", label: "Pedro Pascal", credit: "Gage Skidmore · CC BY-SA 3.0" },
-      { src: "/apps/hbo-4.jpg", label: "Kit Harington", credit: "W!ZARD Radio Media · CC BY 3.0" },
-      { src: "/apps/hbo-5.jpg", label: "Bella Ramsey", credit: "CC BY-SA 2.0" },
+      { src: "/apps/hbo-1.webp", label: "Interestelar", credit: TMDB },
+      { src: "/apps/hbo-2.webp", label: "Duna: Parte Dois", credit: TMDB },
+      { src: "/apps/hbo-3.webp", label: "Batman: O Cavaleiro das Trevas", credit: TMDB },
+      { src: "/apps/hbo-4.webp", label: "Blade Runner 2049", credit: TMDB },
+      { src: "/apps/hbo-5.webp", label: "Harry Potter e a Pedra Filosofal", credit: TMDB },
     ],
   },
   {
     name: "Disney+",
     kind: "Universos inteiros",
     status: "Disponibilidade a confirmar",
-    text: "Star Wars, Marvel e as histórias da Disney em um só lugar.",
+    text: "Marvel, Pixar, Avatar e as histórias da Disney em um só lugar.",
     tone: "#0063E5",
     pending: true,
     slides: [
-      { src: "/apps/disney-1.jpg", label: "Mandalorian na Star Wars Celebration", credit: "CC BY 2.0" },
-      { src: "/apps/disney-2.jpg", label: "Tom Hiddleston", credit: "CC BY-SA 4.0" },
-      { src: "/apps/disney-3.jpg", label: "Grogu em órbita", credit: "NASA · domínio público" },
-      { src: "/apps/disney-5.jpg", label: "Homem de Ferro", credit: "CC BY-SA 2.0" },
+      { src: "/apps/disney-1.webp", label: "Vingadores: Ultimato", credit: TMDB },
+      { src: "/apps/disney-2.webp", label: "Viva: A Vida é Uma Festa", credit: TMDB },
+      { src: "/apps/disney-3.webp", label: "Avatar: O Caminho da Água", credit: TMDB },
+      { src: "/apps/disney-4.webp", label: "Deadpool & Wolverine", credit: TMDB },
+      { src: "/apps/disney-5.webp", label: "Divertida Mente 2", credit: TMDB },
     ],
   },
   {
     name: "Deezer",
     kind: "Música sem limites",
-    status: "Nos planos INET Música e Gamer",
+    status: "Nos planos 700 Mega e 1 Giga",
     text: "Deezer Premium sem anúncios, com download para ouvir offline.",
     tone: "#A238FF",
     slides: [
-      { src: "/apps/deezer-1.jpg", label: "Anitta", credit: "CC BY-SA 4.0" },
-      { src: "/apps/deezer-2.jpg", label: "Ludmilla", credit: "CC BY-SA 4.0" },
-      { src: "/apps/deezer-3.jpg", label: "Gusttavo Lima", credit: "CC0" },
-      { src: "/apps/deezer-4.jpg", label: "Ivete Sangalo", credit: "CC BY 2.0" },
-      { src: "/apps/deezer-5.jpg", label: "Alok", credit: "Agência Brasília · CC BY 2.0" },
-    ],
-  },
-  {
-    name: "Mumo",
-    kind: "Entretenimento em áudio",
-    status: "Em diversos planos",
-    text: "Rádios locais, notícias, esportes, humor e podcasts.",
-    tone: "#38B000",
-    slides: [
-      { src: "/apps/mumo-1.jpg", label: "Rádio ao vivo", credit: "CC BY-SA 4.0" },
-      { src: "/apps/mumo-2.jpg", label: "Podcasts", credit: "CC BY 4.0" },
-    ],
-  },
-  {
-    name: "NetFibra TV",
-    kind: "TV ao vivo",
-    status: "Nos planos com TV",
-    text: "Canais abertos e rádios no celular, no computador ou na smart TV.",
-    tone: "#0062EC",
-    slides: [
-      { src: "/apps/netfibra-1.jpg", label: "Programação ao vivo", credit: "CC BY-SA 4.0" },
-      { src: "/apps/netfibra-2.jpg", label: "Futebol na tela", credit: "domínio público" },
+      { src: "/apps/deezer-1.webp", label: "Luzes do palco", credit: "Foto: Yvette de Wit / Unsplash" },
+      { src: "/apps/deezer-2.webp", label: "Noite de show", credit: "Foto: ActionVance / Unsplash" },
+      { src: "/apps/deezer-3.webp", label: "Festival", credit: "Foto: Aditya Chinchure / Unsplash" },
+      { src: "/apps/deezer-4.webp", label: "Mãos para o alto", credit: "Foto: Tijs van Leur / Unsplash" },
+      { src: "/apps/deezer-5.webp", label: "Show ao vivo", credit: "Foto: Nainoa Shizuru / Unsplash" },
     ],
   },
 ];
@@ -113,7 +91,7 @@ function AppCard({ app, delay }: { app: App; delay: number }) {
   const slide = app.slides[idx];
 
   return (
-    <Rise delay={delay} className={`h-full ${app.wide ? "md:col-span-2" : ""}`}>
+    <Rise delay={delay} className="h-full">
       <div
         ref={ref}
         tabIndex={0}
@@ -122,11 +100,11 @@ function AppCard({ app, delay }: { app: App; delay: number }) {
         onFocus={() => setHovering(true)}
         onBlur={() => setHovering(false)}
         onClick={() => touch && setHovering((h) => !h)}
-        className="card group relative block h-[420px] cursor-default select-none sm:h-[460px]"
+        className="card group relative block h-[440px] cursor-default select-none sm:h-[500px]"
         aria-label={`${app.name}: ${app.text}`}
       >
         {/* fundo em repouso: aura na cor do app */}
-        <div aria-hidden="true" className="card-media" style={{ background: `radial-gradient(110% 80% at 85% 0%, ${app.tone}66, transparent 62%), linear-gradient(180deg,#03256C33,#010818)` }} />
+        <div aria-hidden="true" className="card-media" style={{ background: `radial-gradient(110% 80% at 85% 0%, ${app.tone}66, transparent 62%), linear-gradient(180deg,#020F2E,#010818)` }} />
 
         {/* imagens que passam dentro do card */}
         <motion.div
@@ -154,7 +132,7 @@ function AppCard({ app, delay }: { app: App; delay: number }) {
           <div className="absolute inset-0" style={{ background: `linear-gradient(135deg, ${app.tone}55, transparent 55%)`, mixBlendMode: "soft-light" }} />
         </motion.div>
 
-        <div className="absolute inset-0 bg-gradient-to-t from-[#010818] via-[#010818]/75 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#010818] via-[#010818]/70 to-[#010818]/10" />
 
         {/* legenda e crédito da imagem atual */}
         <AnimatePresence>
@@ -165,7 +143,7 @@ function AppCard({ app, delay }: { app: App; delay: number }) {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.6, ease: EASE }}
-              className="absolute right-5 top-5 max-w-[70%] rounded-full bg-black/45 px-3 py-1 text-right text-[11px] text-white/80 backdrop-blur"
+              className="absolute right-5 top-5 max-w-[62%] rounded-2xl bg-black/45 px-3 py-1 text-right text-[11px] text-white/80 backdrop-blur"
             >
               {slide.label} <span className="text-white/45">· {slide.credit}</span>
             </motion.p>
@@ -198,11 +176,11 @@ function AppCard({ app, delay }: { app: App; delay: number }) {
 export default function AppsShowcase({ id = "apps", tag = "Aplicativos para clientes INET" }: { id?: string; tag?: string }) {
   return (
     <section id={id} className="relative py-20 sm:py-28">
-      <div aria-hidden="true" className="pointer-events-none absolute -left-40 top-24 h-[420px] w-[420px] rounded-full bg-electric/15 blur-[120px]" />
+      <div aria-hidden="true" className="pointer-events-none absolute -left-40 top-24 h-[420px] w-[420px] rounded-full bg-navy/40 blur-[120px]" />
       <div className="wrap relative">
         <Rise><p className="tag">{tag}</p></Rise>
         <div className="mt-4 flex flex-wrap items-end justify-between gap-6">
-          <Lines className="h-lg max-w-3xl" lines={["Séries, música e TV", <span className="italic text-lime">junto com a sua fibra.</span>]} />
+          <Lines className="h-lg max-w-3xl" lines={["Filmes, séries e música", <span className="italic text-lime">junto com a sua fibra.</span>]} />
           <Rise delay={0.2}>
             <p className="flex items-center gap-2 text-sm text-white/55">
               <Hand size={16} aria-hidden="true" className="text-lime" />
@@ -217,7 +195,7 @@ export default function AppsShowcase({ id = "apps", tag = "Aplicativos para clie
         </div>
 
         <p className="mt-6 text-xs leading-relaxed text-white/45">
-          Cada app está disponível apenas nos planos indicados; confirme as condições com o atendimento. Marcas citadas pertencem aos seus titulares. Imagens ilustrativas do Wikimedia Commons, créditos nos cards.
+          Cada app está disponível apenas nos planos indicados; confirme as condições com o atendimento. Marcas citadas pertencem aos seus titulares. Imagens ilustrativas: backdrops de filmes via TMDB e fotos de shows do Unsplash, com crédito nos cards. Os títulos variam conforme o catálogo de cada plataforma.
         </p>
       </div>
     </section>

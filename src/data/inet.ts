@@ -83,56 +83,29 @@ export type Plan = {
 export type PlanGroup = { id: string; label: string; plans: Plan[] };
 
 const STD = ["Clube de Vantagens INET", "Sem custo de instalação", "Wi-Fi grátis"];
-const PREPAID = "Taxa de instalação R$ 230,00 à vista ou em 3x no cartão · plano pré-pago · mínimo de 30 dias";
 
-/** Planos publicados no site anterior. validar: preços e composição atuais. */
+/**
+ * Planos de internet: a INET pediu só três velocidades (700, 800 e 1000 Mega).
+ * 700 Mega e 1 Giga vêm do site anterior. validar: preço e composição do 800 Mega
+ * (sem preço, o card mostra "Consulte").
+ */
 export const PLAN_GROUPS: PlanGroup[] = [
   {
-    id: "familia",
-    label: "Família",
+    id: "principais",
+    label: "Internet fibra",
     plans: [
-      { id: "plus-tv", name: "INET Plus TV", price: "99,90", speed: "650", unit: "Mega", includes: ["+ de 100 canais de TV", "App Mumo", "App Bebanca"], perks: STD, description: "Conexão de alta velocidade com download e upload rápidos para uma navegação fluida." },
-      { id: "musica", name: "INET Música", price: "119,90", speed: "700", unit: "Mega", includes: ["App Deezer", "App Mumo"], perks: STD, description: "Internet para ouvir música com conexão rápida e acesso ilimitado a milhões de faixas." },
-      { id: "hbo-max", name: "INET HBO Max", price: "129,90", speed: "700", unit: "Mega", includes: ["+ de 100 canais de TV", "App Mumo", "App Bebanca", "HBO Max"], perks: STD, description: "Internet rápida com HBO Max e TV incluídos." },
-      { id: "gamer", name: "Plano Gamer", price: "199,90", speed: "1", unit: "Giga", includes: ["+ de 100 canais de TV", "App Deezer", "Roteador Wi-Fi 6", "Cabeamento de 1 dispositivo"], perks: ["Clube de Vantagens INET", "Sem custo de instalação", "Wi-Fi premium grátis"], description: "1 Giga com Wi-Fi premium para turbinar seus jogos. Chega de lag ou ping alto." },
-    ],
-  },
-  {
-    id: "casa-inteligente",
-    label: "Casa inteligente",
-    plans: [
-      { id: "casa-segura", name: "INET Casa Segura", price: "119,90", speed: "400", unit: "Mega", includes: ["Câmera Wi-Fi"], perks: STD, description: "Inclui uma câmera Wi-Fi que transmite imagens para o seu smartphone." },
-      { id: "sala-inteligente", name: "INET Sala Inteligente", price: "129,90", speed: "400", unit: "Mega", includes: ["Lâmpada inteligente", "Tomada inteligente", "Controle infravermelho inteligente"], perks: STD, description: "Kit sala inteligente: comandar sua casa nunca foi tão fácil." },
-      { id: "wifi-mesh", name: "INET Wi-Fi Mesh", price: "129,90", speed: "650", unit: "Mega", includes: ["+ de 100 canais de TV", "App Mumo", "2 roteadores mesh"], perks: ["Clube de Vantagens INET", "Sem custo de instalação", "Wi-Fi premium grátis"], description: "Tecnologia mesh para ampliar a cobertura do Wi-Fi pela casa com eficiência e estabilidade." },
-      { id: "casa-inteligente", name: "INET Casa Inteligente", price: "149,90", speed: "700", unit: "Mega", includes: ["+ de 100 canais de TV", "App Mumo", "Assistente virtual Alexa"], perks: ["Clube de Vantagens INET", "Sem custo de instalação", "Wi-Fi premium grátis"], description: "Alta velocidade + Alexa para transformar sua casa em uma casa inteligente." },
-    ],
-  },
-  {
-    id: "populares",
-    label: "Populares",
-    plans: [
-      { id: "popular", name: "INET Popular", price: "69,90", speed: "50", unit: "Mega", includes: ["Roteador Wi-Fi"], perks: ["Wi-Fi grátis"], description: "Plano popular fibra óptica de 50 Mega com Wi-Fi grátis.", note: "Taxa de instalação R$ 230,00 à vista ou em 3x no cartão · plano pré-pago" },
-      { id: "fit", name: "INET Fit", price: "74,90", speed: "80", unit: "Mega", includes: ["Roteador Wi-Fi"], perks: ["Sem custo de instalação", "Wi-Fi grátis"], description: "Plano popular fibra óptica de 80 Mega com Wi-Fi grátis." },
-      { id: "basico", name: "Plano Básico", price: "84,90", speed: "200", unit: "Mega", includes: ["Roteador Wi-Fi"], perks: ["Sem custo de instalação", "Wi-Fi grátis"], description: "Plano popular fibra óptica de 200 Mega com Wi-Fi grátis." },
-      { id: "economico", name: "INET Econômico", price: "89,90", speed: "300", unit: "Mega", includes: ["Roteador Wi-Fi"], perks: ["Sem custo de instalação", "Wi-Fi grátis"], description: "Plano popular fibra óptica de 300 Mega com Wi-Fi grátis." },
-    ],
-  },
-  {
-    id: "sem-fidelidade",
-    label: "Sem fidelidade",
-    plans: [
-      { id: "livre", name: "INET Livre", price: "149,90", speed: "500", unit: "Mega", includes: ["Roteador Wi-Fi"], perks: ["Wi-Fi grátis", "Cancele quando quiser"], description: "Fibra óptica de 500 Mega sem fidelidade.", note: PREPAID },
-      { id: "livre-mais", name: "INET Livre Mais", price: "169,90", speed: "700", unit: "Mega", includes: ["Roteador Wi-Fi"], perks: ["Wi-Fi grátis", "Cancele quando quiser"], description: "Fibra óptica de 700 Mega sem fidelidade.", note: PREPAID },
-      { id: "livre-giga", name: "INET Livre Giga", price: "219,90", speed: "1", unit: "Giga", includes: ["Roteador Wi-Fi"], perks: ["Wi-Fi grátis", "Cancele quando quiser"], description: "Fibra óptica de 1 Giga sem fidelidade.", note: PREPAID },
+      { id: "700", name: "INET 700 Mega", price: "119,90", speed: "700", unit: "Mega", includes: ["Roteador Wi-Fi", "App Deezer"], perks: STD, description: "Internet rápida para a família toda navegar, estudar e ouvir música ao mesmo tempo." },
+      { id: "800", name: "INET 800 Mega", price: "", speed: "800", unit: "Mega", includes: ["Roteador Wi-Fi", "HBO Max"], perks: STD, description: "Mais velocidade para maratonar em várias telas sem travar.", note: "Valor a confirmar com a equipe comercial." },
+      { id: "1000", name: "INET 1 Giga", price: "199,90", speed: "1", unit: "Giga", includes: ["Roteador Wi-Fi 6", "App Deezer", "Cabeamento de 1 dispositivo"], perks: ["Clube de Vantagens INET", "Sem custo de instalação", "Wi-Fi premium grátis"], description: "1 Giga com Wi-Fi 6 para jogos, streaming em 4K e casa conectada. Chega de lag." },
     ],
   },
   {
     id: "fixo",
     label: "Com telefone fixo",
     plans: [
-      { id: "combo-fixo-lite", name: "Combo Fixo Lite", price: "129,90", speed: "300", unit: "Mega", includes: ["Telefonia ilimitada", "+ de 100 canais de TV", "App Mumo", "App Bebanca"], perks: STD, description: "300 Mega com telefonia ilimitada e vários apps para a família." },
-      { id: "combo-fixo", name: "Combo Fixo", price: "139,90", speed: "650", unit: "Mega", includes: ["Telefonia ilimitada", "+ de 100 canais de TV", "App Mumo", "App Bebanca"], perks: STD, description: "650 Mega com telefonia ilimitada e vários apps para a família." },
-      { id: "mega-combo-fixo", name: "Mega Combo Fixo", price: "149,90", speed: "700", unit: "Mega", includes: ["Telefonia ilimitada", "+ de 100 canais de TV", "App Mumo", "App Bebanca"], perks: STD, description: "700 Mega com telefonia ilimitada e vários apps para a família." },
+      { id: "combo-fixo-lite", name: "Combo Fixo Lite", price: "129,90", speed: "300", unit: "Mega", includes: ["Telefonia ilimitada", "+ de 100 canais de TV", "App Bebanca"], perks: STD, description: "300 Mega com telefonia ilimitada e vários apps para a família." },
+      { id: "combo-fixo", name: "Combo Fixo", price: "139,90", speed: "650", unit: "Mega", includes: ["Telefonia ilimitada", "+ de 100 canais de TV", "App Bebanca"], perks: STD, description: "650 Mega com telefonia ilimitada e vários apps para a família." },
+      { id: "mega-combo-fixo", name: "Mega Combo Fixo", price: "149,90", speed: "700", unit: "Mega", includes: ["Telefonia ilimitada", "+ de 100 canais de TV", "App Bebanca"], perks: STD, description: "700 Mega com telefonia ilimitada e vários apps para a família." },
     ],
   },
   {
@@ -140,7 +113,7 @@ export const PLAN_GROUPS: PlanGroup[] = [
     label: "Com chip móvel",
     plans: [
       { id: "economico-10g", name: "INET Econômico + 10 Giga", price: "139,90", speed: "300", unit: "Mega", extra: "+ 10 Giga móvel", includes: ["Chip 5G", "Ligações ilimitadas para todo o Brasil", "WhatsApp ilimitado", "Waze ilimitado", "Roteador Wi-Fi"], perks: ["Chip 5G", "Sem custo de instalação", "Wi-Fi grátis"], description: "300 Mega + 10 Giga móvel com Wi-Fi grátis e ligações ilimitadas para todo o Brasil." },
-      { id: "plus-tv-10g", name: "INET Plus TV + 10 Giga", price: "149,90", speed: "650", unit: "Mega", extra: "+ 10 Giga móvel", includes: ["Chip 5G", "Ligações ilimitadas para todo o Brasil", "WhatsApp ilimitado", "Waze ilimitado", "+ de 100 canais de TV", "App Mumo", "App Bebanca"], perks: ["Chip 5G", "Clube de Vantagens INET", "Sem custo de instalação", "Wi-Fi grátis"], description: "Para quem quer falar à vontade e assistir aos melhores canais." },
+      { id: "plus-tv-10g", name: "INET Plus TV + 10 Giga", price: "149,90", speed: "650", unit: "Mega", extra: "+ 10 Giga móvel", includes: ["Chip 5G", "Ligações ilimitadas para todo o Brasil", "WhatsApp ilimitado", "Waze ilimitado", "+ de 100 canais de TV", "App Bebanca"], perks: ["Chip 5G", "Clube de Vantagens INET", "Sem custo de instalação", "Wi-Fi grátis"], description: "Para quem quer falar à vontade e assistir aos melhores canais." },
     ],
   },
 ];
@@ -155,10 +128,7 @@ export const TESTIMONIALS = [
   { text: "Internet boa demais, a Inet me atende em tudo!", name: "Welington Martins", handle: "@didifilme" },
 ];
 
-export const NETFIBRA = {
-  web: "https://netfibratv.com.br/",
-  playStore: "https://play.google.com/store/apps/details?id=br.com.netfibratv.mobile",
-  appStore: "https://apps.apple.com/br/app/net-fibra-iptv/id6443505002",
+export const INET_TV = {
   receiverPrice: "19,90", // validar
 };
 

@@ -7,10 +7,10 @@ import { COMPANY, waLink } from "../data/inet";
 
 export const SERVICES = [
   { to: "/internet", label: "Internet e Wi-Fi", text: "Fibra óptica e Wi-Fi Mesh" },
-  { to: "/tv", label: "INET TV", text: "NetFibra TV: canais, rádio e filmes" },
+  { to: "/tv", label: "INET TV", text: "Canais, rádio e filmes na sua TV" },
   { to: "/telefone-fixo", label: "Telefone fixo", text: "Ligações ilimitadas pela fibra" },
   { to: "/movel", label: "Chip móvel", text: "5G, WhatsApp e Waze ilimitados" },
-  { to: "/entretenimento", label: "Entretenimento", text: "HBO Max, Deezer, Mumo e mais" },
+  { to: "/entretenimento", label: "Entretenimento", text: "HBO Max, Disney+ e Deezer" },
 ];
 const MAIN = [
   { to: "/teste-de-velocidade", label: "Velocidade" },

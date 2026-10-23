@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import DownDetectorCard from "../components/DownDetectorCard";
 import { Download, ExternalLink, Gauge, MessageCircle, MonitorSmartphone, Power, UserRound, Wifi } from "lucide-react";
 import { Rise } from "../components/Lines";
 import { CtaBand, PageHero, Section, usePageMeta } from "../components/ui";
@@ -54,6 +55,7 @@ export default function Suporte() {
             </Rise>
           ))}
         </div>
+        <DownDetectorCard />
       </Section>
 
       <Section tag="Acesso remoto" title={["Precisa de ajuda", "no computador?"]}>

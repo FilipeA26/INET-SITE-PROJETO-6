@@ -21,7 +21,7 @@ export function usePageMeta(title: string, description: string) {
 export function PageHero({ tag, title, lead, children }: { tag: string; title: ReactNode[]; lead: string; children?: ReactNode }) {
   return (
     <section className="relative overflow-hidden pb-16 pt-36 sm:pt-44">
-      <div aria-hidden="true" className="pointer-events-none absolute -right-40 -top-40 h-[520px] w-[520px] rounded-full bg-electric/20 blur-[120px]" />
+      <div aria-hidden="true" className="pointer-events-none absolute -right-40 -top-40 h-[520px] w-[520px] rounded-full bg-electric/10 blur-[120px]" />
       <div aria-hidden="true" className="pointer-events-none absolute -left-32 top-40 h-[360px] w-[360px] rounded-full bg-lime/10 blur-[110px]" />
       <div className="wrap relative">
         <Rise><p className="tag">{tag}</p></Rise>
@@ -124,7 +124,7 @@ export function CtaBand({ title, text, children }: { title: ReactNode[]; text: s
   return (
     <section className="py-20 sm:py-28">
       <div className="wrap">
-        <div className="relative overflow-hidden rounded-[2rem] border border-white/10 bg-[linear-gradient(135deg,#03256C,#020F2E_60%)] p-8 sm:p-14">
+        <div className="relative overflow-hidden rounded-[2rem] border border-white/10 bg-[linear-gradient(135deg,#021A4A,#010C22_60%)] p-8 sm:p-14">
           <div aria-hidden="true" className="pointer-events-none absolute -right-24 -top-24 h-80 w-80 rounded-full bg-lime/15 blur-[90px]" />
           <Lines className="h-lg relative max-w-2xl" lines={title} />
           <Rise delay={0.2}><p className="lead relative mt-5 max-w-xl">{text}</p></Rise>

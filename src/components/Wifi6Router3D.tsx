@@ -3,65 +3,118 @@ import { Canvas, useFrame } from "@react-three/fiber";
 import { ContactShadows, OrbitControls, RoundedBox } from "@react-three/drei";
 import * as THREE from "three";
 
-// Cores do manual da marca
-const NAVY = "#03256C";
-const ROYAL = "#003F99";
+// Escala: 1 unidade = 100 mm. Medidas do HUAWEI WiFi AX2S: 205 x 120 x 39 mm (sem antenas).
+const W = 2.05;
+const D = 1.2;
+const H_BACK = 0.39;
+const H_FRONT = 0.1;
+
+const WHITE = "#F3F5F8";
+const SEAM = "#D9DEE6";
 const ELECTRIC = "#0062EC";
 const LIME = "#70E000";
 
-/** Antena articulada na traseira do roteador. */
+/** Corpo em cunha: alto atrás e fino na frente, com cantos arredondados. */
+function useBodyGeometry() {
+  return useMemo(() => {
+    const s = new THREE.Shape();
+    // perfil lateral: x = profundidade (frente em +), y = altura
+    s.moveTo(-D / 2, 0);
+    s.lineTo(D / 2, 0);
+    s.lineTo(D / 2, H_FRONT);
+    s.lineTo(-D / 2, H_BACK);
+    s.closePath();
+    const bevel = 0.04;
+    const g = new THREE.ExtrudeGeometry(s, { depth: W - bevel * 2, bevelEnabled: true, bevelThickness: bevel, bevelSize: bevel, bevelSegments: 6, curveSegments: 12 });
+    // a extrusão vira a largura (eixo X) e o perfil fica de lado
+    g.rotateY(-Math.PI / 2);
+    g.translate(W / 2 - bevel, 0, 0);
+    g.computeVertexNormals();
+    return g;
+  }, []);
+}
+
+/** Antena chata, um pouco mais larga no alto, presa por uma dobradiça. */
 function Antenna({ x, tilt }: { x: number; tilt: number }) {
+  const geo = useMemo(() => {
+    const s = new THREE.Shape();
+    s.moveTo(-0.1, 0);
+    s.lineTo(0.1, 0);
+    s.lineTo(0.12, 1.55);
+    s.quadraticCurveTo(0.12, 1.62, 0.06, 1.62);
+    s.lineTo(-0.06, 1.62);
+    s.quadraticCurveTo(-0.12, 1.62, -0.12, 1.55);
+    s.closePath();
+    const g = new THREE.ExtrudeGeometry(s, { depth: 0.03, bevelEnabled: true, bevelThickness: 0.012, bevelSize: 0.012, bevelSegments: 3 });
+    g.translate(0, 0, -0.015);
+    return g;
+  }, []);
   return (
-    <group position={[x, 0.22, -0.78]} rotation={[-0.12, 0, tilt]}>
-      <mesh position={[0, 0.06, 0]}>
-        <cylinderGeometry args={[0.07, 0.07, 0.14, 24]} />
-        <meshStandardMaterial color={ROYAL} metalness={0.4} roughness={0.35} />
-      </mesh>
-      <RoundedBox args={[0.16, 1.5, 0.06]} radius={0.03} smoothness={4} position={[0, 0.85, 0]}>
-        <meshStandardMaterial color={NAVY} metalness={0.25} roughness={0.3} />
+    <group position={[x, H_BACK - 0.02, -D / 2 - 0.02]}>
+      {/* dobradiça */}
+      <RoundedBox args={[0.18, 0.12, 0.12]} radius={0.03} smoothness={3} position={[0, 0.02, 0]}>
+        <meshStandardMaterial color={SEAM} roughness={0.5} />
       </RoundedBox>
-      <mesh position={[0, 1.45, 0.035]}>
-        <boxGeometry args={[0.06, 0.18, 0.01]} />
-        <meshStandardMaterial color={LIME} emissive={LIME} emissiveIntensity={1.2} />
-      </mesh>
+      <group position={[0, 0.06, 0]} rotation={[-0.06, 0, tilt]}>
+        <mesh geometry={geo}>
+          <meshPhysicalMaterial color={WHITE} roughness={0.35} clearcoat={0.6} clearcoatRoughness={0.3} />
+        </mesh>
+      </group>
     </group>
   );
 }
 
-/** LEDs frontais que pulsam em sequência. */
-function Leds() {
-  const mats = useRef<THREE.MeshStandardMaterial[]>([]);
+const Z_H = -0.18;
+
+/** Botão H no tampo (WPS / HUAWEI Share), em baixo relevo. */
+function HButton() {
+  return (
+    // o tampo é inclinado: o botão acompanha a rampa da cunha (+ 0,04 do chanfro)
+    <group position={[0, H_BACK - ((Z_H + D / 2) / D) * (H_BACK - H_FRONT) + 0.043, Z_H]}>
+      <group rotation={[Math.atan2(H_BACK - H_FRONT, D), 0, 0]}>
+        <mesh rotation={[-Math.PI / 2, 0, 0]}>
+          <circleGeometry args={[0.1, 40]} />
+          <meshStandardMaterial color={SEAM} roughness={0.6} />
+        </mesh>
+        {[[-0.03, 0, 0.012, 0.09], [0.03, 0, 0.012, 0.09], [0, 0, 0.06, 0.012]].map(([x, z, w, d], i) => (
+          <mesh key={i} position={[x, 0.002, z]}>
+            <boxGeometry args={[w, 0.004, d]} />
+            <meshStandardMaterial color="#8A94A6" />
+          </mesh>
+        ))}
+      </group>
+    </group>
+  );
+}
+
+/** LED frontal único, que respira em verde-lima. */
+function Led() {
+  const mat = useRef<THREE.MeshStandardMaterial>(null);
   useFrame(({ clock }) => {
-    mats.current.forEach((m, i) => {
-      if (m) m.emissiveIntensity = 0.6 + 1.6 * Math.max(0, Math.sin(clock.elapsedTime * 2.4 - i * 0.7));
-    });
+    if (mat.current) mat.current.emissiveIntensity = 1.2 + Math.sin(clock.elapsedTime * 2.2) * 0.8;
   });
   return (
-    <group position={[-0.55, 0.02, 0.86]}>
-      {[0, 1, 2, 3, 4].map((i) => (
-        <mesh key={i} position={[i * 0.18, 0, 0]}>
-          <sphereGeometry args={[0.035, 16, 16]} />
-          <meshStandardMaterial ref={(m) => { if (m) mats.current[i] = m; }} color={LIME} emissive={LIME} emissiveIntensity={1} toneMapped={false} />
-        </mesh>
-      ))}
-    </group>
+    <mesh position={[0, H_FRONT * 0.45, D / 2 + 0.035]}>
+      <sphereGeometry args={[0.018, 16, 16]} />
+      <meshStandardMaterial ref={mat} color={LIME} emissive={LIME} emissiveIntensity={1.4} toneMapped={false} />
+    </mesh>
   );
 }
 
 /** Ondas de sinal que saem do roteador. */
 function Waves() {
   const rings = useRef<THREE.Mesh[]>([]);
-  const geo = useMemo(() => new THREE.TorusGeometry(1, 0.012, 8, 96, Math.PI * 0.7), []);
+  const geo = useMemo(() => new THREE.TorusGeometry(1, 0.01, 8, 96, Math.PI * 0.7), []);
   useFrame(({ clock }) => {
     rings.current.forEach((r, i) => {
       if (!r) return;
       const t = (clock.elapsedTime * 0.35 + i / 3) % 1;
-      r.scale.setScalar(1.2 + t * 2.2);
-      (r.material as THREE.MeshBasicMaterial).opacity = (1 - t) * 0.55;
+      r.scale.setScalar(1.4 + t * 2.2);
+      (r.material as THREE.MeshBasicMaterial).opacity = (1 - t) * 0.45;
     });
   });
   return (
-    <group position={[0, 0.6, 0]} rotation={[0, 0, Math.PI * 0.15]}>
+    <group position={[0, 1.3, -0.6]} rotation={[0, 0, Math.PI * 0.15]}>
       {[0, 1, 2].map((i) => (
         <mesh key={i} ref={(m) => { if (m) rings.current[i] = m; }} geometry={geo}>
           <meshBasicMaterial color={LIME} transparent opacity={0.4} toneMapped={false} />
@@ -73,66 +126,62 @@ function Waves() {
 
 function Router() {
   const g = useRef<THREE.Group>(null);
+  const body = useBodyGeometry();
   useFrame(({ clock }) => {
-    if (g.current) g.current.position.y = Math.sin(clock.elapsedTime * 1.1) * 0.05;
+    if (g.current) g.current.position.y = Math.sin(clock.elapsedTime * 1.1) * 0.04;
   });
   return (
-    <group ref={g} rotation={[0.12, -0.5, 0]}>
-      {/* corpo */}
-      <RoundedBox args={[2.2, 0.38, 1.7]} radius={0.16} smoothness={6}>
-        <meshPhysicalMaterial color={NAVY} metalness={0.3} roughness={0.25} clearcoat={1} clearcoatRoughness={0.15} />
-      </RoundedBox>
-      {/* tampo com faixa em azul elétrico */}
-      <RoundedBox args={[1.9, 0.04, 1.4]} radius={0.02} smoothness={4} position={[0, 0.19, 0]}>
-        <meshStandardMaterial color={ROYAL} metalness={0.5} roughness={0.4} />
-      </RoundedBox>
-      {/* grade de ventilação */}
-      {Array.from({ length: 9 }, (_, i) => (
-        <mesh key={i} position={[-0.72 + i * 0.18, 0.215, -0.1]}>
-          <boxGeometry args={[0.07, 0.01, 0.9]} />
-          <meshStandardMaterial color="#010818" roughness={0.9} />
-        </mesh>
-      ))}
-      {/* friso de luz frontal */}
-      <mesh position={[0, -0.12, 0.851]}>
-        <boxGeometry args={[1.6, 0.02, 0.01]} />
-        <meshStandardMaterial color={ELECTRIC} emissive={ELECTRIC} emissiveIntensity={1.4} toneMapped={false} />
+    <group ref={g} rotation={[0, -0.55, 0]}>
+      <mesh geometry={body}>
+        <meshPhysicalMaterial color={WHITE} roughness={0.3} clearcoat={0.8} clearcoatRoughness={0.25} />
       </mesh>
-      <Leds />
-      {/* pés */}
-      {[[-0.85, -0.6], [0.85, -0.6], [-0.85, 0.6], [0.85, 0.6]].map(([x, z]) => (
-        <mesh key={`${x}${z}`} position={[x, -0.21, z]}>
-          <cylinderGeometry args={[0.08, 0.08, 0.04, 16]} />
-          <meshStandardMaterial color="#010818" />
+      {/* base escura levemente recuada, como a sola do aparelho */}
+      <mesh position={[0, -0.035, 0]}>
+        <boxGeometry args={[W - 0.12, 0.012, D - 0.12]} />
+        <meshStandardMaterial color="#C9D0DA" roughness={0.8} />
+      </mesh>
+      {/* portas na traseira: 4 Gigabit WAN/LAN + energia */}
+      {[-0.55, -0.3, -0.05, 0.2, 0.55].map((x, i) => (
+        <mesh key={x} position={[x, 0.16, -D / 2 - 0.041]}>
+          <boxGeometry args={i === 4 ? [0.09, 0.09, 0.01] : [0.17, 0.13, 0.01]} />
+          <meshStandardMaterial color="#1A2233" roughness={0.6} />
         </mesh>
       ))}
-      <Antenna x={-0.8} tilt={0.18} />
-      <Antenna x={-0.27} tilt={0.06} />
-      <Antenna x={0.27} tilt={-0.06} />
-      <Antenna x={0.8} tilt={-0.18} />
+      <HButton />
+      <Led />
+      {/* filete de assinatura no canto direito da frente (sem reproduzir o logotipo) */}
+      <mesh position={[0.72, H_FRONT * 0.45, D / 2 + 0.034]}>
+        <boxGeometry args={[0.22, 0.012, 0.004]} />
+        <meshStandardMaterial color="#B8C0CC" />
+      </mesh>
+      <Antenna x={-0.78} tilt={0.03} />
+      <Antenna x={-0.26} tilt={0.01} />
+      <Antenna x={0.26} tilt={-0.01} />
+      <Antenna x={0.78} tilt={-0.03} />
       <Waves />
     </group>
   );
 }
 
-/** Cena 3D do roteador Wi-Fi 6. Arrastar gira; sem zoom para não brigar com a rolagem. */
+/** Cena 3D do HUAWEI WiFi AX2S. Arrastar gira; sem zoom para não brigar com a rolagem. */
 export default function Wifi6Router3D({ onError }: { onError?: () => void }) {
   return (
     <Canvas
       dpr={[1, 2]}
-      camera={{ position: [3.4, 2.2, 4.2], fov: 35 }}
+      camera={{ position: [3.6, 2.6, 4.4], fov: 35 }}
       gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
       onCreated={({ gl }) => {
         gl.domElement.addEventListener("webglcontextlost", () => onError?.(), { once: true });
       }}
       className="!cursor-grab active:!cursor-grabbing"
     >
-      <ambientLight intensity={0.5} />
-      <directionalLight position={[4, 6, 3]} intensity={2.2} />
-      <pointLight position={[-3, 1.5, 2]} intensity={14} color={ELECTRIC} />
-      <pointLight position={[2, 0.5, -3]} intensity={10} color={LIME} />
+      <ambientLight intensity={0.45} />
+      <hemisphereLight args={["#DCE8FF", "#010818", 0.6]} />
+      <directionalLight position={[4, 6, 3]} intensity={2} />
+      <pointLight position={[-3, 1.5, 2]} intensity={12} color={ELECTRIC} />
+      <pointLight position={[2.5, 1, -3]} intensity={8} color={LIME} />
       <Router />
-      <ContactShadows position={[0, -0.32, 0]} opacity={0.55} scale={7} blur={2.6} far={2} color="#000000" />
+      <ContactShadows position={[0, -0.045, 0]} opacity={0.6} scale={7} blur={2.4} far={2} color="#000000" />
       <OrbitControls
         enableZoom={false}
         enablePan={false}
@@ -142,7 +191,7 @@ export default function Wifi6Router3D({ onError }: { onError?: () => void }) {
         dampingFactor={0.08}
         minPolarAngle={Math.PI * 0.2}
         maxPolarAngle={Math.PI * 0.48}
-        target={[0, 0.5, 0]}
+        target={[0, 0.7, 0]}
       />
     </Canvas>
   );

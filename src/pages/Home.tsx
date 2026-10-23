@@ -10,12 +10,11 @@ import PlanCarousel from "../components/PlanCarousel";
 import SlideToSubscribe from "../components/SlideToSubscribe";
 import CityMap from "../components/CityMap";
 import ProductShot from "../components/ProductShot";
-import AppsShowcase from "../components/AppsShowcase";
 import Wifi6 from "../components/Wifi6";
 import Lines, { Rise } from "../components/Lines";
 import { FeatureCard, Faq, LinkCard, usePageMeta } from "../components/ui";
 import { SPRING } from "../motion";
-import { COMPANY, NETFIBRA, PHONES, STORES, TESTIMONIALS, waLink, type Plan } from "../data/inet";
+import { COMPANY, INET_TV, PHONES, STORES, TESTIMONIALS, waLink, type Plan } from "../data/inet";
 
 export default function Home() {
   usePageMeta("", "INET: internet fibra óptica em Teófilo Otoni com planos de até 1 Giga, Wi-Fi grátis, TV, telefone fixo e chip 5G. Atendimento (33) 3536-3939.");
@@ -24,7 +23,7 @@ export default function Home() {
   const { scrollYProgress } = useScroll({ target: homeRef, offset: ["start start", "end end"] });
   const p = useSpring(scrollYProgress, SPRING);
   // fundo escuro contínuo, só com os azuis profundos do manual da marca
-  const bg = useTransform(p, [0, 0.3, 0.55, 0.8, 1], ["#010818", "#020F2E", "#03256C", "#020F2E", "#010818"]);
+  const bg = useTransform(p, [0, 0.3, 0.55, 0.8, 1], ["#010818", "#010C22", "#02163D", "#010C22", "#010818"]);
 
   return (
     <motion.div ref={homeRef} style={{ backgroundColor: bg }} className="relative">
@@ -52,14 +51,14 @@ export default function Home() {
           <div className="wrap">
             <Rise><p className="tag">02 — INET TV</p></Rise>
             <Rise delay={0.1}>
-              <div className="relative mt-6 overflow-hidden rounded-[2.5rem] border border-white/10 bg-[radial-gradient(120%_120%_at_85%_30%,#0062EC55,transparent_55%),linear-gradient(135deg,#03256C,#010818_70%)] p-8 sm:p-14">
+              <div className="relative mt-6 overflow-hidden rounded-[2.5rem] border border-white/10 bg-[radial-gradient(120%_120%_at_85%_30%,#0062EC30,transparent_55%),linear-gradient(135deg,#021A4A,#010818_70%)] p-8 sm:p-14">
                 <div aria-hidden="true" className="absolute -right-24 -top-24 h-80 w-80 rounded-full bg-lime/10 blur-3xl" />
                 <div className="relative grid items-center gap-10 lg:grid-cols-[1.1fr_1fr]">
                   <div>
                     <Lines className="h-lg max-w-xl" lines={["A TV que vai", <span className="italic text-lime">aonde você vai.</span>]} />
-                    <p className="lead mt-5 max-w-lg">Canais de TV aberta ao vivo, rádios e filmes on demand no celular, no computador, na smart TV e até na TV que não é smart, com o receptor INET TV.</p>
+                    <p className="lead mt-5 max-w-lg">Canais de TV aberta ao vivo, rádios e filmes on demand na sua TV, mesmo que ela não seja smart, com o receptor INET TV.</p>
                     <ul className="mt-8 flex flex-wrap gap-2.5">
-                      {["TV ao vivo", "+30 rádios", "Filmes on demand", "2 telas ao mesmo tempo"].map((c) => (
+                      {["TV ao vivo", "+30 rádios", "Filmes on demand", "Suporte 24h"].map((c) => (
                         <li key={c} className="rounded-full border border-white/15 bg-white/[0.05] px-4 py-2 text-sm">{c}</li>
                       ))}
                     </ul>
@@ -68,7 +67,7 @@ export default function Home() {
                       <a href={waLink("Olá! Quero assinar a INET TV.")} target="_blank" rel="noreferrer" className="btn-ghost">Assinar pelo WhatsApp</a>
                     </div>
                     {/* validar: valor do receptor (site anterior) */}
-                    <p className="mt-6 text-sm text-white/55">Receptor em comodato por R$ {NETFIBRA.receiverPrice}/mês.</p>
+                    <p className="mt-6 text-sm text-white/55">Receptor em comodato por R$ {INET_TV.receiverPrice}/mês.</p>
                   </div>
                   <ProductShot src="/inet-tv-receptor.webp" alt="Receptor INET TV com controle remoto" width={760} height={732} glow="#38B000" className="mx-auto w-full max-w-[440px]" />
                 </div>
@@ -86,35 +85,28 @@ export default function Home() {
             <Lines className="h-lg mt-4 max-w-3xl" lines={["Tudo o que conecta", "a sua casa."]} />
             <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               <LinkCard to="/internet" icon={Wifi} title="Internet e Wi-Fi" text="Fibra óptica de até 1 Giga e Wi-Fi Mesh para a casa toda." tone="#0062EC" />
-              <LinkCard to="/tv" icon={Tv} title="INET TV" text="NetFibra TV: canais abertos, rádios e filmes no celular, PC e smart TV." tone="#003F99" delay={0.06} />
+              <LinkCard to="/tv" icon={Tv} title="INET TV" text="Canais abertos, rádios e filmes na sua TV com o receptor INET TV." tone="#003F99" delay={0.06} />
               <LinkCard to="/telefone-fixo" icon={Phone} title="Telefone fixo" text="Ligações ilimitadas para fixo e celular de todo o Brasil." tone="#38B000" delay={0.12} />
               <LinkCard to="/movel" icon={Smartphone} title="Chip móvel" text="Chip 5G com WhatsApp e Waze ilimitados e portabilidade." tone="#0062EC" delay={0.18} />
-              <LinkCard to="/entretenimento" icon={Music} title="Entretenimento" text="HBO Max, Deezer, Mumo e outros apps nos planos." tone="#7a2cff" delay={0.24} />
+              <LinkCard to="/entretenimento" icon={Music} title="Entretenimento" text="HBO Max, Disney+ e Deezer nos planos." tone="#7a2cff" delay={0.24} />
               <LinkCard to="/teste-de-velocidade" icon={Gauge} title="Teste de velocidade" text="Meça sua conexão no servidor oficial Inet Telecom." cta="Testar agora" tone="#70E000" delay={0.3} />
             </div>
           </div>
         </section>
 
-        {/* aplicativos inclusos */}
+        {/* Wi-Fi 6 */}
         <div className="relative">
           <span data-node="right" className="absolute top-12" />
           <span data-node="right" className="absolute bottom-12" />
-          <AppsShowcase tag="04 — Aplicativos" />
-        </div>
-
-        {/* Wi-Fi 6 */}
-        <div className="relative">
-          <span data-node="left" className="absolute top-12" />
-          <span data-node="left" className="absolute bottom-12" />
-          <Wifi6 tag="05 — Wi-Fi 6" />
+          <Wifi6 tag="04 — Wi-Fi 6" />
         </div>
 
         {/* por que INET — conteúdo do site anterior */}
         <section className="relative py-24 sm:py-32">
-          <span data-node="right" className="absolute top-12" />
-          <span data-node="right" className="absolute bottom-12" />
+          <span data-node="left" className="absolute top-12" />
+          <span data-node="left" className="absolute bottom-12" />
           <div className="wrap">
-            <Rise><p className="tag">06 — Por que INET</p></Rise>
+            <Rise><p className="tag">05 — Por que INET</p></Rise>
             <Lines className="h-lg mt-4 max-w-3xl" lines={["Fibra óptica,", "wi-fi grátis e muito conteúdo."]} />
             <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
               <FeatureCard icon={Zap} title="Internet ultrarrápida" text="Muita velocidade para curtir filmes e jogos online com estabilidade." />
@@ -127,10 +119,10 @@ export default function Home() {
 
         {/* autoatendimento */}
         <section id="autoatendimento" className="relative py-24 sm:py-32">
-          <span data-node="left" className="absolute top-12" />
-          <span data-node="left" className="absolute bottom-12" />
+          <span data-node="right" className="absolute top-12" />
+          <span data-node="right" className="absolute bottom-12" />
           <div className="wrap">
-            <Rise><p className="tag">07 — Autoatendimento</p></Rise>
+            <Rise><p className="tag">06 — Autoatendimento</p></Rise>
             <Lines className="h-lg mt-4 max-w-3xl" lines={["Resolva rápido,", "sem sair de casa."]} />
             <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
               <Rise className="h-full">
@@ -153,7 +145,7 @@ export default function Home() {
           <span data-node="left" className="absolute top-12" />
           <span data-node="left" className="absolute bottom-12" />
           <div className="wrap">
-            <Rise><p className="tag">08 — INET Eventos</p></Rise>
+            <Rise><p className="tag">07 — INET Eventos</p></Rise>
             <Lines className="h-lg mt-4 max-w-3xl" lines={["Muito além", <span className="italic text-lime">da conexão.</span>]} />
             <div className="mt-12 grid gap-4 md:grid-cols-2">
               {[
@@ -179,7 +171,7 @@ export default function Home() {
           <span data-node="right" className="absolute top-12" />
           <span data-node="right" className="absolute bottom-12" />
           <div className="wrap">
-            <Rise><p className="tag">09 — Depoimentos</p></Rise>
+            <Rise><p className="tag">08 — Depoimentos</p></Rise>
             <Lines className="h-lg mt-4 max-w-3xl" lines={["Quem é INET", "não troca."]} />
             <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {TESTIMONIALS.map((t, i) => (
@@ -200,7 +192,7 @@ export default function Home() {
           <span data-node="left" className="absolute top-12" />
           <span data-node="left" className="absolute bottom-12" />
           <div className="wrap">
-            <Rise><p className="tag">10 — Lojas</p></Rise>
+            <Rise><p className="tag">09 — Lojas</p></Rise>
             <Lines className="h-lg mt-4 max-w-3xl" lines={["Três lojas em", <span className="italic text-lime">Teófilo Otoni.</span>]} />
             <Rise delay={0.2}><p className="lead mt-5 max-w-2xl">Seja qual for a loja, ficaremos felizes em receber você.</p></Rise>
             <div className="mt-10"><CityMap className="h-[52vh] min-h-[340px]" /></div>
@@ -212,7 +204,7 @@ export default function Home() {
           <span data-node="right" className="absolute top-12" />
           <span data-node="center" className="absolute bottom-0 left-1/2" />
           <div className="wrap">
-            <Rise><p className="tag">11 — Dúvidas</p></Rise>
+            <Rise><p className="tag">10 — Dúvidas</p></Rise>
             <Lines className="h-lg mt-4 max-w-3xl" lines={["Dúvidas sobre", "os serviços INET."]} />
             <div className="mt-10">
               <Faq

@@ -20,7 +20,7 @@ export default function SlideToSubscribe({ plan }: { plan: Plan | null }) {
   const fill = useTransform(x, (v) => v + KNOB);
   const labelOpacity = useTransform(x, [0, max * 0.5], [1, 0]);
   const msg = plan
-    ? `Olá! Quero contratar o plano ${plan.name} (${plan.speed} ${plan.unit}, R$ ${plan.price}/mês). Pode verificar a disponibilidade no meu endereço?`
+    ? `Olá! Quero contratar o plano ${plan.name} (${plan.speed} ${plan.unit}${plan.price ? `, R$ ${plan.price}/mês` : ""}). Pode verificar a disponibilidade no meu endereço?`
     : "Olá! Quero contratar a internet fibra da INET. Pode me ajudar a escolher um plano?";
 
   useEffect(() => {
@@ -54,7 +54,7 @@ export default function SlideToSubscribe({ plan }: { plan: Plan | null }) {
     <div>
       <p className="text-center text-sm text-white/65">
         {plan ? (
-          <>Plano escolhido: <strong className="text-white">{plan.name}</strong> · {plan.speed} {plan.unit} · R$ {plan.price}/mês</>
+          <>Plano escolhido: <strong className="text-white">{plan.name}</strong> · {plan.speed} {plan.unit}{plan.price && ` · R$ ${plan.price}/mês`}</>
         ) : (
           <>Toque duas vezes em um plano para escolhê-lo, ou fale direto com a gente.</>
         )}

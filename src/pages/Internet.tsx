@@ -24,7 +24,7 @@ export default function Internet() {
       </PageHero>
 
       <Section id="planos" tag="Planos de internet" title={["Escolha pelo seu", "jeito de usar."]}>
-        <PlanCarousel groups={["familia", "casa-inteligente", "populares", "sem-fidelidade"]} selected={plan} onSelect={setPlan} />
+        <PlanCarousel selected={plan} onSelect={setPlan} />
         <div className="mt-14"><SlideToSubscribe plan={plan} /></div>
       </Section>
 

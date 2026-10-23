@@ -21,7 +21,7 @@ function Rail({ side }: { side: "left" | "right" }) {
       aria-hidden="true"
       className={`pointer-events-none fixed inset-y-0 z-0 hidden w-[max(0px,calc((100vw-72rem)/2))] min-w-[120px] xl:block ${side === "left" ? "left-0" : "right-0 -scale-x-100"}`}
     >
-      <motion.div style={{ top: y, background: `radial-gradient(circle, ${color}55, transparent 70%)` }} className="absolute -left-1/2 h-[46vh] w-[140%] -translate-y-1/2 rounded-full blur-[80px]" />
+      <motion.div style={{ top: y, background: `radial-gradient(circle, ${color}33, transparent 70%)` }} className="absolute -left-1/2 h-[46vh] w-[140%] -translate-y-1/2 rounded-full blur-[80px]" />
       {FIBERS.map((f) => (
         <span key={f.x} className="absolute inset-y-0 w-px bg-gradient-to-b from-transparent via-white/[0.07] to-transparent" style={{ left: `${f.x}%` }}>
           <span

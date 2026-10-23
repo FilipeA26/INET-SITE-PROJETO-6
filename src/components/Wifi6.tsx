@@ -7,10 +7,10 @@ import Lines, { Rise } from "./Lines";
 const Router3D = lazy(() => import("./Wifi6Router3D"));
 
 const PERKS = [
-  { icon: Gauge, title: "Mais velocidade", text: "Até 40% mais desempenho que o Wi-Fi 5, aproveitando melhor a velocidade da fibra." },
+  { icon: Gauge, title: "Mais velocidade", text: "Até 1500 Mbps somando as duas faixas (1201 Mbps em 5 GHz), para a fibra chegar inteira ao seu aparelho." },
   { icon: Smartphone, title: "Mais aparelhos ao mesmo tempo", text: "Celulares, TVs, câmeras e casa inteligente conectados sem disputa pela rede." },
   { icon: Timer, title: "Menor latência", text: "Resposta mais rápida em jogos online, chamadas de vídeo e reuniões." },
-  { icon: Radar, title: "Mais alcance e estabilidade", text: "Sinal mais eficiente pelos cômodos e menos interferência de vizinhos." },
+  { icon: Radar, title: "Mais alcance e estabilidade", text: "Antenas que reduzem a interferência e, com HarmonyOS Mesh+, vários roteadores HUAWEI formam uma só rede." },
 ];
 
 function hasWebGL() {
@@ -32,25 +32,37 @@ class GLBoundary extends Component<{ fallback: ReactNode; children: ReactNode },
   }
 }
 
-/** Ilustração estática usada enquanto o 3D carrega ou quando não há WebGL. */
+/** Ilustração estática do HUAWEI WiFi AX2S, usada enquanto o 3D carrega ou quando não há WebGL. */
 function RouterStill() {
   return (
-    <svg viewBox="0 0 400 300" className="h-full w-full" role="img" aria-label="Roteador Wi-Fi 6 da INET">
+    <svg viewBox="0 0 400 300" className="h-full w-full" role="img" aria-label="Roteador HUAWEI WiFi AX2S">
       <defs>
         <linearGradient id="w6body" x1="0" x2="0" y1="0" y2="1">
-          <stop offset="0" stopColor="#003F99" />
-          <stop offset="1" stopColor="#03256C" />
+          <stop offset="0" stopColor="#FFFFFF" />
+          <stop offset="1" stopColor="#D5DBE4" />
+        </linearGradient>
+        <linearGradient id="w6ant" x1="0" x2="1">
+          <stop offset="0" stopColor="#E6EAF0" />
+          <stop offset="1" stopColor="#FFFFFF" />
         </linearGradient>
       </defs>
       {[0, 1, 2].map((i) => (
-        <path key={i} d={`M ${200 - 60 - i * 40} ${110 - i * 22} A ${60 + i * 40} ${60 + i * 40} 0 0 1 ${200 + 60 + i * 40} ${110 - i * 22}`} fill="none" stroke="#70E000" strokeOpacity={0.55 - i * 0.15} strokeWidth="3" strokeLinecap="round" />
+        <path key={i} d={`M ${200 - 70 - i * 40} ${70 - i * 18} A ${70 + i * 40} ${70 + i * 40} 0 0 1 ${200 + 70 + i * 40} ${70 - i * 18}`} fill="none" stroke="#70E000" strokeOpacity={0.5 - i * 0.14} strokeWidth="3" strokeLinecap="round" />
       ))}
-      {[-75, -25, 25, 75].map((x, i) => (
-        <rect key={x} x={200 + x - 6} y={70} width="12" height="110" rx="6" fill="#03256C" stroke="#0062EC" strokeOpacity="0.5" transform={`rotate(${(i - 1.5) * 6} ${200 + x} 180)`} />
+      {/* 4 antenas chatas articuladas na traseira */}
+      {[112, 172, 232, 292].map((x) => (
+        <g key={x}>
+          <path d={`M ${x - 9} 196 L ${x + 9} 196 L ${x + 11} 72 Q ${x + 11} 66 ${x + 5} 66 L ${x - 5} 66 Q ${x - 11} 66 ${x - 11} 72 Z`} fill="url(#w6ant)" />
+          <rect x={x - 9} y="190" width="18" height="10" rx="3" fill="#C9D0DA" />
+        </g>
       ))}
-      <rect x="80" y="170" width="240" height="56" rx="18" fill="url(#w6body)" stroke="#0062EC" strokeOpacity="0.6" />
-      {[0, 1, 2, 3, 4].map((i) => <circle key={i} cx={160 + i * 20} cy="206" r="4" fill="#70E000" />)}
-      <ellipse cx="200" cy="246" rx="120" ry="8" fill="#000" opacity="0.4" />
+      {/* corpo em cunha: alto atrás, fino na frente */}
+      <path d="M 80 200 L 320 200 Q 352 200 360 222 L 366 236 Q 368 244 358 244 L 42 244 Q 32 244 34 236 L 40 222 Q 48 200 80 200 Z" fill="url(#w6body)" />
+      <rect x="40" y="240" width="320" height="4" rx="2" fill="#B8C0CC" />
+      <circle cx="200" cy="214" r="9" fill="#D9DEE6" />
+      <path d="M 196 209 v 10 M 204 209 v 10 M 196 214 h 8" stroke="#8A94A6" strokeWidth="2" />
+      <circle cx="200" cy="238" r="2.5" fill="#70E000" />
+      <ellipse cx="200" cy="258" rx="150" ry="8" fill="#000" opacity="0.45" />
     </svg>
   );
 }
@@ -69,7 +81,7 @@ export default function Wifi6({ id = "wifi6", tag = "Wi-Fi 6" }: { id?: string; 
 
   return (
     <section id={id} className="relative overflow-hidden py-20 sm:py-28">
-      <div aria-hidden="true" className="pointer-events-none absolute -right-40 top-10 h-[520px] w-[520px] rounded-full bg-electric/20 blur-[130px]" />
+      <div aria-hidden="true" className="pointer-events-none absolute -right-40 top-10 h-[520px] w-[520px] rounded-full bg-navy/40 blur-[130px]" />
       <div aria-hidden="true" className="pointer-events-none absolute -left-24 bottom-0 h-[320px] w-[320px] rounded-full bg-lime/10 blur-[110px]" />
       <div className="wrap relative grid items-center gap-12 lg:grid-cols-[1fr_1.05fr]">
         <div>
@@ -77,7 +89,7 @@ export default function Wifi6({ id = "wifi6", tag = "Wi-Fi 6" }: { id?: string; 
           <Lines className="h-lg mt-4" lines={["A fibra chega inteira", <span className="italic text-lime">em cada cômodo.</span>]} />
           <Rise delay={0.2}>
             <p className="lead mt-5 max-w-xl">
-              O Wi-Fi 6 é a nova geração de redes sem fio: entrega mais velocidade, atende muito mais aparelhos ao mesmo tempo e deixa a conexão mais estável para toda a família.
+              O Roteador HUAWEI WiFi AX2S traz o Wi-Fi 6, a nova geração de redes sem fio: mais velocidade em 5 GHz, muito mais aparelhos ao mesmo tempo e conexão estável para toda a família. Ele ainda leva cada aparelho para a melhor faixa (2,4 ou 5 GHz) automaticamente.
             </p>
           </Rise>
           <ul className="mt-10 grid gap-3 sm:grid-cols-2">
@@ -89,11 +101,11 @@ export default function Wifi6({ id = "wifi6", tag = "Wi-Fi 6" }: { id?: string; 
               </Rise>
             ))}
           </ul>
-          <p className="mt-6 text-xs leading-relaxed text-white/45">Ganhos variam conforme o roteador, os aparelhos (que também precisam ser compatíveis com Wi-Fi 6) e o ambiente. Confirme com a INET quais planos incluem roteador Wi-Fi 6.</p>
+          <p className="mt-6 text-xs leading-relaxed text-white/45">Velocidades informadas pela HUAWEI são máximas teóricas; o desempenho real varia conforme os aparelhos (que também precisam ser compatíveis com Wi-Fi 6) e o ambiente. A troca automática de faixa exige aparelhos com 802.11v. Confirme com a INET quais planos incluem o HUAWEI WiFi AX2S.</p>
         </div>
 
         <Rise delay={0.15}>
-          <div ref={stage} className="relative aspect-square w-full overflow-hidden rounded-[2rem] border border-white/10 bg-[radial-gradient(80%_70%_at_50%_40%,#03256C,#010818_75%)]">
+          <div ref={stage} className="relative aspect-square w-full overflow-hidden rounded-[2rem] border border-white/10 bg-[radial-gradient(80%_70%_at_50%_40%,#020F2E,#010818_75%)]">
             <div aria-hidden="true" className="pointer-events-none absolute inset-x-10 bottom-10 h-24 rounded-full bg-lime/10 blur-3xl" />
             <div className="absolute inset-0">
               {near && gl ? (
@@ -112,6 +124,7 @@ export default function Wifi6({ id = "wifi6", tag = "Wi-Fi 6" }: { id?: string; 
               </p>
             )}
             <span className="absolute left-5 top-5 rounded-full bg-lime px-3 py-1 font-display text-xs font-semibold uppercase tracking-[0.18em] text-navy-ink">Wi-Fi 6</span>
+            <p className="absolute right-5 top-5 text-right text-xs leading-tight text-white/60">Roteador<br /><span className="font-display text-sm text-white">HUAWEI WiFi AX2S</span></p>
           </div>
         </Rise>
       </div>

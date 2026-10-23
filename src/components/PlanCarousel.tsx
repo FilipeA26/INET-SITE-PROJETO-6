@@ -15,7 +15,7 @@ const HOLD_MS = 550;
  * toque duplo escolhe. Botões e teclado fazem o mesmo para quem não usa toque.
  */
 export default function PlanCarousel({
-  groups = PLAN_GROUPS.map((g) => g.id),
+  groups = ["principais"],
   selected,
   onSelect,
 }: {
@@ -87,7 +87,7 @@ export default function PlanCarousel({
       )}
 
       {/* painel mais claro com a malha animada atrás dos cards escuros */}
-      <div className="relative mt-8 overflow-hidden rounded-[2rem] border border-white/10 bg-[linear-gradient(135deg,#003F99_0%,#03256C_55%,#0a4fc4_100%)] py-10 sm:rounded-[2.5rem] sm:py-14">
+      <div className="relative mt-8 overflow-hidden rounded-[2rem] border border-white/10 bg-[linear-gradient(135deg,#021A4A_0%,#010C22_55%,#02163D_100%)] py-10 sm:rounded-[2.5rem] sm:py-14">
         <MeshCanvas className="absolute inset-0 h-full w-full opacity-70 [filter:blur(1.2px)]" />
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-transparent to-navy-ink/40" />
         <div
@@ -206,7 +206,7 @@ function Card({
           </p>
           {plan.extra && <p className="mt-2 font-display text-lg text-[#5CC8FF]">{plan.extra}</p>}
           <p className="mt-6 font-display text-3xl">
-            R$ {plan.price}<span className="text-sm text-white/45"> /mês</span>
+            {plan.price ? <>R$ {plan.price}<span className="text-sm text-white/45"> /mês</span></> : <span className="text-2xl text-white/80">Consulte</span>}
           </p>
           <ul className="mt-5 flex flex-wrap gap-1.5">
             {plan.includes.slice(0, 4).map((inc) => (
