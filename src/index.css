@@ -1,0 +1,30 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Lenis (rolagem suave) */
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-stopped { overflow: hidden; }
+
+@layer base {
+  body { @apply bg-navy-ink font-sans text-white antialiased; }
+  ::selection { @apply bg-lime text-navy; }
+}
+
+@layer components {
+  .wrap { @apply mx-auto w-full max-w-6xl px-12 sm:px-20; }
+  .tag { @apply font-display text-[11px] font-medium uppercase tracking-[0.28em] text-lime; }
+  .h-xl { @apply font-display text-5xl font-light leading-[1.02] tracking-[-0.02em] sm:text-7xl lg:text-8xl; }
+  .h-lg { @apply font-display text-4xl font-light leading-[1.05] tracking-[-0.02em] sm:text-6xl; }
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-7 py-3.5 text-sm font-semibold
+      transition-[transform,background-color,box-shadow,color] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)];
+  }
+  .btn-lime { @apply btn bg-lime text-navy-ink hover:-translate-y-0.5 hover:shadow-[0_14px_40px_-12px_rgba(112,224,0,0.9)]; }
+  .btn-ghost { @apply btn border border-white/25 text-white hover:border-lime hover:text-lime; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
