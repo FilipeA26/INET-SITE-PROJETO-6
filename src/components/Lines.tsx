@@ -32,9 +32,10 @@ export default function Lines({ lines, className = "", delay = 0, as = "h2" }: {
 }
 
 /** Entrada padrão para blocos (cards, parágrafos): sobe e aparece. */
-export function Rise({ children, delay = 0, className = "" }: { children: ReactNode; delay?: number; className?: string }) {
+export function Rise({ children, delay = 0, className = "", as = "div" }: { children: ReactNode; delay?: number; className?: string; as?: "div" | "li" }) {
+  const Tag = as === "li" ? motion.li : motion.div;
   return (
-    <motion.div
+    <Tag
       className={className}
       initial={{ opacity: 0, y: 28, filter: "blur(6px)" }}
       whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
@@ -42,6 +43,6 @@ export function Rise({ children, delay = 0, className = "" }: { children: ReactN
       transition={{ duration: DUR, ease: EASE, delay }}
     >
       {children}
-    </motion.div>
+    </Tag>
   );
 }

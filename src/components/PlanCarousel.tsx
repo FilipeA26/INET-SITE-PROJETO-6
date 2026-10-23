@@ -1,45 +1,49 @@
 import { useEffect, useRef, useState } from "react";
 import { animate, motion, useMotionValue, useTransform, type MotionValue } from "framer-motion";
 import { useDrag } from "@use-gesture/react";
-import { ArrowLeft, ArrowRight, Check, Hand, MoveHorizontal } from "lucide-react";
+import { ArrowLeft, ArrowRight, Check, Hand, MoveHorizontal, Plus } from "lucide-react";
 import GestureHint from "./GestureHint";
 import MeshCanvas from "./MeshCanvas";
-import Lines, { Rise } from "./Lines";
 import { DUR, EASE } from "../motion";
-
-// Valores provisórios — trocar pelos planos reais da INET
-export const plans = [
-  { speed: "400", unit: "Mega", price: "89,90", perks: ["Wi-Fi 6", "Instalação grátis", "Sem franquia"], ideal: "Para casas conectadas", details: ["Até 6 aparelhos ao mesmo tempo", "Streaming em Full HD", "Suporte pelo WhatsApp"] },
-  { speed: "700", unit: "Mega", price: "109,90", perks: ["Wi-Fi 6", "Instalação grátis", "Sem franquia"], ideal: "Mais escolhido", details: ["Até 12 aparelhos ao mesmo tempo", "Streaming em 4K e jogos", "Suporte prioritário"] },
-  { speed: "1", unit: "Giga", price: "149,90", perks: ["Wi-Fi 6 mesh", "Instalação grátis", "Sem franquia"], ideal: "Para home office e famílias", details: ["Aparelhos sem limite prático", "Upload alto para chamadas", "Suporte VIP"] },
-];
+import { PLAN_GROUPS, waLink, type Plan } from "../data/inet";
 
 const SPRING_SNAP = { type: "spring" as const, stiffness: 140, damping: 24, mass: 0.9 };
 const HOLD_MS = 550;
 
 /**
- * Carrossel de planos com gestos:
- * - swipe/arraste horizontal (com inércia e elástico nas pontas) troca de plano;
- * - segurar (long press) vira o card e mostra os detalhes;
- * - duplo toque escolhe o plano (usado no "deslize para assinar").
+ * Planos com gestos: deslizar troca, segurar vira o card (detalhes),
+ * toque duplo escolhe. Botões e teclado fazem o mesmo para quem não usa toque.
  */
-export default function PlanCarousel({ selected, onSelect }: { selected: number; onSelect: (i: number) => void }) {
+export default function PlanCarousel({
+  groups = PLAN_GROUPS.map((g) => g.id),
+  selected,
+  onSelect,
+}: {
+  groups?: string[];
+  selected?: Plan | null;
+  onSelect?: (p: Plan) => void;
+}) {
+  const list = PLAN_GROUPS.filter((g) => groups.includes(g.id));
+  const [group, setGroup] = useState(list[0].id);
+  const plans = list.find((g) => g.id === group)!.plans;
   const viewRef = useRef<HTMLDivElement>(null);
-  const [index, setIndex] = useState(1);
-  const [flipped, setFlipped] = useState<number | null>(null);
+  const [index, setIndex] = useState(0);
+  const [flipped, setFlipped] = useState<string | null>(null);
   const [hints, setHints] = useState({ swipe: true, hold: true });
   const x = useMotionValue(0);
-  const [step, setStep] = useState(360);
+  const [step, setStep] = useState(340);
 
   useEffect(() => {
-    const measure = () => {
-      const w = viewRef.current?.clientWidth ?? 360;
-      setStep(Math.min(420, w * 0.78));
-    };
+    const measure = () => setStep(Math.min(380, (viewRef.current?.clientWidth ?? 340) * 0.82));
     measure();
     window.addEventListener("resize", measure);
     return () => window.removeEventListener("resize", measure);
   }, []);
+
+  useEffect(() => {
+    setIndex(Math.min(1, plans.length - 1));
+    setFlipped(null);
+  }, [group, plans.length]);
 
   useEffect(() => {
     const c = animate(x, -index * step, SPRING_SNAP);
@@ -56,9 +60,7 @@ export default function PlanCarousel({ selected, onSelect }: { selected: number;
         if (Math.abs(mx) > step * 0.6) cancel();
         return;
       }
-      // swipe: velocidade alta ou arraste longo trocam de plano
-      const swipe = vx > 0.4 || Math.abs(mx) > step * 0.25;
-      if (swipe) {
+      if (vx > 0.4 || Math.abs(mx) > step * 0.25) {
         go(index - Math.sign(mx || -dx));
         setHints((h) => ({ ...h, swipe: false }));
       } else animate(x, -index * step, SPRING_SNAP);
@@ -67,81 +69,96 @@ export default function PlanCarousel({ selected, onSelect }: { selected: number;
   );
 
   return (
-    <section id="planos" className="relative overflow-hidden py-32">
-      <span data-node="left" className="absolute top-12" />
-      <span data-node="left" className="absolute bottom-12" />
-      <div className="wrap">
-        <Rise>
-          <p className="tag">01 — Planos</p>
-        </Rise>
-        <div className="mt-5 flex flex-wrap items-end justify-between gap-6">
-          <Lines className="h-lg" lines={["Deslize e", "escolha."]} />
-          <div className="flex items-center gap-2">
-            <button onClick={() => go(index - 1)} aria-label="Plano anterior" className="btn-ghost h-12 w-12 p-0"><ArrowLeft size={18} /></button>
-            <button onClick={() => go(index + 1)} aria-label="Próximo plano" className="btn-ghost h-12 w-12 p-0"><ArrowRight size={18} /></button>
+    <div>
+      {list.length > 1 && (
+        <div role="tablist" aria-label="Categorias de planos" className="-mx-5 flex gap-2 overflow-x-auto px-5 pb-2 [scrollbar-width:none] sm:mx-0 sm:flex-wrap sm:px-0">
+          {list.map((g) => (
+            <button
+              key={g.id}
+              role="tab"
+              aria-selected={group === g.id}
+              onClick={() => setGroup(g.id)}
+              className={`min-h-[44px] shrink-0 rounded-full border px-5 text-sm transition-colors duration-500 ${group === g.id ? "border-lime bg-lime text-navy-ink" : "border-white/15 text-white/70 hover:border-white/40 hover:text-white"}`}
+            >
+              {g.label}
+            </button>
+          ))}
+        </div>
+      )}
+
+      {/* painel mais claro com a malha animada atrás dos cards escuros */}
+      <div className="relative mt-8 overflow-hidden rounded-[2rem] border border-white/10 bg-[linear-gradient(135deg,#003F99_0%,#03256C_55%,#0a4fc4_100%)] py-10 sm:rounded-[2.5rem] sm:py-14">
+        <MeshCanvas className="absolute inset-0 h-full w-full opacity-70 [filter:blur(1.2px)]" />
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-transparent to-navy-ink/40" />
+        <div
+          ref={viewRef}
+          className="relative cursor-grab select-none active:cursor-grabbing"
+          style={{ touchAction: "pan-y" }}
+          {...bind()}
+          aria-roledescription="carrossel"
+          aria-label="Planos"
+          tabIndex={0}
+          onKeyDown={(e) => {
+            if (e.key === "ArrowRight") go(index + 1);
+            if (e.key === "ArrowLeft") go(index - 1);
+          }}
+        >
+          <motion.div style={{ x, paddingLeft: `calc(50% - ${step / 2}px)` }} className="flex">
+            {plans.map((p, i) => (
+              <Card
+                key={p.id}
+                i={i}
+                x={x}
+                step={step}
+                plan={p}
+                active={i === index}
+                flipped={flipped === p.id}
+                chosen={selected?.id === p.id}
+                onTap={() => go(i)}
+                onHold={() => {
+                  setFlipped((f) => (f === p.id ? null : p.id));
+                  setHints((h) => ({ ...h, hold: false }));
+                }}
+                onDouble={() => onSelect?.(p)}
+              />
+            ))}
+          </motion.div>
+        </div>
+
+        <div className="relative mt-8 flex flex-col items-center gap-5 px-4">
+          <div className="flex items-center gap-3">
+            <button onClick={() => go(index - 1)} disabled={index === 0} aria-label="Plano anterior" className="btn-ghost h-11 w-11 p-0 disabled:opacity-30"><ArrowLeft size={18} /></button>
+            <div className="flex gap-2">
+              {plans.map((p, i) => (
+                <button key={p.id} onClick={() => go(i)} aria-label={`${p.name}`} aria-current={i === index} className="flex h-6 items-center">
+                  <span className={`block h-1.5 rounded-full transition-all duration-700 ${i === index ? "w-10 bg-lime" : "w-4 bg-white/30"}`} />
+                </button>
+              ))}
+            </div>
+            <button onClick={() => go(index + 1)} disabled={index === plans.length - 1} aria-label="Próximo plano" className="btn-ghost h-11 w-11 p-0 disabled:opacity-30"><ArrowRight size={18} /></button>
+          </div>
+          <div className="flex flex-wrap justify-center gap-2">
+            <GestureHint icon={MoveHorizontal} kind="swipe" label="Deslize para trocar" visible={hints.swipe} />
+            <GestureHint icon={Hand} kind="hold" label="Segure para detalhes · toque 2x para escolher" visible={hints.hold} />
           </div>
         </div>
       </div>
-
-      {/* painel mais claro com a malha animada (ref. Projeto 3) atrás dos cards escuros */}
-      <div className="relative mx-8 mt-14 overflow-hidden rounded-[2.5rem] border border-white/10 bg-[linear-gradient(135deg,#003F99_0%,#03256C_55%,#0a4fc4_100%)] py-14 sm:mx-20">
-        <MeshCanvas className="absolute inset-0 h-full w-full opacity-70 [filter:blur(1.2px)]" />
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-navy-ink/40" />
-      <div ref={viewRef} className="relative cursor-grab select-none active:cursor-grabbing" style={{ touchAction: "pan-y" }} {...bind()}>
-        <motion.div style={{ x, paddingLeft: `calc(50% - ${step / 2}px)` }} className="flex gap-0">
-          {plans.map((p, i) => (
-            <Card
-              key={p.speed + p.unit}
-              i={i}
-              x={x}
-              step={step}
-              plan={p}
-              flipped={flipped === i}
-              chosen={selected === i}
-              onTap={() => go(i)}
-              onHold={() => {
-                setFlipped((f) => (f === i ? null : i));
-                setHints((h) => ({ ...h, hold: false }));
-              }}
-              onDouble={() => onSelect(i)}
-            />
-          ))}
-        </motion.div>
-      </div>
-
-      <div className="wrap relative mt-10 flex flex-col items-center gap-5">
-        <div className="flex gap-2" role="tablist" aria-label="Planos">
-          {plans.map((p, i) => (
-            <button
-              key={p.speed + p.unit}
-              role="tab"
-              aria-selected={i === index}
-              aria-label={`${p.speed} ${p.unit}`}
-              onClick={() => go(i)}
-              className={`h-1.5 rounded-full transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${i === index ? "w-10 bg-lime" : "w-4 bg-white/25"}`}
-            />
-          ))}
-        </div>
-        <div className="flex flex-wrap justify-center gap-2">
-          <GestureHint icon={MoveHorizontal} kind="swipe" label="Deslize para trocar" visible={hints.swipe} />
-          <GestureHint icon={Hand} kind="hold" label="Segure para ver detalhes · toque 2x para escolher" visible={hints.hold} />
-        </div>
-      </div>
-      </div>
-    </section>
+      <p className="mt-5 text-xs leading-relaxed text-white/45">
+        Valores e benefícios conforme publicados no site anterior da INET. Sujeitos a alteração e à viabilidade técnica no endereço: confirme as condições atuais com o atendimento antes de contratar.
+      </p>
+    </div>
   );
 }
 
 function Card({
-  i, x, step, plan, flipped, chosen, onTap, onHold, onDouble,
+  i, x, step, plan, active, flipped, chosen, onTap, onHold, onDouble,
 }: {
-  i: number; x: MotionValue<number>; step: number; plan: (typeof plans)[number]; flipped: boolean; chosen: boolean;
+  i: number; x: MotionValue<number>; step: number; plan: Plan; active: boolean; flipped: boolean; chosen: boolean;
   onTap: () => void; onHold: () => void; onDouble: () => void;
 }) {
-  // cards distantes do centro encolhem e esmaecem — tudo derivado da mesma posição x
   const dist = useTransform(x, (v) => Math.min(1, Math.abs(v + i * step) / step));
-  const scale = useTransform(dist, [0, 1], [1, 0.86]);
-  const opacity = useTransform(dist, [0, 1], [1, 0.4]);
+  const scale = useTransform(dist, [0, 1], [1, 0.88]);
+  const opacity = useTransform(dist, [0, 1], [1, 0.45]);
   const [holding, setHolding] = useState(false);
   const timer = useRef<number>();
   const lastTap = useRef(0);
@@ -167,7 +184,7 @@ function Card({
   };
 
   return (
-    <motion.div style={{ scale, opacity, width: step }} className="shrink-0 px-3 [perspective:1400px]">
+    <motion.div style={{ scale, opacity, width: step }} className="shrink-0 px-2.5 [perspective:1400px]" aria-hidden={!active}>
       <motion.div
         onPointerDown={down}
         onPointerUp={up}
@@ -175,28 +192,45 @@ function Card({
         onPointerLeave={() => (clearTimeout(timer.current), setHolding(false))}
         animate={{ rotateY: flipped ? 180 : 0, scale: holding ? 0.97 : 1 }}
         transition={{ duration: DUR, ease: EASE }}
-        className="relative h-[440px] [transform-style:preserve-3d]"
+        className="relative h-[520px] [transform-style:preserve-3d]"
       >
         {/* frente */}
-        <div className={`absolute inset-0 flex flex-col rounded-[2rem] border p-8 [backface-visibility:hidden] ${chosen ? "border-lime bg-[#020F2E]/95 shadow-[0_0_60px_-20px_rgba(112,224,0,0.8)]" : "border-white/10 bg-[#020F2E]/90 shadow-[0_30px_60px_-30px_rgba(0,0,0,0.8)]"}`}>
-          <div className="flex items-center justify-between text-xs uppercase tracking-[0.2em]">
-            <span className="text-white/50">{plan.ideal}</span>
-            {chosen && <span className="font-semibold text-lime">Escolhido</span>}
+        <div className={`absolute inset-0 flex flex-col rounded-[1.75rem] border p-7 [backface-visibility:hidden] ${chosen ? "border-lime bg-[#020F2E]/95 shadow-[0_0_60px_-20px_rgba(112,224,0,0.8)]" : "border-white/10 bg-[#020F2E]/90 shadow-[0_30px_60px_-30px_rgba(0,0,0,0.8)]"}`}>
+          <div className="flex items-start justify-between gap-3">
+            <h3 className="text-xs font-semibold uppercase tracking-[0.18em] text-white/60">{plan.name}</h3>
+            {chosen && <span className="text-xs font-semibold uppercase tracking-[0.18em] text-lime">Escolhido</span>}
           </div>
-          <p className="mt-10 font-display text-8xl font-light leading-none">
+          <p className="mt-6 font-display text-7xl font-light leading-none">
             {plan.speed}
             <span className="ml-2 text-2xl text-lime">{plan.unit}</span>
           </p>
-          <p className="mt-8 font-display text-3xl">
+          {plan.extra && <p className="mt-2 font-display text-lg text-[#5CC8FF]">{plan.extra}</p>}
+          <p className="mt-6 font-display text-3xl">
             R$ {plan.price}<span className="text-sm text-white/45"> /mês</span>
           </p>
-          <ul className="mt-auto space-y-2.5 text-sm text-white/70">
-            {plan.perks.map((perk) => (
-              <li key={perk} className="flex items-center gap-2.5"><Check size={14} className="text-lime" /> {perk}</li>
+          <ul className="mt-5 flex flex-wrap gap-1.5">
+            {plan.includes.slice(0, 4).map((inc) => (
+              <li key={inc} className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-[11px] text-white/80">
+                <Plus size={10} aria-hidden="true" className="text-lime" /> {inc}
+              </li>
             ))}
           </ul>
-          {/* anel de progresso do "segurar" */}
-          <svg className="pointer-events-none absolute right-6 top-6 h-8 w-8 -rotate-90" viewBox="0 0 32 32" aria-hidden="true">
+          <ul className="mt-auto space-y-2 pt-5 text-sm text-white/75">
+            {plan.perks.map((perk) => (
+              <li key={perk} className="flex items-center gap-2.5"><Check size={14} aria-hidden="true" className="text-lime" /> {perk}</li>
+            ))}
+          </ul>
+          <a
+            href={waLink(`Olá! Quero saber se o plano ${plan.name} (${plan.speed} ${plan.unit}) está disponível no meu endereço.`)}
+            target="_blank"
+            rel="noreferrer"
+            tabIndex={active ? 0 : -1}
+            onPointerDown={(e) => e.stopPropagation()}
+            className="btn-lime mt-6 w-full"
+          >
+            Quero este plano
+          </a>
+          <svg className="pointer-events-none absolute right-5 top-5 h-8 w-8 -rotate-90" viewBox="0 0 32 32" aria-hidden="true">
             <motion.circle
               cx="16" cy="16" r="13" fill="none" stroke="#70E000" strokeWidth="2" strokeLinecap="round"
               initial={false}
@@ -206,14 +240,16 @@ function Card({
           </svg>
         </div>
         {/* verso: detalhes */}
-        <div className="absolute inset-0 flex flex-col rounded-[2rem] border border-lime/50 bg-navy-ink p-8 [backface-visibility:hidden] [transform:rotateY(180deg)]">
-          <span className="text-xs uppercase tracking-[0.2em] text-lime">Detalhes · {plan.speed} {plan.unit}</span>
-          <ul className="mt-8 space-y-5">
-            {plan.details.map((d) => (
-              <li key={d} className="border-b border-white/10 pb-5 font-display text-xl font-light">{d}</li>
+        <div className="absolute inset-0 flex flex-col rounded-[1.75rem] border border-lime/50 bg-navy-ink p-7 [backface-visibility:hidden] [transform:rotateY(180deg)]">
+          <span className="text-xs uppercase tracking-[0.2em] text-lime">{plan.name}</span>
+          <p className="mt-5 font-display text-xl font-light leading-snug">{plan.description}</p>
+          <ul className="mt-6 space-y-3 text-sm text-white/80">
+            {plan.includes.map((d) => (
+              <li key={d} className="flex gap-2.5 border-b border-white/10 pb-3"><Plus size={14} aria-hidden="true" className="mt-0.5 shrink-0 text-lime" /> {d}</li>
             ))}
           </ul>
-          <p className="mt-auto text-xs text-white/45">Segure de novo para voltar · toque 2x para escolher</p>
+          {plan.note && <p className="mt-4 text-xs text-white/55">{plan.note}</p>}
+          <p className="mt-auto text-xs text-white/45">Segure de novo para voltar</p>
         </div>
       </motion.div>
     </motion.div>

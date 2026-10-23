@@ -37,7 +37,8 @@ export default function Thread({ container }: { container: RefObject<HTMLElement
       const w = main.clientWidth, h = main.scrollHeight;
       svg.setAttribute("viewBox", `0 0 ${w} ${h}`);
       svg.style.height = `${h}px`;
-      const margin = w < 640 ? 20 : 44;
+      // fica na faixa livre fora do texto (o conteúdo começa em 20px no celular, 40px+ no resto)
+      const margin = w < 640 ? 8 : 26;
       const top = main.getBoundingClientRect().top + window.scrollY;
       const pts = [...main.querySelectorAll<HTMLElement>("[data-node]")].map((el) => {
         const side = el.dataset.node;

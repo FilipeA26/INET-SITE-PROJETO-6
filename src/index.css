@@ -8,23 +8,72 @@ html.lenis, html.lenis body { height: auto; }
 .lenis.lenis-stopped { overflow: hidden; }
 
 @layer base {
-  body { @apply bg-navy-ink font-sans text-white antialiased; }
+  html { -webkit-text-size-adjust: 100%; }
+  body { @apply overflow-x-hidden bg-navy-ink font-sans text-white antialiased; }
   ::selection { @apply bg-lime text-navy; }
+  /* foco sempre visível para quem navega pelo teclado */
+  :focus-visible { @apply rounded-md outline outline-2 outline-offset-2 outline-lime; }
+  summary::-webkit-details-marker { display: none; }
 }
 
 @layer components {
-  .wrap { @apply mx-auto w-full max-w-6xl px-12 sm:px-20; }
+  .wrap { @apply mx-auto w-full max-w-6xl px-5 sm:px-10 lg:px-16; }
   .tag { @apply font-display text-[11px] font-medium uppercase tracking-[0.28em] text-lime; }
-  .h-xl { @apply font-display text-5xl font-light leading-[1.02] tracking-[-0.02em] sm:text-7xl lg:text-8xl; }
-  .h-lg { @apply font-display text-4xl font-light leading-[1.05] tracking-[-0.02em] sm:text-6xl; }
+  .h-xl { @apply font-display text-[2.6rem] font-light leading-[1.02] tracking-[-0.02em] sm:text-7xl lg:text-8xl; }
+  .h-lg { @apply font-display text-[2rem] font-light leading-[1.08] tracking-[-0.02em] sm:text-5xl lg:text-6xl; }
+  .h-md { @apply font-display text-2xl font-light leading-tight sm:text-3xl; }
+  .lead { @apply text-base leading-relaxed text-white/70 sm:text-lg; }
   .btn {
-    @apply inline-flex items-center justify-center gap-2 rounded-full px-7 py-3.5 text-sm font-semibold
-      transition-[transform,background-color,box-shadow,color] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)];
+    @apply inline-flex min-h-[44px] items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-semibold
+      transition-[transform,background-color,box-shadow,color,border-color] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)];
   }
   .btn-lime { @apply btn bg-lime text-navy-ink hover:-translate-y-0.5 hover:shadow-[0_14px_40px_-12px_rgba(112,224,0,0.9)]; }
   .btn-ghost { @apply btn border border-white/25 text-white hover:border-lime hover:text-lime; }
+
+  /* card premium: elevação, zoom da imagem contido, sobreposição em degradê */
+  .card {
+    @apply relative overflow-hidden rounded-[1.75rem] border border-white/10 bg-[#020F2E]/80
+      transition-[transform,border-color,box-shadow] duration-700 ease-[cubic-bezier(0.16,1,0.3,1)];
+  }
+  .card:hover, .card:focus-within { @apply -translate-y-1 border-white/25 shadow-[0_30px_60px_-30px_rgba(0,0,0,0.9)]; }
+  .card-media { @apply absolute inset-0 transition-transform duration-[1200ms] ease-[cubic-bezier(0.16,1,0.3,1)]; }
+  .card:hover .card-media, .card:focus-within .card-media { @apply scale-[1.06]; }
+  .card-icon { @apply transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]; }
+  .card:hover .card-icon, .card:focus-within .card-icon { @apply -translate-y-0.5 rotate-[-6deg]; }
+  .card-link { @apply inline-flex items-center gap-1.5 text-sm font-semibold text-lime; }
+  .card-link svg { @apply transition-transform duration-500; }
+  .card:hover .card-link svg, .card-link:hover svg { @apply translate-x-1; }
+}
+
+/* artes dos cards de entretenimento: paradas por padrão, ganham vida no hover/foco */
+@keyframes art-bar { 0%, 100% { transform: scaleY(1); } 50% { transform: scaleY(0.45); } }
+@keyframes art-ember { from { transform: translateY(0); opacity: 0; } 20% { opacity: 1; } to { transform: translateY(-320px); opacity: 0; } }
+@keyframes art-twinkle { 0%, 100% { opacity: 1; } 50% { opacity: 0.25; } }
+@keyframes art-ring { 0%, 100% { transform: scale(1); opacity: 0.8; } 50% { transform: scale(1.06); opacity: 0.4; } }
+@keyframes art-fog { from { transform: translateX(-8%); } to { transform: translateX(8%); } }
+.art-bar { transform-origin: bottom; animation: art-bar 1.4s ease-in-out infinite paused; }
+.art-ember { animation: art-ember 3.2s linear infinite paused; opacity: 0.6; }
+.art-twinkle { animation: art-twinkle 2.4s ease-in-out infinite paused; }
+.art-ring { animation: art-ring 2.8s ease-in-out infinite paused; }
+.art-fog { animation: art-fog 6s ease-in-out infinite alternate paused; }
+.card:hover :is(.art-bar, .art-ember, .art-twinkle, .art-ring, .art-fog),
+.card:focus-within :is(.art-bar, .art-ember, .art-twinkle, .art-ring, .art-fog) { animation-play-state: running; }
+
+@media (hover: none) {
+  /* no toque não existe hover: o card mostra o estado de destaque ao ser tocado */
+  .card:active { @apply border-white/25; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
 }
+
+/* Leaflet no tema escuro da marca (filtro só nos tiles; atribuição preservada) */
+.leaflet-container { @apply bg-navy-ink font-sans; }
+.inet-tiles { filter: invert(1) hue-rotate(195deg) brightness(0.85) contrast(0.95) saturate(0.6); }
+.leaflet-control-attribution { @apply !bg-navy-ink/80 !text-white/60; }
+.leaflet-control-attribution a { @apply !text-lime; }
+.leaflet-bar a { @apply !border-white/15 !bg-navy-ink !text-white; }
+.leaflet-popup-content-wrapper, .leaflet-popup-tip { @apply !bg-[#020F2E] !text-white; }
+.inet-pin { @apply relative block h-4 w-4 rounded-full bg-lime shadow-[0_0_0_4px_rgba(112,224,0,0.25),0_0_18px_#70E000]; }
+.inet-pin::after { content: ""; @apply absolute inset-0 animate-ping rounded-full bg-lime/60; }

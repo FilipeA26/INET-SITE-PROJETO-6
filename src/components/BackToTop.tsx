@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { AnimatePresence, motion, useMotionValueEvent, useScroll } from "framer-motion";
 import { ArrowUp } from "lucide-react";
 import { EASE } from "../motion";
@@ -13,7 +13,7 @@ export default function BackToTop() {
     <AnimatePresence>
       {show && (
         <motion.a
-          href="#inicio"
+          href="#top"
           aria-label="Voltar ao início"
           initial={{ opacity: 0, y: 16, scale: 0.9 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
