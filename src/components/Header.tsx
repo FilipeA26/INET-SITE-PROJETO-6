@@ -15,6 +15,7 @@ export const SERVICES = [
 const MAIN = [
   { to: "/teste-de-velocidade", label: "Velocidade" },
   { to: "/cobertura", label: "Cobertura" },
+  { to: "/avaliacoes", label: "Avaliações" },
 ];
 
 type Opt = { label: string; text: string; to?: string; href?: string };

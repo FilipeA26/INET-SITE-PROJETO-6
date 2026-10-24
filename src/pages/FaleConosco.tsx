@@ -138,7 +138,7 @@ function ContactForm() {
 }
 
 export default function FaleConosco() {
-  usePageMeta("Fale conosco", "Fale com a INET: WhatsApp e telefone (33) 3536-3939, (33) 3508-0811, 0800 500 3939, e-mails por setor e três lojas em Teófilo Otoni.");
+  usePageMeta("Fale conosco", "Fale com a INET: WhatsApp e telefone (33) 3536-3939, (33) 3508-0811, 0800 500 3939, e-mails por setor e lojas em Teófilo Otoni e Carlos Chagas.");
 
   return (
     <>

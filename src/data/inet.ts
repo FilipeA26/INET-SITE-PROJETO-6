@@ -56,7 +56,19 @@ export const STORES = [
   { name: "Loja Centro", address: "Avenida Getúlio Vargas, 1055 – Centro", maps: "https://goo.gl/maps/EW259th22mrKUd3G8", lat: -17.8678, lng: -41.5079 },
   { name: "Loja Grão Pará", address: "Rua Doutor Onofre, 156 – Grão Pará", maps: "https://goo.gl/maps/GNgwSJFek2yKAFJN6", lat: -17.8603, lng: -41.5073 },
   { name: "Loja Concórdia", address: "Avenida Alfredo Sá, 2225 – Concórdia (Teó Shopping)", maps: "https://goo.gl/maps/KcoupwZpWDgsDGzf8", lat: -17.8557, lng: -41.5146 },
+  // validar: endereço e localização exatos da loja de Carlos Chagas (marcador no centro da cidade)
+  { name: "Loja Carlos Chagas", address: "Carlos Chagas – MG (endereço a confirmar)", maps: "https://www.google.com/maps/search/?api=1&query=INET+Carlos+Chagas+MG", lat: -17.7028, lng: -40.7658 },
 ];
+
+/** Cidades atendidas pela fibra, usadas na consulta de CEP. validar: lista completa. */
+export const COVERAGE_CITIES = ["Teófilo Otoni", "Carlos Chagas"];
+
+/**
+ * Link de avaliação no Google (vai no QR code da página de avaliações).
+ * validar: trocar pelo link "Pedir avaliações" do Perfil da Empresa no Google
+ * (formato https://g.page/r/<id>/review); até lá abre a busca da INET no Maps.
+ */
+export const GOOGLE_REVIEW_URL = "https://www.google.com/maps/search/?api=1&query=INET+Telecomunica%C3%A7%C3%B5es+Te%C3%B3filo+Otoni";
 
 export const CITY_CENTER: [number, number] = [-17.8595, -41.5087];
 

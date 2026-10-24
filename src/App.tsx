@@ -19,6 +19,7 @@ const Cobertura = lazy(() => import("./pages/Cobertura"));
 const Suporte = lazy(() => import("./pages/Suporte"));
 const FaleConosco = lazy(() => import("./pages/FaleConosco"));
 const Eventos = lazy(() => import("./pages/Eventos"));
+const Avaliacoes = lazy(() => import("./pages/Avaliacoes"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 let lenis: Lenis | null = null;
@@ -99,6 +100,7 @@ export default function App() {
         <Route path="suporte" element={<Suporte />} />
         <Route path="fale-conosco" element={<FaleConosco />} />
         <Route path="eventos" element={<Eventos />} />
+        <Route path="avaliacoes" element={<Avaliacoes />} />
         <Route path="*" element={<NotFound />} />
       </Route>
     </Routes>

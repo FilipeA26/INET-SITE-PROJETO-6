@@ -1,22 +1,55 @@
 import { ArrowLeftRight, AudioLines, Building2, Coins, Home as HomeIcon, PhoneCall, Server, ShieldCheck } from "lucide-react";
+import { useReducedMotion } from "framer-motion";
 import PlanCarousel from "../components/PlanCarousel";
-import { Rise } from "../components/Lines";
-import { CtaBand, Faq, FeatureCard, PageHero, Section, usePageMeta } from "../components/ui";
+import Lines, { Rise } from "../components/Lines";
+import { CtaBand, Faq, FeatureCard, Section, usePageMeta } from "../components/ui";
 import { PHONES, waLink } from "../data/inet";
+
+/** Hero com vídeo de fundo (Pexels, ver public/fixo/FONTES.md) e véu escuro para a leitura. */
+function VideoHero() {
+  const reduce = useReducedMotion();
+  return (
+    <section className="relative isolate flex min-h-[88svh] items-end overflow-hidden pb-16 pt-36 sm:pb-24 sm:pt-44">
+      {reduce ? (
+        <img src="/fixo/telefone-poster.webp" alt="" aria-hidden="true" className="absolute inset-0 -z-10 h-full w-full object-cover" />
+      ) : (
+        <video
+          className="absolute inset-0 -z-10 h-full w-full object-cover"
+          src="/fixo/telefone.mp4"
+          poster="/fixo/telefone-poster.webp"
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="metadata"
+          aria-hidden="true"
+        />
+      )}
+      {/* véu escuro nos azuis profundos da INET */}
+      <div aria-hidden="true" className="absolute inset-0 -z-10 bg-[linear-gradient(90deg,#010818_0%,rgba(1,12,34,0.88)_45%,rgba(2,26,74,0.45)_100%)]" />
+      <div aria-hidden="true" className="absolute inset-x-0 bottom-0 -z-10 h-48 bg-gradient-to-t from-[#010818] to-transparent" />
+      <div aria-hidden="true" className="pointer-events-none absolute -left-32 top-40 -z-10 h-[360px] w-[360px] rounded-full bg-lime/10 blur-[110px]" />
+      <div className="wrap">
+        <Rise><p className="tag">Telefone fixo</p></Rise>
+        <Lines as="h1" className="h-xl mt-5 max-w-4xl" lines={["Ligue à vontade,", <span className="italic text-lime">sem limite.</span>]} />
+        <Rise delay={0.3}>
+          <p className="lead mt-6 max-w-2xl">Telefonia fixa usando a fibra óptica como base: áudio digital, livre de interferências ou chiados, e ligações ilimitadas para qualquer fixo ou celular do país.</p>
+        </Rise>
+        <Rise delay={0.45} className="mt-9 flex flex-wrap gap-3">
+          <a href="#planos" className="btn-lime">Planos com telefone</a>
+          <a href={waLink("Olá! Quero um telefone fixo da INET.")} target="_blank" rel="noreferrer" className="btn-ghost">Falar com um vendedor</a>
+        </Rise>
+      </div>
+    </section>
+  );
+}
 
 export default function Fixo() {
   usePageMeta("Telefone fixo", "Telefonia fixa INET pela fibra óptica: ligações ilimitadas para fixo e celular de todo o Brasil, áudio digital sem chiado e portabilidade do seu número.");
 
   return (
     <>
-      <PageHero
-        tag="Telefone fixo"
-        title={["Ligue à vontade,", <span className="italic text-lime">sem limite.</span>]}
-        lead="Telefonia fixa usando a fibra óptica como base: áudio digital, livre de interferências ou chiados, e ligações ilimitadas para qualquer fixo ou celular do país."
-      >
-        <a href="#planos" className="btn-lime">Planos com telefone</a>
-        <a href={waLink("Olá! Quero um telefone fixo da INET.")} target="_blank" rel="noreferrer" className="btn-ghost">Falar com um vendedor</a>
-      </PageHero>
+      <VideoHero />
 
       <Section tag="Vantagens" title={["Tudo o que você precisa", "em um plano de telefonia."]}>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">

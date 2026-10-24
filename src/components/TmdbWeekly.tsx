@@ -1,14 +1,17 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { AnimatePresence, motion } from "framer-motion";
-import { Bookmark, BookmarkCheck, ChevronLeft, ChevronRight, Film, Loader2, Play, Search, Star, Tv as TvIcon, X } from "lucide-react";
+import { Link } from "react-router-dom";
+import { ChevronLeft, ChevronRight, Film, ListPlus, ListChecks, Loader2, Mail, MessageCircle, Play, Search, Star, Tv as TvIcon, X } from "lucide-react";
 import Lines, { Rise } from "./Lines";
 import { DUR, EASE, STAGGER } from "../motion";
+import { waLink } from "../data/inet";
 
 const KEY = import.meta.env.VITE_TMDB_KEY;
 const API = "https://api.themoviedb.org/3";
 const IMG = "https://image.tmdb.org/t/p";
-const LIST_KEY = "inet-quero-assistir";
+const LIST_KEY = "inet-tv-pedidos";
+const SUPPORT_EMAIL = "suporte@inetminas.com.br";
 
 type Kind = "movie" | "tv";
 type Title = {
@@ -57,7 +60,7 @@ function toTitle(r: Raw, fallback: Kind): Title {
   };
 }
 
-/** Lista "Quero assistir" guardada no navegador (falha em silêncio se o armazenamento estiver bloqueado). */
+/** Lista de títulos pedidos para o INET TV, guardada no navegador (falha em silêncio se o armazenamento estiver bloqueado). */
 function useWatchlist() {
   const [list, setList] = useState<Title[]>(() => {
     try {
@@ -214,7 +217,13 @@ function Weekly({ onOpen }: { onOpen: (t: Title) => void }) {
   );
 }
 
-/* ---------------- Bloco B: busca + "Quero assistir" ---------------- */
+/* ---------------- Bloco B: pedidos de conteúdo para o INET TV ---------------- */
+
+const label = (t: Title) => `${t.title}${t.year ? ` (${t.year})` : ""} – ${t.media_type === "tv" ? "série" : "filme"}`;
+
+function requestText(list: Title[]) {
+  return `Olá, suporte INET! Gostaria de sugerir estes títulos para o INET TV:\n\n${list.map((t, i) => `${i + 1}. ${label(t)}`).join("\n")}\n\nObrigado!`;
+}
 
 function Finder({ onOpen, watch }: { onOpen: (t: Title) => void; watch: ReturnType<typeof useWatchlist> }) {
   const [query, setQuery] = useState("");
@@ -244,8 +253,13 @@ function Finder({ onOpen, watch }: { onOpen: (t: Title) => void; watch: ReturnTy
 
   return (
     <div>
-      <Rise><p className="tag">Sua lista</p></Rise>
-      <Lines className="h-lg mt-4 max-w-3xl" lines={["O que você gostaria", <span className="italic text-lime">de assistir?</span>]} />
+      <Rise><p className="tag">Sugira um título</p></Rise>
+      <Lines className="h-lg mt-4 max-w-3xl" lines={["O que você gostaria de", <span className="italic text-lime">adicionar no nosso INET TV?</span>]} />
+      <Rise delay={0.1}>
+        <p className="lead mt-5 max-w-2xl">
+          Busque filmes e séries, monte sua lista e envie. O pedido vai direto para o setor de suporte da INET. Se preferir, fale com o <Link to="/suporte" className="text-lime underline-offset-4 hover:underline">suporte</Link>.
+        </p>
+      </Rise>
 
       <Rise delay={0.15} className="mt-8">
         <label className="relative block max-w-2xl">
@@ -285,8 +299,8 @@ function Finder({ onOpen, watch }: { onOpen: (t: Title) => void; watch: ReturnTy
                     aria-pressed={saved}
                     className={`mt-2 inline-flex min-h-[40px] items-center justify-center gap-1.5 rounded-full border px-3 text-xs font-semibold transition-colors duration-500 ${saved ? "border-lime bg-lime text-navy-ink" : "border-white/20 text-white hover:border-lime hover:text-lime"}`}
                   >
-                    {saved ? <BookmarkCheck size={14} aria-hidden="true" /> : <Bookmark size={14} aria-hidden="true" />}
-                    {saved ? "Na sua lista" : "Quero assistir"}
+                    {saved ? <ListChecks size={14} aria-hidden="true" /> : <ListPlus size={14} aria-hidden="true" />}
+                    {saved ? "No pedido" : "Adicionar ao pedido"}
                   </button>
                 </motion.li>
               );
@@ -295,31 +309,45 @@ function Finder({ onOpen, watch }: { onOpen: (t: Title) => void; watch: ReturnTy
         )}
       </div>
 
-      {/* lista local */}
-      <div className="mt-12">
+      {/* lista de pedidos */}
+      <div className="card mt-12 p-6 sm:p-8">
         <h3 className="flex items-center gap-2 font-display text-xl">
-          <BookmarkCheck size={20} aria-hidden="true" className="text-lime" /> Quero assistir
+          <ListChecks size={20} aria-hidden="true" className="text-lime" /> Seu pedido
           <span className="text-sm text-white/45">({watch.list.length})</span>
         </h3>
         {watch.list.length === 0 ? (
-          <p className="mt-3 text-sm text-white/50">Sua lista está vazia. Busque um título e toque em “Quero assistir”.</p>
+          <p className="mt-3 text-sm text-white/50">Ainda vazio. Busque um título acima e toque em “Adicionar ao pedido”.</p>
         ) : (
-          <ul className="mt-5 flex flex-wrap gap-3">
-            <AnimatePresence initial={false}>
-              {watch.list.map((t) => (
-                <motion.li key={`${t.media_type}-${t.id}`} layout initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }} transition={{ duration: 0.5, ease: EASE }} className="flex items-center gap-3 rounded-2xl border border-white/10 bg-[#020F2E] p-2 pr-3">
-                  <button onClick={() => onOpen(t)} className="flex items-center gap-3 text-left">
-                    <span className="block h-14 w-10 overflow-hidden rounded-lg"><Poster t={t} /></span>
-                    <span>
-                      <span className="block max-w-[180px] truncate text-sm font-semibold">{t.title}</span>
-                      <span className="block text-xs text-white/50">{t.media_type === "tv" ? "Série" : "Filme"} · {t.year || "—"}</span>
-                    </span>
-                  </button>
-                  <button onClick={() => watch.toggle(t)} aria-label={`Remover ${t.title} da lista`} className="flex h-8 w-8 items-center justify-center rounded-full text-white/50 transition-colors hover:bg-white/10 hover:text-white"><X size={16} /></button>
-                </motion.li>
-              ))}
-            </AnimatePresence>
-          </ul>
+          <>
+            <ul className="mt-5 flex flex-wrap gap-3">
+              <AnimatePresence initial={false}>
+                {watch.list.map((t) => (
+                  <motion.li key={`${t.media_type}-${t.id}`} layout initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }} transition={{ duration: 0.5, ease: EASE }} className="flex items-center gap-3 rounded-2xl border border-white/10 bg-[#010C22] p-2 pr-3">
+                    <button onClick={() => onOpen(t)} className="flex items-center gap-3 text-left">
+                      <span className="block h-14 w-10 overflow-hidden rounded-lg"><Poster t={t} /></span>
+                      <span>
+                        <span className="block max-w-[180px] truncate text-sm font-semibold">{t.title}</span>
+                        <span className="block text-xs text-white/50">{t.media_type === "tv" ? "Série" : "Filme"} · {t.year || "—"}</span>
+                      </span>
+                    </button>
+                    <button onClick={() => watch.toggle(t)} aria-label={`Remover ${t.title} do pedido`} className="flex h-8 w-8 items-center justify-center rounded-full text-white/50 transition-colors hover:bg-white/10 hover:text-white"><X size={16} /></button>
+                  </motion.li>
+                ))}
+              </AnimatePresence>
+            </ul>
+            <div className="mt-7 flex flex-wrap gap-3">
+              <a href={waLink(requestText(watch.list))} target="_blank" rel="noreferrer" className="btn-lime">
+                <MessageCircle size={16} aria-hidden="true" /> Enviar sugestão ao suporte
+              </a>
+              <a
+                href={`mailto:${SUPPORT_EMAIL}?subject=${encodeURIComponent("Sugestão de conteúdo INET TV")}&body=${encodeURIComponent(requestText(watch.list))}`}
+                className="btn-ghost"
+              >
+                <Mail size={16} aria-hidden="true" /> Enviar por e-mail
+              </a>
+            </div>
+            <p className="mt-4 text-xs text-white/45">O WhatsApp ou o e-mail abre com a lista pronta; é só confirmar o envio. Os pedidos são avaliados pela equipe e não garantem a inclusão do título.</p>
+          </>
         )}
       </div>
     </div>
@@ -435,8 +463,8 @@ function DetailPanel({ t, onClose, watch }: { t: Title; onClose: () => void; wat
             aria-pressed={saved}
             className={`mt-7 ${saved ? "btn-lime" : "btn-ghost"}`}
           >
-            {saved ? <BookmarkCheck size={16} aria-hidden="true" /> : <Bookmark size={16} aria-hidden="true" />}
-            {saved ? "Na sua lista" : "Quero assistir"}
+            {saved ? <ListChecks size={16} aria-hidden="true" /> : <ListPlus size={16} aria-hidden="true" />}
+            {saved ? "No pedido" : "Adicionar ao pedido"}
           </button>
         </div>
       </motion.div>
@@ -464,20 +492,14 @@ export default function TmdbWeekly({ id = "sugestoes" }: { id?: string }) {
 
   return (
     <section id={id} className="relative overflow-hidden py-20 sm:py-28">
-      <div aria-hidden="true" className="pointer-events-none absolute -right-40 top-0 h-[480px] w-[480px] rounded-full bg-navy/40 blur-[130px]" />
+      <div aria-hidden="true" className="pointer-events-none absolute -right-40 top-0 h-[480px] w-[480px] rounded-full bg-[#021A4A]/50 blur-[130px]" />
       <div className="wrap relative">
         <Weekly onOpen={setOpen} />
         <div className="my-20 h-px bg-gradient-to-r from-transparent via-white/15 to-transparent sm:my-28" />
         <Finder onOpen={setOpen} watch={watch} />
 
-        <footer className="mt-16 flex flex-wrap items-center gap-4 border-t border-white/10 pt-6">
-          <a href="https://www.themoviedb.org" target="_blank" rel="noreferrer" aria-label="The Movie Database (TMDB)" className="shrink-0 opacity-90 transition-opacity hover:opacity-100">
-            <img src="/tmdb/tmdb-logo.svg" alt="TMDB" width={137} height={18} className="h-[18px] w-auto" />
-          </a>
-          <p className="text-xs leading-relaxed text-white/45">
-            Este produto usa a API do TMDB, mas não é endossado nem certificado pelo TMDB. Sugestões ilustrativas: a disponibilidade de cada título depende da plataforma e do plano.
-          </p>
-        </footer>
+        {/* atribuição mínima exigida pelos termos da API do TMDB */}
+        <p className="mt-10 text-[10px] text-white/25">Dados: <a href="https://www.themoviedb.org" target="_blank" rel="noreferrer" className="hover:text-white/50">TMDB</a></p>
       </div>
 
       {/* portal: o painel fica fora de qualquer ancestral com transform */}

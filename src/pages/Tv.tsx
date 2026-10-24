@@ -6,7 +6,6 @@ import { CtaBand, Faq, FeatureCard, Note, PageHero, Section, usePageMeta } from 
 import { INET_TV, waLink } from "../data/inet";
 import TmdbWeekly from "../components/TmdbWeekly";
 
-const CHANNELS = ["Globo", "SBT", "Record", "Band", "RedeTV!", "Rede Vida", "TV Senado", "Canção Nova", "Polishop", "Futura"];
 
 export default function Tv() {
   usePageMeta("INET TV", "INET TV: canais de TV aberta ao vivo, rádios e filmes on demand na sua TV com o receptor INET TV, mesmo que ela não seja smart. Receptor em comodato.");
@@ -31,17 +30,6 @@ export default function Tv() {
         <Note>
           O site anterior informa a quantidade de canais de formas diferentes (“+65”, “mais de 90 canais de TV e rádio” e “+ de 100 canais” nos planos). Confirme o número atual com a INET.
         </Note>
-      </Section>
-
-      <Section tag="Principais canais" title={["Os canais que você", "mais assiste."]}>
-        <Rise>
-          <ul className="flex flex-wrap gap-2.5">
-            {CHANNELS.map((c) => (
-              <li key={c} className="rounded-full border border-white/15 bg-white/[0.04] px-5 py-2.5 font-display text-lg">{c}</li>
-            ))}
-          </ul>
-        </Rise>
-        <Note>Lista conforme o site anterior. A grade pode mudar; confirme a programação atual.</Note>
       </Section>
 
       <TmdbWeekly />

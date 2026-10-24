@@ -35,6 +35,8 @@ export default function Footer() {
               <li><Link to="/suporte" className="transition-colors duration-500 hover:text-lime">Suporte técnico</Link></li>
               <li><Link to="/fale-conosco" className="transition-colors duration-500 hover:text-lime">Fale conosco</Link></li>
               <li><Link to="/cobertura" className="transition-colors duration-500 hover:text-lime">Cobertura e lojas</Link></li>
+              <li><Link to="/avaliacoes" className="transition-colors duration-500 hover:text-lime">Depoimentos e avaliações</Link></li>
+              <li><Link to="/eventos" className="transition-colors duration-500 hover:text-lime">INET Eventos</Link></li>
               <li><a href={COMPANY.clientArea} target="_blank" rel="noreferrer" className="transition-colors duration-500 hover:text-lime">Central do Cliente</a></li>
               <li><a href={COMPANY.contractPdf} target="_blank" rel="noreferrer" className="transition-colors duration-500 hover:text-lime">Contrato de prestação de serviços</a></li>
             </ul>
