@@ -3,3 +3,7 @@ dist
 *.local
 .DS_Store
 *.tsbuildinfo
+
+# duplicatas criadas pela sincronizacao do OneDrive
+* - Copia*
+*- Copia*

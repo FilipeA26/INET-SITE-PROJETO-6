@@ -1,0 +1,8 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>preview</title></head>
+<body class="bg-[#010818] text-white font-sans"><div id="r"></div>
+<script type="module">
+import "/src/index.css";
+import React from "react"; import { createRoot } from "react-dom/client";
+import MeshHouse from "/src/components/MeshHouse.tsx";
+createRoot(document.getElementById("r")).render(React.createElement(MeshHouse, { defaultMode: new URLSearchParams(location.search).get("m") || "single" }));
+</script></body></html>
