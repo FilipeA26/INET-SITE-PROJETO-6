@@ -88,3 +88,6 @@ html.lenis, html.lenis body { height: auto; }
 /* Alexa: fios de luz correndo até os aparelhos */
 @keyframes alexa-link { to { stroke-dashoffset: -20; } }
 .alexa-link { animation: alexa-link 1.6s linear infinite; }
+
+/* dica de arrastar: a seta balança para os lados */
+@keyframes drag-hint { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(5px); } }

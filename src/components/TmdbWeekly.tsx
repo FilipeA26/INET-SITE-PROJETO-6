@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { ChevronLeft, ChevronRight, Film, ListPlus, ListChecks, Loader2, Mail, MessageCircle, Play, Search, Star, Tv as TvIcon, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, Film, MoveHorizontal, ListPlus, ListChecks, Loader2, Mail, MessageCircle, Play, Search, Star, Tv as TvIcon, X } from "lucide-react";
 import Lines, { Rise } from "./Lines";
 import { DUR, EASE, STAGGER } from "../motion";
 import { waLink } from "../data/inet";
@@ -144,6 +144,7 @@ function Weekly({ onOpen }: { onOpen: (t: Title) => void }) {
   useEffect(() => { rail.current?.scrollTo({ left: 0 }); }, [tab]);
 
   const items = data[tab];
+  const drag = useDragScroll(rail);
   const scroll = (dir: 1 | -1) => {
     const el = rail.current;
     if (el) el.scrollBy({ left: dir * el.clientWidth * 0.8, behavior: "smooth" });
@@ -182,20 +183,21 @@ function Weekly({ onOpen }: { onOpen: (t: Title) => void }) {
         {error ? (
           <ErrorBox onRetry={() => setNonce((n) => n + 1)} />
         ) : (
-          <div ref={rail} className="-mx-5 flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth px-5 pb-4 [scrollbar-width:none] sm:-mx-10 sm:px-10 lg:-mx-16 lg:px-16 [&::-webkit-scrollbar]:hidden">
+          <div ref={rail} {...drag.handlers} className={`-mx-5 flex gap-4 overflow-x-auto px-5 pb-4 scroll-px-5 sm:scroll-px-10 lg:scroll-px-16 ${drag.dragging ? "cursor-grabbing select-none" : "cursor-grab snap-x snap-mandatory scroll-smooth"} [scrollbar-width:none] sm:-mx-10 sm:px-10 lg:-mx-16 lg:px-16 [&::-webkit-scrollbar]:hidden`}>
             {!items ? (
-              <Skeletons n={6} className="aspect-[2/3] w-[160px] shrink-0 sm:w-[200px]" />
+              <Skeletons n={6} className="aspect-[2/3] w-[calc((100%-1rem)/2)] shrink-0 sm:w-[200px]" />
             ) : items.length === 0 ? (
               <p className="text-sm text-white/55">Nenhum título em alta nesta semana.</p>
             ) : (
               items.map((t, i) => (
                 <motion.button
                   key={`${tab}-${t.id}`}
-                  onClick={() => onOpen(t)}
+                  onClick={() => !drag.moved() && onOpen(t)}
+                  draggable={false}
                   initial={{ opacity: 0, y: 24, filter: "blur(6px)" }}
                   animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
                   transition={{ duration: DUR, ease: EASE, delay: Math.min(i, 8) * STAGGER * 0.6 }}
-                  className="group relative aspect-[2/3] w-[160px] shrink-0 snap-start overflow-hidden rounded-2xl border border-white/10 bg-[#020F2E] text-left focus-visible:outline-offset-4 sm:w-[200px]"
+                  className="group relative aspect-[2/3] w-[calc((100%-1rem)/2)] shrink-0 snap-start overflow-hidden rounded-2xl border border-white/10 bg-[#020F2E] text-left focus-visible:outline-offset-4 sm:w-[200px]"
                   aria-label={`${t.title}${t.year ? ` (${t.year})` : ""}: ver detalhes`}
                 >
                   <Poster t={t} className="transition-transform duration-[1200ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.06] group-focus-visible:scale-[1.06]" />
@@ -210,6 +212,17 @@ function Weekly({ onOpen }: { onOpen: (t: Title) => void }) {
                 </motion.button>
               ))
             )}
+          </div>
+        )}
+        {items && items.length > 2 && (
+          <div className="mt-3 flex items-center gap-4">
+            <span className="flex shrink-0 items-center gap-2 text-xs text-white/60">
+              <MoveHorizontal size={16} aria-hidden="true" className="animate-[drag-hint_2.4s_ease-in-out_infinite] text-lime motion-reduce:animate-none" />
+              Arraste para ver mais
+            </span>
+            <span className="relative h-[3px] flex-1 overflow-hidden rounded-full bg-white/10" aria-hidden="true">
+              <span className="absolute inset-y-0 left-0 rounded-full bg-lime transition-[width] duration-300" style={{ width: `${Math.max(8, drag.progress * 100)}%` }} />
+            </span>
           </div>
         )}
       </div>
@@ -509,4 +522,49 @@ export default function TmdbWeekly({ id = "sugestoes" }: { id?: string }) {
       )}
     </section>
   );
+}
+
+/**
+ * Arrastar o trilho com o mouse (no toque o navegador já rola sozinho).
+ * Também informa o progresso da rolagem para a barrinha abaixo dos cards.
+ */
+function useDragScroll(ref: React.RefObject<HTMLDivElement>) {
+  const [dragging, setDragging] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const start = useRef({ x: 0, left: 0, moved: 0 });
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const update = () => setProgress(el.scrollWidth > el.clientWidth ? (el.scrollLeft + el.clientWidth) / el.scrollWidth : 1);
+    update();
+    el.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", update);
+    return () => {
+      el.removeEventListener("scroll", update);
+      window.removeEventListener("resize", update);
+    };
+  });
+
+  const handlers = {
+    onPointerDown: (e: React.PointerEvent<HTMLDivElement>) => {
+      start.current.moved = 0;
+      if (e.pointerType !== "mouse" || e.button !== 0 || !ref.current) return;
+      start.current = { x: e.clientX, left: ref.current.scrollLeft, moved: 0 };
+      setDragging(true);
+    },
+    onPointerMove: (e: React.PointerEvent<HTMLDivElement>) => {
+      if (!dragging || !ref.current) return;
+      const dx = e.clientX - start.current.x;
+      start.current.moved = Math.max(start.current.moved, Math.abs(dx));
+      if (start.current.moved > 4) ref.current.setPointerCapture(e.pointerId);
+      ref.current.scrollLeft = start.current.left - dx;
+    },
+    onPointerUp: () => setDragging(false),
+    onPointerCancel: () => setDragging(false),
+    onPointerLeave: () => setDragging(false),
+  };
+
+  // um clique só abre o título se o mouse quase não se mexeu
+  return { handlers, dragging, progress, moved: () => start.current.moved > 6 };
 }
