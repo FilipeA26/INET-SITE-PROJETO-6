@@ -1,7 +1,7 @@
 import { ArrowLeftRight, AudioLines, Building2, Coins, Home as HomeIcon, PhoneCall, Server, ShieldCheck } from "lucide-react";
 import { useReducedMotion } from "framer-motion";
 import PlanCarousel from "../components/PlanCarousel";
-import Lines, { Rise } from "../components/Lines";
+import Lines, { Rise, Fit } from "../components/Lines";
 import { CtaBand, Faq, FeatureCard, Section, usePageMeta } from "../components/ui";
 import { PHONES, waLink } from "../data/inet";
 
@@ -30,7 +30,7 @@ function VideoHero() {
       <div aria-hidden="true" className="absolute inset-x-0 bottom-0 -z-10 h-48 bg-gradient-to-t from-[#010818] to-transparent" />
       <div aria-hidden="true" className="pointer-events-none absolute -left-32 top-40 -z-10 h-[360px] w-[360px] rounded-full bg-lime/10 blur-[110px]" />
       <div className="wrap">
-        <Rise><p className="tag">Telefone fixo</p></Rise>
+        <Rise><Fit className="tag">Telefone fixo</Fit></Rise>
         <Lines as="h1" className="h-xl mt-5 max-w-5xl" lines={["Ligue à vontade,", <span className="italic text-lime">sem limite.</span>]} />
         <Rise delay={0.3}>
           <p className="lead mt-6 max-w-2xl">Telefonia fixa usando a fibra óptica como base: áudio digital, livre de interferências ou chiados, e ligações ilimitadas para qualquer fixo ou celular do país.</p>

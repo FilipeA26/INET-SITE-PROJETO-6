@@ -2,7 +2,7 @@ import { useEffect, useState, type ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ArrowRight, ChevronDown, type LucideIcon } from "lucide-react";
-import Lines, { Rise } from "./Lines";
+import Lines, { Rise, Fit } from "./Lines";
 import { DUR, EASE } from "../motion";
 
 const BASE = "INET – Internet Fibra Óptica em Teófilo Otoni";
@@ -24,7 +24,7 @@ export function PageHero({ tag, title, lead, children }: { tag: string; title: R
       <div aria-hidden="true" className="pointer-events-none absolute -right-40 -top-40 h-[520px] w-[520px] rounded-full bg-electric/10 blur-[120px]" />
       <div aria-hidden="true" className="pointer-events-none absolute -left-32 top-40 h-[360px] w-[360px] rounded-full bg-lime/10 blur-[110px]" />
       <div className="wrap relative">
-        <Rise><p className="tag">{tag}</p></Rise>
+        <Rise><Fit className="tag">{tag}</Fit></Rise>
         <Lines as="h1" className="h-xl mt-5 max-w-5xl" lines={title} />
         <Rise delay={0.3}><p className="lead mt-6 max-w-2xl">{lead}</p></Rise>
         {children && <Rise delay={0.45} className="mt-9 flex flex-wrap gap-3">{children}</Rise>}
@@ -37,7 +37,7 @@ export function Section({ id, tag, title, lead, children, className = "" }: { id
   return (
     <section id={id} className={`relative py-20 sm:py-28 ${className}`}>
       <div className="wrap">
-        {tag && <Rise><p className="tag">{tag}</p></Rise>}
+        {tag && <Rise><Fit className="tag">{tag}</Fit></Rise>}
         {title && <Lines className="h-lg mt-4 max-w-4xl" lines={title} />}
         {lead && <Rise delay={0.2}><p className="lead mt-5 max-w-2xl">{lead}</p></Rise>}
         <div className={title || lead ? "mt-12" : ""}>{children}</div>

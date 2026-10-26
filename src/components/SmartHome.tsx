@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { motion, useScroll, useSpring, useTransform } from "framer-motion";
 import { BellRing, Eye, Lightbulb, Moon, Music, Plug, Smartphone, Thermometer, Tv, Video } from "lucide-react";
-import Lines, { Rise } from "./Lines";
+import Lines, { Rise, Fit } from "./Lines";
 import { DUR, EASE, SPRING } from "../motion";
 import { waLink } from "../data/inet";
 
@@ -61,7 +61,7 @@ export function HomeSecurity() {
     <Stage id="seguranca" video="/casa/seg.mp4" poster="/casa/seg-poster.webp">
       <div ref={ref} className="grid items-center gap-10 lg:grid-cols-[1.1fr_1fr]">
         <div>
-          <Rise><p className="tag">Segurança</p></Rise>
+          <Rise><Fit className="tag">Segurança</Fit></Rise>
           <Lines className="h-lg mt-4 max-w-xl" lines={["Sua casa", <span className="italic text-lime">sempre à vista.</span>]} />
           <Rise delay={0.15}>
             <p className="lead mt-5 max-w-lg">Com a câmera Wi-Fi Intelbras Mibo e a fibra da INET, você acompanha tudo pelo celular, com imagem estável e sem travar.</p>
@@ -132,7 +132,7 @@ export function AlexaHome() {
     <Stage id="alexa" video="/casa/alexa.mp4" poster="/casa/alexa-poster.webp">
       <div className="grid items-center gap-12 lg:grid-cols-[1fr_1fr]">
         <div>
-          <Rise><p className="tag">Casa inteligente com Alexa</p></Rise>
+          <Rise><Fit className="tag">Casa inteligente com Alexa</Fit></Rise>
           <Lines className="h-lg mt-4 max-w-xl" lines={["Fale e a casa", <span className="italic text-lime">obedece.</span>]} />
           <Rise delay={0.15}>
             <p className="lead mt-5 max-w-lg">A Alexa se conecta pelo Wi-Fi a lâmpadas, tomadas, TV e câmeras compatíveis. Você comanda tudo pela voz ou pelo app, e cria rotinas que funcionam sozinhas.</p>

@@ -81,6 +81,17 @@ export default function Lines({ lines, className = "", delay = 0, as = "h2" }: {
   );
 }
 
+/** Linha única (olho de seção, etiqueta) que também encaixa na largura disponível. */
+export function Fit({ children, className = "", as: Tag = "p" }: { children: ReactNode; className?: string; as?: "p" | "h2" }) {
+  const ref = useRef<HTMLParagraphElement>(null);
+  useFit(ref);
+  return (
+    <Tag ref={ref} className={className}>
+      <span data-line className="block whitespace-nowrap">{children}</span>
+    </Tag>
+  );
+}
+
 /** Entrada padrão para blocos (cards, parágrafos): sobe e aparece. */
 export function Rise({ children, delay = 0, className = "", as = "div" }: { children: ReactNode; delay?: number; className?: string; as?: "div" | "li" }) {
   const Tag = as === "li" ? motion.li : motion.div;

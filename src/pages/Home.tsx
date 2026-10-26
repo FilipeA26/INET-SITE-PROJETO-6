@@ -9,7 +9,7 @@ import Thread from "../components/Thread";
 import PlanCarousel from "../components/PlanCarousel";
 import SlideToSubscribe from "../components/SlideToSubscribe";
 import ProductShot from "../components/ProductShot";
-import Lines, { Rise } from "../components/Lines";
+import Lines, { Rise, Fit } from "../components/Lines";
 import { FeatureCard, Faq, LinkCard, usePageMeta } from "../components/ui";
 import { SPRING } from "../motion";
 import { COMPANY, INET_TV, PHONES, STORES, waLink, type Plan } from "../data/inet";
@@ -34,7 +34,7 @@ export default function Home() {
           <span data-node="left" className="absolute top-12" />
           <span data-node="left" className="absolute bottom-12" />
           <div className="wrap">
-            <Rise><p className="tag">01 — Planos</p></Rise>
+            <Rise><Fit className="tag">01 — Planos</Fit></Rise>
             <Lines className="h-lg mt-4 max-w-4xl" lines={["Deslize e", <span className="italic text-lime">escolha o seu.</span>]} />
             <Rise delay={0.2}><p className="lead mt-5 max-w-2xl">Fibra com Wi-Fi grátis. Escolha e deslize para assinar.</p></Rise>
             <div className="mt-10"><PlanCarousel selected={plan} onSelect={setPlan} /></div>
@@ -47,7 +47,7 @@ export default function Home() {
           <span data-node="right" className="absolute top-12" />
           <span data-node="right" className="absolute bottom-12" />
           <div className="wrap">
-            <Rise><p className="tag">02 — INET TV Box</p></Rise>
+            <Rise><Fit className="tag">02 — INET TV Box</Fit></Rise>
             <Rise delay={0.1}>
               <div className="relative mt-6 overflow-hidden rounded-[2.5rem] border border-white/10 bg-[radial-gradient(120%_120%_at_85%_30%,#0062EC30,transparent_55%),linear-gradient(135deg,#021A4A,#010818_70%)] p-8 sm:p-14">
                 <div aria-hidden="true" className="absolute -right-24 -top-24 h-80 w-80 rounded-full bg-lime/10 blur-3xl" />
@@ -79,7 +79,7 @@ export default function Home() {
           <span data-node="left" className="absolute top-12" />
           <span data-node="left" className="absolute bottom-12" />
           <div className="wrap">
-            <Rise><p className="tag">03 — Serviços</p></Rise>
+            <Rise><Fit className="tag">03 — Serviços</Fit></Rise>
             <Lines className="h-lg mt-4 max-w-4xl" lines={["Tudo o que conecta", "a sua casa."]} />
             <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               <LinkCard to="/internet" icon={Wifi} title="Internet e Wi-Fi" text="Até 1 Giga e Wi-Fi 6 na casa toda." tone="#0062EC" />
@@ -97,7 +97,7 @@ export default function Home() {
           <span data-node="right" className="absolute top-12" />
           <span data-node="right" className="absolute bottom-12" />
           <div className="wrap">
-            <Rise><p className="tag">04 — Por que INET</p></Rise>
+            <Rise><Fit className="tag">04 — Por que INET</Fit></Rise>
             <Lines className="h-lg mt-4 max-w-4xl" lines={["Fibra óptica,", "wi-fi grátis e muito conteúdo."]} />
             <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
               <FeatureCard icon={Zap} title="Internet ultrarrápida" text="Filmes e jogos sem travar." />
@@ -113,7 +113,7 @@ export default function Home() {
           <span data-node="left" className="absolute top-12" />
           <span data-node="left" className="absolute bottom-12" />
           <div className="wrap">
-            <Rise><p className="tag">05 — Autoatendimento</p></Rise>
+            <Rise><Fit className="tag">05 — Autoatendimento</Fit></Rise>
             <Lines className="h-lg mt-4 max-w-4xl" lines={["Resolva rápido,", "sem sair de casa."]} />
             <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
               <Rise className="h-full">
@@ -136,7 +136,7 @@ export default function Home() {
           <span data-node="right" className="absolute top-12" />
           <span data-node="center" className="absolute bottom-0 left-1/2" />
           <div className="wrap">
-            <Rise><p className="tag">06 — Dúvidas</p></Rise>
+            <Rise><Fit className="tag">06 — Dúvidas</Fit></Rise>
             <Lines className="h-lg mt-4 max-w-4xl" lines={["Dúvidas sobre", "os serviços INET."]} />
             <div className="mt-10">
               <Faq

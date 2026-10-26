@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion, useInView, useReducedMotion } from "framer-motion";
 import { ArrowUpRight, Hand } from "lucide-react";
-import Lines, { Rise } from "./Lines";
+import Lines, { Rise, Fit } from "./Lines";
 import { DUR, EASE } from "../motion";
 
 export type Slide = { src: string; label: string; credit: string };
@@ -183,7 +183,7 @@ export default function AppsShowcase({ id = "apps", tag = "Aplicativos para clie
     <section id={id} className="relative py-20 sm:py-28">
       <div aria-hidden="true" className="pointer-events-none absolute -left-40 top-24 h-[420px] w-[420px] rounded-full bg-[#021A4A]/50 blur-[120px]" />
       <div className="wrap relative">
-        <Rise><p className="tag">{tag}</p></Rise>
+        <Rise><Fit className="tag">{tag}</Fit></Rise>
         <div className="mt-4 flex flex-wrap items-end justify-between gap-6">
           <Lines className="h-lg max-w-4xl" lines={["Filmes, séries e música", <span className="italic text-lime">junto com a sua fibra.</span>]} />
           <Rise delay={0.2}>

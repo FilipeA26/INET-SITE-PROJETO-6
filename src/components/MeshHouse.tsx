@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { motion, useInView, useReducedMotion } from "framer-motion";
 import { Router, Share2, Smartphone } from "lucide-react";
-import Lines, { Rise } from "./Lines";
+import Lines, { Rise, Fit } from "./Lines";
 import { DUR, EASE } from "../motion";
 
 /*
@@ -313,7 +313,7 @@ export default function MeshHouse({ id = "mesh", tag = "Wi-Fi na casa toda", def
     <section id={id} className="relative overflow-hidden py-20 sm:py-28">
       <div aria-hidden="true" className="pointer-events-none absolute -left-40 top-20 h-[460px] w-[460px] rounded-full bg-[#021A4A]/60 blur-[130px]" />
       <div className="wrap relative">
-        <Rise><p className="tag">{tag}</p></Rise>
+        <Rise><Fit className="tag">{tag}</Fit></Rise>
         <div className="mt-4 flex flex-wrap items-end justify-between gap-6">
           <Lines className="h-lg max-w-4xl" lines={["Um roteador é suficiente", <span className="italic text-lime">para a minha casa?</span>]} />
           {/* alternador */}

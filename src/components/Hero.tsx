@@ -4,7 +4,7 @@ import { motion, useScroll, useSpring, useTransform } from "framer-motion";
 import { Hand } from "lucide-react";
 import PluckFibers from "./PluckFibers";
 import GestureHint from "./GestureHint";
-import Lines, { Rise } from "./Lines";
+import Lines, { Rise, Fit } from "./Lines";
 import { SPRING } from "../motion";
 
 export default function Hero() {
@@ -24,7 +24,7 @@ export default function Hero() {
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-navy-ink via-navy-ink/50 to-transparent" />
 
       <motion.div style={{ y: textY }} className="wrap pointer-events-none relative z-10 flex min-h-[100svh] flex-col justify-end pb-20">
-        <Rise><p className="tag">Internet 100% fibra óptica · Teófilo Otoni</p></Rise>
+        <Rise><Fit className="tag">Internet 100% fibra óptica · Teófilo Otoni</Fit></Rise>
         <Lines as="h1" delay={0.1} className="h-xl mt-5 max-w-5xl" lines={["A internet fibra", <span className="italic text-lime">mais escolhida da cidade.</span>]} />
         <Rise delay={0.45}>
           <p className="lead mt-6 max-w-xl">

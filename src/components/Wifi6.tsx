@@ -1,7 +1,7 @@
 import { Component, lazy, Suspense, useEffect, useRef, useState, type ReactNode } from "react";
 import { useInView } from "framer-motion";
 import { Gauge, Move3d, Radar, Smartphone, Timer } from "lucide-react";
-import Lines, { Rise } from "./Lines";
+import Lines, { Rise, Fit } from "./Lines";
 
 // o three.js só é baixado quando a seção se aproxima da tela
 const Router3D = lazy(() => import("./Wifi6Router3D"));
@@ -85,7 +85,7 @@ export default function Wifi6({ id = "wifi6", tag = "Wi-Fi 6" }: { id?: string; 
       <div aria-hidden="true" className="pointer-events-none absolute -left-24 bottom-0 h-[320px] w-[320px] rounded-full bg-lime/10 blur-[110px]" />
       <div className="wrap relative grid items-center gap-12 lg:grid-cols-[1fr_1.05fr]">
         <div>
-          <Rise><p className="tag">{tag}</p></Rise>
+          <Rise><Fit className="tag">{tag}</Fit></Rise>
           <Lines className="h-lg mt-4" lines={["A fibra chega inteira", <span className="italic text-lime">em cada cômodo.</span>]} />
           <Rise delay={0.2}>
             <p className="lead mt-5 max-w-xl">

@@ -3,7 +3,7 @@ import { createPortal } from "react-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { ChevronLeft, ChevronRight, Film, MoveHorizontal, ListPlus, ListChecks, Loader2, Mail, MessageCircle, Play, Search, Star, Tv as TvIcon, X } from "lucide-react";
-import Lines, { Rise } from "./Lines";
+import Lines, { Rise, Fit } from "./Lines";
 import { DUR, EASE, STAGGER } from "../motion";
 import { waLink } from "../data/inet";
 
@@ -154,7 +154,7 @@ function Weekly({ onOpen }: { onOpen: (t: Title) => void }) {
     <div>
       <div className="flex flex-wrap items-end justify-between gap-6">
         <div>
-          <Rise><p className="tag">Sugestões da semana</p></Rise>
+          <Rise><Fit className="tag">Sugestões da semana</Fit></Rise>
           <Lines className="h-lg mt-4 max-w-4xl" lines={["O que está em alta", <span className="italic text-lime">para assistir hoje.</span>]} />
         </div>
         <Rise delay={0.15} className="flex items-center gap-3">
@@ -266,7 +266,7 @@ function Finder({ onOpen, watch }: { onOpen: (t: Title) => void; watch: ReturnTy
 
   return (
     <div>
-      <Rise><p className="tag">Sugira um título</p></Rise>
+      <Rise><Fit className="tag">Sugira um título</Fit></Rise>
       <Lines className="h-lg mt-4 max-w-4xl" lines={["O que você gostaria de", <span className="italic text-lime">adicionar no nosso INET TV?</span>]} />
       <Rise delay={0.1}>
         <p className="lead mt-5 max-w-2xl">

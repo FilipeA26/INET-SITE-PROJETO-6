@@ -2,7 +2,7 @@ import { useRef, useState, type PointerEvent } from "react";
 import { motion, useMotionValue, useReducedMotion, useScroll, useSpring, useTransform } from "framer-motion";
 import { ArrowRight, CalendarDays, ExternalLink, Instagram, MapPin, Mic2, MoveVertical, Music, Sparkles, Trophy, Users } from "lucide-react";
 import GestureHint from "../components/GestureHint";
-import Lines, { Rise } from "../components/Lines";
+import Lines, { Rise, Fit } from "../components/Lines";
 import { CtaBand, Note, PageHero, Section, usePageMeta } from "../components/ui";
 import { SPRING } from "../motion";
 import { waLink } from "../data/inet";
@@ -168,7 +168,7 @@ export default function Eventos() {
         <div aria-hidden="true" className="pointer-events-none absolute -left-40 top-20 h-[480px] w-[480px] rounded-full bg-leaf/15 blur-[130px]" />
         <div className="wrap relative grid items-center gap-14 lg:grid-cols-[1.1fr_0.9fr]">
           <div>
-            <Rise><p className="tag">IMS · Cultura + Esporte</p></Rise>
+            <Rise><Fit className="tag">IMS · Cultura + Esporte</Fit></Rise>
             <Lines className="h-lg mt-4" lines={["O talento é daqui.", <span className="italic text-lime">O movimento é de todos.</span>]} />
             <Rise delay={0.2}>
               <p className="lead mt-5 max-w-xl">

@@ -18,7 +18,7 @@ html.lenis, html.lenis body { height: auto; }
 
 @layer components {
   .wrap { @apply mx-auto w-full max-w-6xl px-5 sm:px-10 lg:px-16; }
-  .tag { @apply font-display text-[11px] font-medium uppercase tracking-[0.28em] text-lime; }
+  .tag { @apply font-display text-[11px] font-medium uppercase tracking-[0.2em] text-lime sm:tracking-[0.28em]; }
   .h-xl { @apply font-display text-[2.6rem] font-light leading-[1.02] tracking-[-0.02em] sm:text-7xl lg:text-8xl; }
   .h-lg { @apply font-display text-[2rem] font-light leading-[1.08] tracking-[-0.02em] sm:text-5xl lg:text-6xl; }
   .h-md { @apply font-display text-2xl font-light leading-tight sm:text-3xl; }

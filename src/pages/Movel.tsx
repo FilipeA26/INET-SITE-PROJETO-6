@@ -2,7 +2,7 @@ import { ArrowLeftRight, Coins, ExternalLink, MessageCircle, Navigation, PhoneCa
 import { useRef, type PointerEvent } from "react";
 import { motion, useMotionValue, useReducedMotion, useScroll, useSpring, useTransform } from "framer-motion";
 import PlanCarousel from "../components/PlanCarousel";
-import Lines, { Rise } from "../components/Lines";
+import Lines, { Rise, Fit } from "../components/Lines";
 import { CtaBand, Faq, FeatureCard, Note, Section, usePageMeta } from "../components/ui";
 import { SPRING } from "../motion";
 import { waLink } from "../data/inet";
@@ -78,7 +78,7 @@ export default function Movel() {
         <div aria-hidden="true" className="pointer-events-none absolute -left-32 top-40 h-[360px] w-[360px] rounded-full bg-lime/10 blur-[110px]" />
         <div className="wrap relative grid items-center gap-14 lg:grid-cols-[1.1fr_0.9fr]">
           <div>
-            <Rise><p className="tag">Chip móvel</p></Rise>
+            <Rise><Fit className="tag">Chip móvel</Fit></Rise>
             <Lines as="h1" className="h-xl mt-5" lines={["Seu celular", <span className="italic text-lime">no 5G da INET.</span>]} />
             <Rise delay={0.3}>
               <p className="lead mt-6 max-w-xl">Planos de internet com telefonia móvel: acesso à rede 5G, ligações ilimitadas para qualquer operadora do Brasil e WhatsApp ilimitado.</p>
