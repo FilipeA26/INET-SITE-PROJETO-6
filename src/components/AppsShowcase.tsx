@@ -185,7 +185,7 @@ export default function AppsShowcase({ id = "apps", tag = "Aplicativos para clie
       <div className="wrap relative">
         <Rise><p className="tag">{tag}</p></Rise>
         <div className="mt-4 flex flex-wrap items-end justify-between gap-6">
-          <Lines className="h-lg max-w-3xl" lines={["Filmes, séries e música", <span className="italic text-lime">junto com a sua fibra.</span>]} />
+          <Lines className="h-lg max-w-4xl" lines={["Filmes, séries e música", <span className="italic text-lime">junto com a sua fibra.</span>]} />
           <Rise delay={0.2}>
             <p className="flex items-center gap-2 text-sm text-white/55">
               <Hand size={16} aria-hidden="true" className="text-lime" />

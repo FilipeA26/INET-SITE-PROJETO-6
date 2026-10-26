@@ -11,6 +11,7 @@ const moves = {
   swipe: { x: [18, -18, 18], y: 0, scale: 1 },
   hold: { x: 0, y: 0, scale: [1, 0.82, 0.82, 1] },
   pinch: { x: 0, y: 0, scale: [1, 1.25, 1] },
+  scroll: { x: 0, y: [0, 12, 0], scale: 1 },
 };
 
 export default function GestureHint({ icon: Icon, label, kind, visible, className = "" }: { icon: LucideIcon; label: string; kind: keyof typeof moves; visible: boolean; className?: string }) {

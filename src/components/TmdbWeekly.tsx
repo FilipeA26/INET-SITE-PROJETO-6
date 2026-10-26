@@ -155,7 +155,7 @@ function Weekly({ onOpen }: { onOpen: (t: Title) => void }) {
       <div className="flex flex-wrap items-end justify-between gap-6">
         <div>
           <Rise><p className="tag">Sugestões da semana</p></Rise>
-          <Lines className="h-lg mt-4 max-w-3xl" lines={["O que está em alta", <span className="italic text-lime">para assistir hoje.</span>]} />
+          <Lines className="h-lg mt-4 max-w-4xl" lines={["O que está em alta", <span className="italic text-lime">para assistir hoje.</span>]} />
         </div>
         <Rise delay={0.15} className="flex items-center gap-3">
           <div role="tablist" aria-label="Tipo de título" className="flex rounded-full border border-white/15 bg-white/[0.03] p-1">
@@ -267,7 +267,7 @@ function Finder({ onOpen, watch }: { onOpen: (t: Title) => void; watch: ReturnTy
   return (
     <div>
       <Rise><p className="tag">Sugira um título</p></Rise>
-      <Lines className="h-lg mt-4 max-w-3xl" lines={["O que você gostaria de", <span className="italic text-lime">adicionar no nosso INET TV?</span>]} />
+      <Lines className="h-lg mt-4 max-w-4xl" lines={["O que você gostaria de", <span className="italic text-lime">adicionar no nosso INET TV?</span>]} />
       <Rise delay={0.1}>
         <p className="lead mt-5 max-w-2xl">
           Busque filmes e séries, monte sua lista e envie. O pedido vai direto para o setor de suporte da INET. Se preferir, fale com o <Link to="/suporte" className="text-lime underline-offset-4 hover:underline">suporte</Link>.

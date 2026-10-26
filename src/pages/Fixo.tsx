@@ -31,7 +31,7 @@ function VideoHero() {
       <div aria-hidden="true" className="pointer-events-none absolute -left-32 top-40 -z-10 h-[360px] w-[360px] rounded-full bg-lime/10 blur-[110px]" />
       <div className="wrap">
         <Rise><p className="tag">Telefone fixo</p></Rise>
-        <Lines as="h1" className="h-xl mt-5 max-w-4xl" lines={["Ligue à vontade,", <span className="italic text-lime">sem limite.</span>]} />
+        <Lines as="h1" className="h-xl mt-5 max-w-5xl" lines={["Ligue à vontade,", <span className="italic text-lime">sem limite.</span>]} />
         <Rise delay={0.3}>
           <p className="lead mt-6 max-w-2xl">Telefonia fixa usando a fibra óptica como base: áudio digital, livre de interferências ou chiados, e ligações ilimitadas para qualquer fixo ou celular do país.</p>
         </Rise>

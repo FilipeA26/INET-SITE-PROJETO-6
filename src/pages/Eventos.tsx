@@ -1,6 +1,7 @@
-import { useRef, type PointerEvent } from "react";
+import { useRef, useState, type PointerEvent } from "react";
 import { motion, useMotionValue, useReducedMotion, useScroll, useSpring, useTransform } from "framer-motion";
-import { ArrowRight, CalendarDays, ExternalLink, Instagram, MapPin, Mic2, Music, Sparkles, Trophy, Users } from "lucide-react";
+import { ArrowRight, CalendarDays, ExternalLink, Instagram, MapPin, Mic2, MoveVertical, Music, Sparkles, Trophy, Users } from "lucide-react";
+import GestureHint from "../components/GestureHint";
 import Lines, { Rise } from "../components/Lines";
 import { CtaBand, Note, PageHero, Section, usePageMeta } from "../components/ui";
 import { SPRING } from "../motion";
@@ -45,16 +46,23 @@ const SHOW_FACTS = [
   { icon: Users, label: "Clientes INET", value: "Vantagens exclusivas" },
 ];
 
-/** Celular com o site do IMS: inclina seguindo o ponteiro e flutua com a rolagem. */
+/**
+ * Celular com o site do IMS aberto de verdade: a tela é o site num iframe, então dá para
+ * rolar por dentro e ver a página inteira. A captura fica atrás como espera do carregamento.
+ * O aparelho inclina seguindo o ponteiro e se endireita quando o ponteiro entra na tela,
+ * para a rolagem acontecer sem o desenho 3D no caminho.
+ */
 function PhoneMockup() {
   const ref = useRef<HTMLDivElement>(null);
   const reduce = useReducedMotion();
+  const [live, setLive] = useState(false);
+  const [hint, setHint] = useState(true);
   const mx = useMotionValue(0);
   const my = useMotionValue(0);
-  const rx = useSpring(useTransform(my, [-0.5, 0.5], [10, -10]), SPRING);
-  const ry = useSpring(useTransform(mx, [-0.5, 0.5], [-14, 14]), SPRING);
+  const rx = useSpring(useTransform(my, [-0.5, 0.5], [7, -7]), SPRING);
+  const ry = useSpring(useTransform(mx, [-0.5, 0.5], [-10, 10]), SPRING);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
-  const y = useSpring(useTransform(scrollYProgress, [0, 1], [60, -60]), SPRING);
+  const y = useSpring(useTransform(scrollYProgress, [0, 1], [50, -50]), SPRING);
   const glare = useTransform(mx, [-0.5, 0.5], ["0%", "100%"]);
 
   const move = (e: PointerEvent<HTMLDivElement>) => {
@@ -68,31 +76,52 @@ function PhoneMockup() {
   return (
     <div ref={ref} onPointerMove={move} onPointerLeave={leave} className="relative mx-auto w-full max-w-[340px] py-6 [perspective:1200px]">
       <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-1/4 mx-auto h-2/3 w-3/4 rounded-full bg-lime/20 blur-[90px]" />
-      <motion.a
-        href={IMS_URL}
-        target="_blank"
-        rel="noreferrer"
-        aria-label="Abrir o site do IMS em uma nova aba"
+      <motion.div
         style={reduce ? undefined : { rotateX: rx, rotateY: ry, y }}
-        className="relative block rounded-[3rem] bg-gradient-to-b from-[#1b2a4d] to-[#060d22] p-[11px] shadow-[0_50px_100px_-30px_rgba(0,0,0,0.95),inset_0_0_0_1.5px_rgba(255,255,255,0.14)] [transform-style:preserve-3d]"
+        className="relative rounded-[3rem] bg-gradient-to-b from-[#1b2a4d] to-[#060d22] p-[11px] shadow-[0_50px_100px_-30px_rgba(0,0,0,0.95),inset_0_0_0_1.5px_rgba(255,255,255,0.14)] [transform-style:preserve-3d]"
       >
         {/* botões laterais */}
         <span aria-hidden="true" className="absolute -left-[3px] top-28 h-10 w-[3px] rounded-l bg-[#24345a]" />
         <span aria-hidden="true" className="absolute -left-[3px] top-44 h-16 w-[3px] rounded-l bg-[#24345a]" />
         <span aria-hidden="true" className="absolute -right-[3px] top-36 h-20 w-[3px] rounded-r bg-[#24345a]" />
-        <div className="relative overflow-hidden rounded-[2.4rem] bg-[#06122b]">
-          {/* captura em 390x836 do site do IMS */}
-          <img src="/eventos/ims-mobile.png" alt="Site do IMS aberto no celular: “O talento é daqui. O movimento é de todos.”" width={390} height={836} loading="lazy" className="block h-auto w-full" />
+        <div onPointerEnter={() => setHint(false)} className="relative overflow-hidden rounded-[2.4rem] bg-[#06122b]">
+          <div className="relative aspect-[390/836] w-full">
+            {/* captura em 390x836 do site do IMS: fica visível até o site carregar */}
+            <img
+              src="/eventos/ims-mobile.png"
+              alt="Site do IMS aberto no celular: “O talento é daqui. O movimento é de todos.”"
+              width={390}
+              height={836}
+              loading="lazy"
+              className="absolute inset-0 h-full w-full object-cover object-top"
+            />
+            <iframe
+              src={IMS_URL}
+              title="Site do IMS — role dentro do celular para ver a página inteira"
+              loading="lazy"
+              sandbox="allow-scripts allow-same-origin allow-popups allow-forms"
+              onLoad={() => setLive(true)}
+              style={{ opacity: live ? 1 : 0 }}
+              className="absolute inset-0 h-full w-full border-0 transition-opacity duration-700"
+            />
+          </div>
           {/* ilha dinâmica */}
-          <span aria-hidden="true" className="absolute left-1/2 top-2.5 h-6 w-24 -translate-x-1/2 rounded-full bg-black" />
+          <span aria-hidden="true" className="pointer-events-none absolute left-1/2 top-2.5 h-6 w-24 -translate-x-1/2 rounded-full bg-black" />
           {/* reflexo que acompanha a inclinação */}
           <motion.span
             aria-hidden="true"
             className="pointer-events-none absolute inset-0 bg-[linear-gradient(115deg,transparent_35%,rgba(255,255,255,0.14)_50%,transparent_65%)] bg-[length:250%_100%]"
             style={{ backgroundPositionX: glare }}
           />
+          <GestureHint icon={MoveVertical} kind="scroll" label="Role dentro do celular" visible={hint && live} className="absolute bottom-5 left-1/2 -translate-x-1/2" />
         </div>
-      </motion.a>
+      </motion.div>
+      <p className="mt-5 text-center text-xs leading-relaxed text-white/50">
+        É o site do IMS rodando aqui dentro.{" "}
+        <a href={IMS_URL} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 underline underline-offset-2 hover:text-lime">
+          Abrir em nova aba <ExternalLink size={12} aria-hidden="true" />
+        </a>
+      </p>
     </div>
   );
 }
@@ -239,7 +268,7 @@ export default function Eventos() {
             </div>
             <div className="relative">
               <Rise><p className="tag flex items-center gap-2"><Sparkles size={14} aria-hidden="true" /> INET Music Show</p></Rise>
-              <Lines className="h-xl mt-5 max-w-4xl" lines={["O palco", <span className="italic text-lime">é nosso.</span>]} />
+              <Lines className="h-xl mt-5 max-w-5xl" lines={["O palco", <span className="italic text-lime">é nosso.</span>]} />
               {/* PROVISÓRIO */}
               <Rise delay={0.2}>
                 <p className="lead mt-6 max-w-2xl">

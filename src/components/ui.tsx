@@ -25,7 +25,7 @@ export function PageHero({ tag, title, lead, children }: { tag: string; title: R
       <div aria-hidden="true" className="pointer-events-none absolute -left-32 top-40 h-[360px] w-[360px] rounded-full bg-lime/10 blur-[110px]" />
       <div className="wrap relative">
         <Rise><p className="tag">{tag}</p></Rise>
-        <Lines as="h1" className="h-xl mt-5 max-w-4xl" lines={title} />
+        <Lines as="h1" className="h-xl mt-5 max-w-5xl" lines={title} />
         <Rise delay={0.3}><p className="lead mt-6 max-w-2xl">{lead}</p></Rise>
         {children && <Rise delay={0.45} className="mt-9 flex flex-wrap gap-3">{children}</Rise>}
       </div>
@@ -38,7 +38,7 @@ export function Section({ id, tag, title, lead, children, className = "" }: { id
     <section id={id} className={`relative py-20 sm:py-28 ${className}`}>
       <div className="wrap">
         {tag && <Rise><p className="tag">{tag}</p></Rise>}
-        {title && <Lines className="h-lg mt-4 max-w-3xl" lines={title} />}
+        {title && <Lines className="h-lg mt-4 max-w-4xl" lines={title} />}
         {lead && <Rise delay={0.2}><p className="lead mt-5 max-w-2xl">{lead}</p></Rise>}
         <div className={title || lead ? "mt-12" : ""}>{children}</div>
       </div>
@@ -126,7 +126,7 @@ export function CtaBand({ title, text, children }: { title: ReactNode[]; text: s
       <div className="wrap">
         <div className="relative overflow-hidden rounded-[2rem] border border-white/10 bg-[linear-gradient(135deg,#021A4A,#010C22_60%)] p-8 sm:p-14">
           <div aria-hidden="true" className="pointer-events-none absolute -right-24 -top-24 h-80 w-80 rounded-full bg-lime/15 blur-[90px]" />
-          <Lines className="h-lg relative max-w-2xl" lines={title} />
+          <Lines className="h-lg relative max-w-3xl" lines={title} />
           <Rise delay={0.2}><p className="lead relative mt-5 max-w-xl">{text}</p></Rise>
           <Rise delay={0.35} className="relative mt-8 flex flex-wrap gap-3">{children}</Rise>
         </div>

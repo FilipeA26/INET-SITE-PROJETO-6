@@ -42,7 +42,8 @@ const ROOMS: Room[] = [
 ];
 
 const ROUTER: Pt = [300, 262];
-const MESH_NODES: Pt[] = [[470, 345], [640, 232]];
+// um unico ponto Mesh, no fim do corredor: e a posicao que deixa todos os comodos com sinal otimo
+const MESH_NODES: Pt[] = [[520, 322]];
 
 // caminho do celular pelas portas da casa (fecha o ciclo)
 const WALK: Pt[] = [
@@ -110,12 +111,37 @@ function Bars({ bars, color, x = 0, y = 0, scale = 1 }: { bars: number; color: s
   );
 }
 
+/**
+ * Sombra de uma parede vista do ponto de acesso: o quadrilátero que começa na parede
+ * e se projeta para longe. É o que faz a onda clarear depois de bater nela.
+ */
+function wallShadow(ap: Pt, w: [number, number, number, number], k = 8) {
+  const far = (x: number, y: number): Pt => [ap[0] + (x - ap[0]) * k, ap[1] + (y - ap[1]) * k];
+  const pts: Pt[] = [[w[0], w[1]], [w[2], w[3]], far(w[2], w[3]), far(w[0], w[1])];
+  return pts.map((p) => p.join(",")).join(" ");
+}
+
+/**
+ * Máscara de uma fonte de sinal: branco onde a onda passa livre, cinza atrás de cada
+ * parede. Duas paredes somam duas sombras, então a onda vai ficando cada vez mais clara.
+ */
+function WallShadowMask({ id, at }: { id: string; at: Pt }) {
+  return (
+    <mask id={id} maskUnits="userSpaceOnUse" x="0" y="0" width="1000" height="560">
+      <rect x="0" y="0" width="1000" height="560" fill="#fff" />
+      {WALLS.map((w, i) => (
+        <polygon key={i} points={wallShadow(at, w)} fill="#000" fillOpacity={0.46} />
+      ))}
+    </mask>
+  );
+}
+
 /** Ondas que saem de um ponto, perdendo força (opacidade e cor) conforme se afastam. */
 function Waves({ at, r, reduce, delay = 0 }: { at: Pt; r: number; reduce: boolean; delay?: number }) {
   if (reduce) {
     return (
       <g>
-        {[0.3, 0.6, 0.9].map((k) => (
+        {[0.45, 0.85].map((k) => (
           <circle key={k} cx={at[0]} cy={at[1]} r={r * k} fill="none" stroke="#70E000" strokeOpacity={0.5 - k * 0.4} strokeWidth={2} />
         ))}
       </g>
@@ -123,11 +149,11 @@ function Waves({ at, r, reduce, delay = 0 }: { at: Pt; r: number; reduce: boolea
   }
   return (
     <g>
-      {[0, 1, 2].map((i) => (
+      {[0, 1].map((i) => (
         <circle key={i} cx={at[0]} cy={at[1]} r={10} fill="none" strokeWidth={2.5}>
-          <animate attributeName="r" from="10" to={r} dur="3.6s" begin={`${delay + i * 1.2}s`} repeatCount="indefinite" />
-          <animate attributeName="stroke-opacity" values="0.9;0.45;0" keyTimes="0;0.45;1" dur="3.6s" begin={`${delay + i * 1.2}s`} repeatCount="indefinite" />
-          <animate attributeName="stroke" values="#70E000;#C6E000;#FF9F1C;#FF4D5E" dur="3.6s" begin={`${delay + i * 1.2}s`} repeatCount="indefinite" />
+          <animate attributeName="r" from="10" to={r} dur="4.2s" begin={`${delay + i * 2.1}s`} repeatCount="indefinite" />
+          <animate attributeName="stroke-opacity" values="0.9;0.45;0" keyTimes="0;0.45;1" dur="4.2s" begin={`${delay + i * 2.1}s`} repeatCount="indefinite" />
+          <animate attributeName="stroke" values="#70E000;#C6E000;#FF9F1C;#FF4D5E" dur="4.2s" begin={`${delay + i * 2.1}s`} repeatCount="indefinite" />
         </circle>
       ))}
     </g>
@@ -173,6 +199,11 @@ export default function MeshHouse({ id = "mesh", tag = "Wi-Fi na casa toda", def
   const stage = useRef<HTMLDivElement>(null);
   const visible = useInView(stage, { margin: "0px 0px -10% 0px" });
   const phone = useRef<SVGGElement>(null);
+  const wire = useRef<SVGPathElement>(null);
+  const wireGlow = useRef<SVGPathElement>(null);
+  const pulse = useRef<SVGCircleElement>(null);
+  // ponta do fio: persegue o ponto de acesso mais forte com uma mola, por isso "se lança" na troca
+  const link = useRef({ x: ROUTER[0], y: ROUTER[1], vx: 0, vy: 0, ap: 0, hop: 0 });
   const [walker, setWalker] = useState<{ room: string; s: number }>({ room: "Quarto 1", s: 1 });
 
   const rooms = useMemo(() => ROOMS.map((r) => ({ ...r, s: signalAt(centroid(r.poly), mode) })), [mode]);
@@ -190,7 +221,7 @@ export default function MeshHouse({ id = "mesh", tag = "Wi-Fi na casa toda", def
   modeRef.current = mode;
   const dist = useRef(0);
   useEffect(() => {
-    const place = (d: number) => {
+    const place = (d: number, dt: number, now: number) => {
       const { pts, acc, total } = path;
       const k = ((d % total) + total) % total;
       let i = 1;
@@ -201,20 +232,70 @@ export default function MeshHouse({ id = "mesh", tag = "Wi-Fi na casa toda", def
       const s = signalAt(p, modeRef.current);
       const room = ROOMS.find((r) => inside(p, r.poly))?.name ?? "Corredor";
       setWalker((w) => (w.room === room && levelOf(w.s) === levelOf(s) ? w : { room, s }));
+
+      // o fio segue o ponto de acesso mais forte; quando o sinal cai, ele se lança para o Mesh
+      const aps: Pt[] = modeRef.current === "mesh" ? [ROUTER, ...MESH_NODES] : [ROUTER];
+      let best = 0;
+      for (let i = 1; i < aps.length; i++) if (signalFrom(aps[i], p) > signalFrom(aps[best], p)) best = i;
+      const w = link.current;
+      if (w.ap !== best) { w.ap = best; w.hop = now; }
+      const [tx, ty] = aps[best];
+      if (dt <= 0) {
+        w.x = tx; w.y = ty; w.vx = 0; w.vy = 0;
+      } else {
+        const h = Math.min(dt, 1 / 30);
+        w.vx += (tx - w.x) * 260 * h - w.vx * 22 * h;
+        w.vy += (ty - w.y) * 260 * h - w.vy * 22 * h;
+        w.x += w.vx * h;
+        w.y += w.vy * h;
+      }
+      const dx = w.x - p[0];
+      const dy = w.y - p[1];
+      const len = Math.hypot(dx, dy) || 1;
+      const sag = Math.min(52, len * 0.18);
+      const cx = (p[0] + w.x) / 2 - (dy / len) * sag;
+      const cy = (p[1] + w.y) / 2 + (dx / len) * sag;
+      const curve = `M${p[0].toFixed(1)} ${p[1].toFixed(1)} Q${cx.toFixed(1)} ${cy.toFixed(1)} ${w.x.toFixed(1)} ${w.y.toFixed(1)}`;
+      const lv = levelOf(s);
+      const flash = Math.max(0, 1 - (now - w.hop) / 560); // brilho do lançamento
+      const line = wire.current;
+      const glow = wireGlow.current;
+      if (line && glow) {
+        for (const el of [line, glow]) {
+          el.setAttribute("d", curve);
+          el.setAttribute("stroke", lv.color);
+        }
+        line.setAttribute("stroke-width", (2 + flash * 2.4).toFixed(2));
+        line.setAttribute("stroke-opacity", (lv.bars === 0 ? 0.3 : 0.5 + s * 0.4).toFixed(2));
+        line.setAttribute("stroke-dasharray", lv.bars === 0 ? "7 11" : "none");
+        glow.setAttribute("stroke-width", (9 + flash * 11).toFixed(2));
+        glow.setAttribute("stroke-opacity", (0.09 + flash * 0.24).toFixed(2));
+      }
+      const dot = pulse.current;
+      if (dot) {
+        const u = ((now - w.hop) / 900) % 1; // reinicia a cada troca de ponto
+        const at = (a: number, b: number, c: number) => (1 - u) * (1 - u) * a + 2 * (1 - u) * u * b + u * u * c;
+        dot.setAttribute("cx", at(p[0], cx, w.x).toFixed(1));
+        dot.setAttribute("cy", at(p[1], cy, w.y).toFixed(1));
+        dot.setAttribute("fill", lv.color);
+        dot.setAttribute("fill-opacity", (lv.bars === 0 ? 0 : 0.3 + Math.sin(u * Math.PI) * 0.6).toFixed(2));
+        dot.setAttribute("r", (2.6 + flash * 2).toFixed(2));
+      }
     };
     if (reduce) {
       // sem animação: o celular fica parado na varanda, o cômodo mais difícil
       dist.current = path.acc[9];
-      place(dist.current);
+      place(dist.current, 0, performance.now());
       return;
     }
-    if (!visible) { place(dist.current); return; }
+    if (!visible) { place(dist.current, 0, performance.now()); return; }
     let raf = 0;
     let last = performance.now();
     const tick = (now: number) => {
-      dist.current += ((now - last) / 1000) * SPEED;
+      const dt = (now - last) / 1000;
+      dist.current += dt * SPEED;
       last = now;
-      place(dist.current);
+      place(dist.current, dt, now);
       raf = requestAnimationFrame(tick);
     };
     raf = requestAnimationFrame(tick);
@@ -225,8 +306,8 @@ export default function MeshHouse({ id = "mesh", tag = "Wi-Fi na casa toda", def
   const isMesh = mode === "mesh";
   const offline = rooms.filter((r) => levelOf(r.s).bars === 0).map((r) => r.name);
   const desc = isMesh
-    ? "Planta de uma casa com um roteador e dois pontos Mesh ligados entre si. O sinal chega forte em todos os cômodos."
-    : `Planta de uma casa com um único roteador no quarto 1. O sinal enfraquece a cada parede; ${offline.length ? `ficam sem sinal: ${offline.join(", ")}.` : "alguns cômodos ficam com sinal fraco."}`;
+    ? "Planta de uma casa com um roteador no quarto 1 e um ponto Mesh no corredor, ligados entre si. Um fio mostra o celular conectado ao ponto mais forte e o sinal chega bem em todos os cômodos."
+    : `Planta de uma casa com um único roteador no quarto 1. As ondas clareiam ao atravessar cada parede; ${offline.length ? `ficam sem sinal: ${offline.join(", ")}.` : "alguns cômodos ficam com sinal fraco."}`;
 
   return (
     <section id={id} className="relative overflow-hidden py-20 sm:py-28">
@@ -234,7 +315,7 @@ export default function MeshHouse({ id = "mesh", tag = "Wi-Fi na casa toda", def
       <div className="wrap relative">
         <Rise><p className="tag">{tag}</p></Rise>
         <div className="mt-4 flex flex-wrap items-end justify-between gap-6">
-          <Lines className="h-lg max-w-3xl" lines={["Um roteador é suficiente", <span className="italic text-lime">para a minha casa?</span>]} />
+          <Lines className="h-lg max-w-4xl" lines={["Um roteador é suficiente", <span className="italic text-lime">para a minha casa?</span>]} />
           {/* alternador */}
           <Rise delay={0.15}>
             <div role="group" aria-label="Como a casa está conectada" className="flex rounded-full border border-white/15 bg-white/[0.03] p-1">
@@ -255,7 +336,7 @@ export default function MeshHouse({ id = "mesh", tag = "Wi-Fi na casa toda", def
         </div>
         <Rise delay={0.2}>
           <p className="lead mt-5 max-w-2xl">
-            {isMesh ? "Os pontos Mesh repetem o sinal e formam uma rede só: você anda pela casa e o celular continua conectado no melhor ponto." : "O roteador espalha o Wi-Fi por ondas de rádio. A cada parede o sinal enfraquece, e os cômodos mais distantes ficam sem internet."}
+            {isMesh ? "O ponto Mesh repete o sinal e forma uma rede só: você anda pela casa e, quando o sinal do roteador cai, o fio do celular se lança sozinho para o Mesh." : "O roteador espalha o Wi-Fi por ondas de rádio. Veja a onda clarear cada vez que bate numa parede: é o sinal perdendo força, até os cômodos mais distantes ficarem sem internet."}
           </p>
         </Rise>
 
@@ -270,6 +351,8 @@ export default function MeshHouse({ id = "mesh", tag = "Wi-Fi na casa toda", def
                   <feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge>
                 </filter>
                 <clipPath id={`${id}-house`}><polygon points={OUTER.map((p) => p.join(",")).join(" ")} /></clipPath>
+                <WallShadowMask id={`${id}-shadow-router`} at={ROUTER} />
+                {MESH_NODES.map((n, i) => <WallShadowMask key={i} id={`${id}-shadow-mesh-${i}`} at={n} />)}
               </defs>
 
               {/* cômodos coloridos pelo sinal */}
@@ -288,8 +371,14 @@ export default function MeshHouse({ id = "mesh", tag = "Wi-Fi na casa toda", def
 
               {/* ondas, presas dentro da casa */}
               <g clipPath={`url(#${id}-house)`}>
-                <Waves at={ROUTER} r={RANGE * 0.75} reduce={reduce} />
-                {isMesh && MESH_NODES.map((n, i) => <Waves key={i} at={n} r={RANGE * 0.5} reduce={reduce} delay={0.6 + i * 0.5} />)}
+                <g mask={`url(#${id}-shadow-router)`}>
+                  <Waves at={ROUTER} r={RANGE * 0.75} reduce={reduce} />
+                </g>
+                {isMesh && MESH_NODES.map((n, i) => (
+                  <g key={i} mask={`url(#${id}-shadow-mesh-${i})`}>
+                    <Waves at={n} r={RANGE * 0.62} reduce={reduce} delay={1.05 + i * 0.5} />
+                  </g>
+                ))}
               </g>
 
               {/* paredes grossas */}
@@ -301,8 +390,8 @@ export default function MeshHouse({ id = "mesh", tag = "Wi-Fi na casa toda", def
               {/* ligações de luz entre os pontos Mesh */}
               {isMesh && (
                 <g filter={`url(#${id}-glow)`}>
-                  {[[ROUTER, MESH_NODES[0]], [MESH_NODES[0], MESH_NODES[1]], [ROUTER, MESH_NODES[1]]].map(([a, b], i) => (
-                    <line key={i} x1={a[0]} y1={a[1]} x2={b[0]} y2={b[1]} stroke="#70E000" strokeWidth={3} strokeOpacity={i === 2 ? 0.35 : 0.85} strokeDasharray="10 12" strokeLinecap="round">
+                  {MESH_NODES.map((n, i) => (
+                    <line key={i} x1={ROUTER[0]} y1={ROUTER[1]} x2={n[0]} y2={n[1]} stroke="#70E000" strokeWidth={3} strokeOpacity={0.85} strokeDasharray="10 12" strokeLinecap="round">
                       {!reduce && <animate attributeName="stroke-dashoffset" from="0" to="-44" dur="1.2s" repeatCount="indefinite" />}
                     </line>
                   ))}
@@ -337,6 +426,13 @@ export default function MeshHouse({ id = "mesh", tag = "Wi-Fi na casa toda", def
                   </g>
                 </motion.g>
               ))}
+
+              {/* fio do celular até o ponto de acesso: na troca ele se lança para o Mesh */}
+              <g aria-hidden="true">
+                <path ref={wireGlow} fill="none" stroke="#70E000" strokeWidth={9} strokeOpacity={0.1} strokeLinecap="round" />
+                <path ref={wire} fill="none" stroke="#70E000" strokeWidth={2.4} strokeLinecap="round" />
+                <circle ref={pulse} r={3} fill="#70E000" fillOpacity={0.8} />
+              </g>
 
               {/* celular andando */}
               <g ref={phone} aria-hidden="true">
@@ -373,7 +469,7 @@ export default function MeshHouse({ id = "mesh", tag = "Wi-Fi na casa toda", def
             })}
           </ul>
           <p className="max-w-sm text-sm text-white/60">
-            {isMesh ? "Os pontos Mesh repetem o sinal e formam uma rede só." : "A cada parede o sinal enfraquece."}{" "}
+            {isMesh ? "O ponto Mesh repete o sinal e forma uma rede só." : "A onda clareia a cada parede: é o sinal perdendo força."}{" "}
             <span className="text-white/40">Ilustração simplificada: o alcance real depende do roteador, dos materiais das paredes e dos aparelhos.</span>
           </p>
         </div>

@@ -35,7 +35,7 @@ export default function Home() {
           <span data-node="left" className="absolute bottom-12" />
           <div className="wrap">
             <Rise><p className="tag">01 — Planos</p></Rise>
-            <Lines className="h-lg mt-4 max-w-3xl" lines={["Deslize e", <span className="italic text-lime">escolha o seu.</span>]} />
+            <Lines className="h-lg mt-4 max-w-4xl" lines={["Deslize e", <span className="italic text-lime">escolha o seu.</span>]} />
             <Rise delay={0.2}><p className="lead mt-5 max-w-2xl">Fibra com Wi-Fi grátis. Escolha e deslize para assinar.</p></Rise>
             <div className="mt-10"><PlanCarousel selected={plan} onSelect={setPlan} /></div>
             <div id="assinar" className="mt-14"><SlideToSubscribe plan={plan} /></div>
@@ -80,7 +80,7 @@ export default function Home() {
           <span data-node="left" className="absolute bottom-12" />
           <div className="wrap">
             <Rise><p className="tag">03 — Serviços</p></Rise>
-            <Lines className="h-lg mt-4 max-w-3xl" lines={["Tudo o que conecta", "a sua casa."]} />
+            <Lines className="h-lg mt-4 max-w-4xl" lines={["Tudo o que conecta", "a sua casa."]} />
             <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               <LinkCard to="/internet" icon={Wifi} title="Internet e Wi-Fi" text="Até 1 Giga e Wi-Fi 6 na casa toda." tone="#0062EC" />
               <LinkCard to="/tv" icon={Tv} title="INET TV" text="TV ao vivo e filmes com o TV Box." tone="#003F99" delay={0.06} />
@@ -98,7 +98,7 @@ export default function Home() {
           <span data-node="right" className="absolute bottom-12" />
           <div className="wrap">
             <Rise><p className="tag">04 — Por que INET</p></Rise>
-            <Lines className="h-lg mt-4 max-w-3xl" lines={["Fibra óptica,", "wi-fi grátis e muito conteúdo."]} />
+            <Lines className="h-lg mt-4 max-w-4xl" lines={["Fibra óptica,", "wi-fi grátis e muito conteúdo."]} />
             <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
               <FeatureCard icon={Zap} title="Internet ultrarrápida" text="Filmes e jogos sem travar." />
               <FeatureCard icon={AppWindow} title="Streaming incluso" text="HBO Max, Disney+ e Deezer nos planos." delay={0.06} />
@@ -114,7 +114,7 @@ export default function Home() {
           <span data-node="left" className="absolute bottom-12" />
           <div className="wrap">
             <Rise><p className="tag">05 — Autoatendimento</p></Rise>
-            <Lines className="h-lg mt-4 max-w-3xl" lines={["Resolva rápido,", "sem sair de casa."]} />
+            <Lines className="h-lg mt-4 max-w-4xl" lines={["Resolva rápido,", "sem sair de casa."]} />
             <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
               <Rise className="h-full">
                 <a href={COMPANY.clientArea} target="_blank" rel="noreferrer" className="card flex h-full flex-col p-7">
@@ -137,7 +137,7 @@ export default function Home() {
           <span data-node="center" className="absolute bottom-0 left-1/2" />
           <div className="wrap">
             <Rise><p className="tag">06 — Dúvidas</p></Rise>
-            <Lines className="h-lg mt-4 max-w-3xl" lines={["Dúvidas sobre", "os serviços INET."]} />
+            <Lines className="h-lg mt-4 max-w-4xl" lines={["Dúvidas sobre", "os serviços INET."]} />
             <div className="mt-10">
               <Faq
                 items={[

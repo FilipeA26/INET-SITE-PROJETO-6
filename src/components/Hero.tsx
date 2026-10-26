@@ -25,7 +25,7 @@ export default function Hero() {
 
       <motion.div style={{ y: textY }} className="wrap pointer-events-none relative z-10 flex min-h-[100svh] flex-col justify-end pb-20">
         <Rise><p className="tag">Internet 100% fibra óptica · Teófilo Otoni</p></Rise>
-        <Lines as="h1" delay={0.1} className="h-xl mt-5 max-w-4xl" lines={["A internet fibra", <span className="italic text-lime">mais escolhida da cidade.</span>]} />
+        <Lines as="h1" delay={0.1} className="h-xl mt-5 max-w-5xl" lines={["A internet fibra", <span className="italic text-lime">mais escolhida da cidade.</span>]} />
         <Rise delay={0.45}>
           <p className="lead mt-6 max-w-xl">
             Planos de até 1 Giga com Wi-Fi grátis, TV, telefone fixo e chip 5G. Suporte técnico 24 horas pelo WhatsApp.

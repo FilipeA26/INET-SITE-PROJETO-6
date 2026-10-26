@@ -139,6 +139,9 @@ export default function Header() {
             </NavLink>
           ))}
           <Dropdown id="menu-atendimento" label="Atendimento" options={ATENDIMENTO} active={pathname.startsWith("/suporte")} open={drop === "atendimento"} onToggle={() => toggle("atendimento")} align="right" />
+          <Link to="/internet#planos" className="hidden rounded-full border border-lime/45 px-4 py-2 text-[13px] font-semibold text-lime transition-colors duration-500 hover:bg-lime/10 sm:block">
+            Ver planos
+          </Link>
           <Link to="/fale-conosco" className="rounded-full bg-lime/90 px-4 py-2 text-[13px] font-semibold text-navy-ink transition-colors duration-500 hover:bg-lime">
             Fale conosco
           </Link>
@@ -180,7 +183,7 @@ export default function Header() {
               transition={{ staggerChildren: 0.05, delayChildren: 0.1 }}
               className="px-5 pb-10 pt-8"
             >
-              {[{ to: "/", label: "Início" }, ...SERVICES, { to: "/eventos", label: "INET Eventos" }, ...MAIN, { to: "/suporte", label: "Suporte" }, { to: "/fale-conosco", label: "Fale conosco" }].map((l) => (
+              {[{ to: "/", label: "Início" }, { to: "/internet#planos", label: "Ver planos" }, ...SERVICES, { to: "/eventos", label: "INET Eventos" }, ...MAIN, { to: "/suporte", label: "Suporte" }, { to: "/fale-conosco", label: "Fale conosco" }].map((l) => (
                 <motion.div key={l.to} variants={{ h: { opacity: 0, y: 14 }, s: { opacity: 1, y: 0 } }} transition={{ duration: 0.6, ease: EASE }}>
                   <NavLink end to={l.to} className={({ isActive }) => `block border-b border-white/10 py-4 font-display text-2xl ${isActive ? "text-lime" : "text-white"}`}>
                     {l.label}
