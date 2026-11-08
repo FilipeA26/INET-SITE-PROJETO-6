@@ -1,11 +1,12 @@
-import { useEffect, useRef, useState } from "react";
+import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { animate, motion, useMotionValue, useTransform, type MotionValue } from "framer-motion";
 import { useDrag } from "@use-gesture/react";
 import { ArrowLeft, ArrowRight, Check, Hand, MoveHorizontal, Plus } from "lucide-react";
 import GestureHint from "./GestureHint";
-import MeshCanvas from "./MeshCanvas";
 import { DUR, EASE } from "../motion";
 import { PLAN_GROUPS, waLink, type Plan } from "../data/inet";
+
+const PlanGlobe = lazy(() => import("./PlanGlobe"));
 
 const SPRING_SNAP = { type: "spring" as const, stiffness: 140, damping: 24, mass: 0.9 };
 const HOLD_MS = 550;
@@ -27,6 +28,17 @@ export default function PlanCarousel({
   const [group, setGroup] = useState(list[0].id);
   const plans = list.find((g) => g.id === group)!.plans;
   const viewRef = useRef<HTMLDivElement>(null);
+  const globeRef = useRef<HTMLDivElement>(null);
+  const [loadGlobe, setLoadGlobe] = useState(false);
+
+  useEffect(() => {
+    if (!globeRef.current) return;
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) { setLoadGlobe(true); observer.disconnect(); }
+    }, { rootMargin: "160px" });
+    observer.observe(globeRef.current);
+    return () => observer.disconnect();
+  }, []);
   const [index, setIndex] = useState(0);
   const [flipped, setFlipped] = useState<string | null>(null);
   const [hints, setHints] = useState({ swipe: true, hold: true });
@@ -87,9 +99,9 @@ export default function PlanCarousel({
       )}
 
       {/* painel mais claro com a malha animada atrás dos cards escuros */}
-      <div className="relative mt-8 overflow-hidden rounded-[2rem] border border-white/10 bg-[linear-gradient(135deg,#021A4A_0%,#010C22_55%,#02163D_100%)] py-10 sm:rounded-[2.5rem] sm:py-14">
-        <MeshCanvas className="absolute inset-0 h-full w-full opacity-70 [filter:blur(1.2px)]" />
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-transparent to-navy-ink/40" />
+      <div ref={globeRef} className="relative isolate mt-8 overflow-hidden rounded-[2rem] border border-white/10 bg-[#020F2E]/70 py-10 sm:rounded-[2.5rem] sm:py-14">
+        {loadGlobe && <Suspense fallback={null}><PlanGlobe /></Suspense>}
+        <div className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(ellipse at 50% 38%, transparent 20%, rgba(2,15,46,.45) 68%, #020F2E 100%), linear-gradient(0deg, rgba(2,15,46,.75), transparent 35%)" }} />
         <div
           ref={viewRef}
           className="relative cursor-grab select-none active:cursor-grabbing"
@@ -144,7 +156,7 @@ export default function PlanCarousel({
         </div>
       </div>
       <p className="mt-5 text-xs leading-relaxed text-white/45">
-        Valores e benefícios conforme publicados no site anterior da INET. Sujeitos a alteração e à viabilidade técnica no endereço: confirme as condições atuais com o atendimento antes de contratar.
+        Planos de internet conforme a tabela de outubro de 2026; combos com telefone fixo e chip conforme o site anterior. Sujeitos à viabilidade técnica no endereço: confirme as condições com o atendimento antes de contratar.
       </p>
     </div>
   );
@@ -208,14 +220,14 @@ function Card({
           <p className="mt-6 font-display text-3xl">
             {plan.price ? <>R$ {plan.price}<span className="text-sm text-white/45"> /mês</span></> : <span className="text-2xl text-white/80">Consulte</span>}
           </p>
-          <ul className="mt-5 flex flex-wrap gap-1.5">
+          {plan.includes.length > 0 && <ul className="mt-5 flex flex-wrap gap-1.5">
             {plan.includes.slice(0, 4).map((inc) => (
               <li key={inc} className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-[11px] text-white/80">
                 <Plus size={10} aria-hidden="true" className="text-lime" /> {inc}
               </li>
             ))}
-          </ul>
-          <ul className="mt-auto space-y-2 pt-5 text-sm text-white/75">
+          </ul>}
+          <ul className={`pt-5 text-sm text-white/75 ${plan.includes.length ? "mt-auto space-y-2" : "flex flex-1 flex-col justify-center gap-3"}`}>
             {plan.perks.map((perk) => (
               <li key={perk} className="flex items-center gap-2.5"><Check size={14} aria-hidden="true" className="text-lime" /> {perk}</li>
             ))}

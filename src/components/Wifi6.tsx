@@ -1,3 +1,4 @@
+import SectionBackdrop from "./fundos/SectionBackdrop";
 import { Component, lazy, Suspense, useEffect, useRef, useState, type ReactNode } from "react";
 import { useInView } from "framer-motion";
 import { Gauge, Move3d, Radar, Smartphone, Timer } from "lucide-react";
@@ -80,10 +81,11 @@ export default function Wifi6({ id = "wifi6", tag = "Wi-Fi 6" }: { id?: string; 
   const still = <RouterStill />;
 
   return (
-    <section id={id} className="relative overflow-hidden py-20 sm:py-28">
+    <section id={id} className="section-frame relative isolate overflow-hidden">
+      <SectionBackdrop variant="mist" />
       <div aria-hidden="true" className="pointer-events-none absolute -right-40 top-10 h-[520px] w-[520px] rounded-full bg-navy/40 blur-[130px]" />
       <div aria-hidden="true" className="pointer-events-none absolute -left-24 bottom-0 h-[320px] w-[320px] rounded-full bg-lime/10 blur-[110px]" />
-      <div className="wrap relative grid items-center gap-12 lg:grid-cols-[1fr_1.05fr]">
+      <div className="wrap relative grid items-center gap-12 lg:grid-cols-[.85fr_1.15fr]">
         <div>
           <Rise><Fit className="tag">{tag}</Fit></Rise>
           <Lines className="h-lg mt-4" lines={["A fibra chega inteira", <span className="italic text-lime">em cada cômodo.</span>]} />

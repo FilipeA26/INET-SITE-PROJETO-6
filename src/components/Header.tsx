@@ -1,204 +1,238 @@
 import { useEffect, useState } from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
-import { AnimatePresence, motion, useScroll, useSpring } from "framer-motion";
-import { ChevronDown, Menu, Sparkles, UserRound, X } from "lucide-react";
-import { DUR, EASE, SPRING } from "../motion";
-import { COMPANY, waLink } from "../data/inet";
+import { AnimatePresence, motion } from "framer-motion";
+import { ArrowUpRight, Phone, X } from "lucide-react";
+import { EASE } from "../motion";
+import { COMPANY, PHONES, SOCIAL, waLink } from "../data/inet";
 
 export const SERVICES = [
-  { to: "/internet", label: "Internet e Wi-Fi", text: "Fibra óptica e Wi-Fi Mesh" },
-  { to: "/tv", label: "INET TV", text: "Canais, rádio e filmes na sua TV" },
-  { to: "/telefone-fixo", label: "Telefone fixo", text: "Ligações ilimitadas pela fibra" },
-  { to: "/movel", label: "Chip móvel", text: "5G, WhatsApp e Waze ilimitados" },
+  { to: "/internet", label: "Internet e Wi-Fi", text: "Fibra óptica, roteadores e Wi-Fi Mesh" },
+  { to: "/movel", label: "Chip móvel", text: "Internet 5G, ligações e benefícios" },
+  { to: "/tv", label: "INET TV", text: "Canais, rádio, filmes e entretenimento" },
+  { to: "/telefone-fixo", label: "Telefone fixo", text: "Telefonia residencial e empresarial" },
   { to: "/entretenimento", label: "Entretenimento", text: "HBO Max, Disney+ e Deezer" },
+  { to: "/monte-seu-combo", label: "Monte seu combo", text: "Escolha o plano e os adicionais" },
 ];
-const MAIN = [
-  { to: "/teste-de-velocidade", label: "Velocidade" },
+
+export const NAV_LINKS = [
   { to: "/cobertura", label: "Cobertura" },
+  { to: "/teste-de-velocidade", label: "Velocidade" },
+  { to: "/eventos", label: "INET Eventos" },
   { to: "/avaliacoes", label: "Avaliações" },
+  { to: "/suporte", label: "Suporte 24h" },
+  { to: "/fale-conosco", label: "Fale conosco" },
 ];
-
-type Opt = { label: string; text: string; to?: string; href?: string };
-
-/** Atendimento por setor: financeiro na central do cliente, suporte e comercial. */
-export const ATENDIMENTO: Opt[] = [
-  { label: "Financeiro", text: "Faturas, segunda via e pagamentos", href: COMPANY.clientArea },
-  { label: "Suporte", text: "Atendimento técnico 24 horas", to: "/suporte" },
-  { label: "Comercial", text: "Contratar ou mudar de plano", href: waLink("Olá! Quero falar com o comercial da INET.") },
-];
-
-/** Menu suspenso de vidro usado por "Serviços" e "Atendimento". */
-function Dropdown({ id, label, options, active, open, onToggle, align = "left" }: {
-  id: string; label: string; options: Opt[]; active: boolean; open: boolean; onToggle: () => void; align?: "left" | "right";
-}) {
-  return (
-    <div className="relative hidden lg:block" data-dropdown>
-      <button
-        aria-expanded={open}
-        aria-controls={id}
-        onClick={onToggle}
-        className={`flex items-center gap-1 rounded-full px-4 py-2 text-[13px] transition-colors duration-500 ${active || open ? "bg-white/10 text-white" : "text-white/65 hover:text-white"}`}
-      >
-        {label} <ChevronDown size={14} aria-hidden="true" className={`transition-transform duration-500 ${open ? "rotate-180" : ""}`} />
-      </button>
-      <AnimatePresence>
-        {open && (
-          <motion.ul
-            id={id}
-            initial={{ opacity: 0, y: -8, filter: "blur(6px)" }}
-            animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-            exit={{ opacity: 0, y: -8, filter: "blur(6px)" }}
-            transition={{ duration: 0.5, ease: EASE }}
-            className={`absolute top-[calc(100%+12px)] w-72 rounded-3xl border border-white/10 bg-navy-ink/90 p-2 backdrop-blur-xl ${align === "right" ? "right-0" : "left-0"}`}
-          >
-            {options.map((o) => {
-              const body = (
-                <>
-                  <span className="block text-sm font-semibold">{o.label}</span>
-                  <span className="block text-xs text-white/55">{o.text}</span>
-                </>
-              );
-              return (
-                <li key={o.label}>
-                  {o.to ? (
-                    <NavLink to={o.to} className={({ isActive }) => `block rounded-2xl px-4 py-3 transition-colors duration-500 hover:bg-white/5 ${isActive ? "bg-white/10" : ""}`}>{body}</NavLink>
-                  ) : (
-                    <a href={o.href} target="_blank" rel="noreferrer" className="block rounded-2xl px-4 py-3 transition-colors duration-500 hover:bg-white/5">{body}</a>
-                  )}
-                </li>
-              );
-            })}
-          </motion.ul>
-        )}
-      </AnimatePresence>
-    </div>
-  );
-}
 
 /**
- * Menu flutuante: pílula de vidro quase transparente que acompanha a tela inteira
- * sem cobrir o site. No celular vira um painel em tela cheia.
+ * Header estilo Lusion para o Teste 3 (Tema Claro-Neve):
+ * - Logo INET azul (/inet-logo.png) para fundo claro à esquerda.
+ * - Pílulas flutuantes à direita: "Fale conosco •" (escura) e "Menu ••" (clara).
+ * - Menu abre um painel em tela cheia com transição elegante na curva oficial EASE.
+ * - Navegação acessível por teclado, fecha no Esc e na troca de rota.
  */
 export default function Header() {
-  const { scrollYProgress } = useScroll();
-  const progress = useSpring(scrollYProgress, SPRING);
+  const [menuOpen, setMenuOpen] = useState(false);
   const { pathname } = useLocation();
-  const [drop, setDrop] = useState<"servicos" | "atendimento" | null>(null);
-  const [mobile, setMobile] = useState(false);
-  const servicesActive = SERVICES.some((s) => pathname.startsWith(s.to));
-  const toggle = (d: "servicos" | "atendimento") => setDrop((cur) => (cur === d ? null : d));
 
   useEffect(() => {
-    setDrop(null);
-    setMobile(false);
+    setMenuOpen(false);
   }, [pathname]);
 
   useEffect(() => {
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && (setDrop(null), setMobile(false));
-    const onClick = (e: MouseEvent) => !(e.target as HTMLElement).closest("[data-dropdown]") && setDrop(null);
-    document.addEventListener("keydown", onKey);
-    document.addEventListener("mousedown", onClick);
-    return () => {
-      document.removeEventListener("keydown", onKey);
-      document.removeEventListener("mousedown", onClick);
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setMenuOpen(false);
     };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
   }, []);
 
+  // Trava a rolagem de fundo quando o menu estiver aberto
   useEffect(() => {
-    document.body.style.overflow = mobile ? "hidden" : "";
-  }, [mobile]);
-
-  const item = ({ isActive }: { isActive: boolean }) =>
-    `relative rounded-full px-4 py-2 text-[13px] transition-colors duration-500 ${isActive ? "bg-white/10 text-white" : "text-white/65 hover:text-white"}`;
+    if (menuOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [menuOpen]);
 
   return (
     <>
-      <a href="#conteudo" className="sr-only z-[80] rounded-full bg-lime px-4 py-2 font-semibold text-navy-ink focus:not-sr-only focus:fixed focus:left-4 focus:top-4">
-        Pular para o conteúdo
-      </a>
-      <motion.div style={{ scaleX: progress }} className="fixed inset-x-0 top-0 z-[60] h-[2px] origin-left bg-gradient-to-r from-electric via-[#5CC8FF] to-lime" />
-
-      <motion.header
-        initial={{ y: -40, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: DUR, ease: EASE, delay: 0.2 }}
-        className="fixed inset-x-0 top-3 z-50 flex justify-center px-3 sm:top-4"
-      >
-        <nav aria-label="Menu principal" className="flex w-full max-w-fit items-center gap-1 rounded-full border border-white/10 bg-white/[0.04] p-1.5 shadow-[0_8px_30px_-12px_rgba(0,0,0,0.6)] backdrop-blur-md">
-          <Link to="/" aria-label="INET – página inicial" className="flex min-h-[40px] items-center px-3">
-            <img src="/inet-logo-branca.png" alt="INET" width={68} height={24} className="h-6 w-auto" />
-          </Link>
-
-          <Dropdown id="menu-servicos" label="Serviços" options={SERVICES.map((x) => ({ ...x }))} active={servicesActive} open={drop === "servicos"} onToggle={() => toggle("servicos")} />
-          <NavLink to="/eventos" className={({ isActive }) => `group relative hidden items-center gap-1.5 rounded-full px-4 py-2 text-[13px] transition-colors duration-500 lg:flex ${isActive ? "bg-white/10 text-white" : "text-white/65 hover:text-white"}`}>
-            <Sparkles size={13} aria-hidden="true" className="text-lime transition-transform duration-700 group-hover:rotate-12" /> INET Eventos
-          </NavLink>
-          {MAIN.map((m) => (
-            <NavLink key={m.to} to={m.to} className={(s) => `${item(s)} hidden lg:block`}>
-              {m.label}
-            </NavLink>
-          ))}
-          <Dropdown id="menu-atendimento" label="Atendimento" options={ATENDIMENTO} active={pathname.startsWith("/suporte")} open={drop === "atendimento"} onToggle={() => toggle("atendimento")} align="right" />
-          <Link to="/internet#planos" className="hidden rounded-full border border-lime/45 px-4 py-2 text-[13px] font-semibold text-lime transition-colors duration-500 hover:bg-lime/10 sm:block">
-            Ver planos
-          </Link>
-          <Link to="/fale-conosco" className="rounded-full bg-lime/90 px-4 py-2 text-[13px] font-semibold text-navy-ink transition-colors duration-500 hover:bg-lime">
-            Fale conosco
-          </Link>
-          <button
-            onClick={() => setMobile(true)}
-            aria-label="Abrir menu"
-            aria-expanded={mobile}
-            aria-controls="menu-movel"
-            className="flex h-10 w-10 items-center justify-center rounded-full text-white/80 lg:hidden"
+      <header className="fixed inset-x-0 top-3 sm:top-5 z-50 pointer-events-none px-4 sm:px-8 max-w-[100rem] mx-auto">
+        <div className="flex items-center justify-between">
+          {/* Logo oficial azul em cápsula de vidro suave para máxima legibilidade */}
+          <Link
+            to="/"
+            className="pointer-events-auto inline-flex items-center px-3 py-1.5 rounded-full bg-[#EFF3F9]/85 border border-navy/10 shadow-sm backdrop-blur-md transition-all duration-300 hover:scale-105 hover:bg-[#E2E8F2] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric"
+            aria-label="INET Telecomunicações - Início"
           >
-            <Menu size={20} />
-          </button>
-        </nav>
-      </motion.header>
+            <img
+              src="/inet-logo.png"
+              alt="INET"
+              width={124}
+              height={44}
+              className="h-6 sm:h-7 w-auto object-contain"
+            />
+          </Link>
 
+          {/* Pílulas estilo Lusion */}
+          <div className="pointer-events-auto flex items-center gap-2 sm:gap-3">
+            {/* Pílula Escura: Fale conosco com ponto luminoso verde-limão */}
+            <a
+              href={waLink("Olá! Vim pelo site da INET e gostaria de falar com a equipe.")}
+              target="_blank"
+              rel="noreferrer"
+              className="inet-dark-pill inline-flex items-center gap-2 rounded-full bg-navy-ink px-4 sm:px-5 py-2.5 text-xs sm:text-[13px] font-medium text-white shadow-md transition-all duration-300 hover:bg-navy hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric"
+            >
+              <span>Fale conosco</span>
+              <span className="h-2 w-2 rounded-full bg-[#70E000] shadow-[0_0_8px_#70E000]" aria-hidden="true" />
+            </a>
+
+            {/* Pílula Clara: Menu com dois pontos */}
+            <button
+              type="button"
+              onClick={() => setMenuOpen((prev) => !prev)}
+              aria-expanded={menuOpen}
+              aria-controls="menu-fullscreen"
+              className="inline-flex items-center gap-2 rounded-full border border-navy/15 bg-[#EFF3F9]/90 px-4 sm:px-5 py-2.5 text-xs sm:text-[13px] font-medium text-navy-ink shadow-sm backdrop-blur-md transition-all duration-300 hover:bg-[#E2E8F2] hover:border-navy/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric"
+            >
+              <span>{menuOpen ? "Fechar" : "Menu"}</span>
+              {menuOpen ? (
+                <X size={14} aria-hidden="true" />
+              ) : (
+                <span className="flex items-center gap-1" aria-hidden="true">
+                  <span className="h-1.5 w-1.5 rounded-full bg-navy-ink" />
+                  <span className="h-1.5 w-1.5 rounded-full bg-navy-ink" />
+                </span>
+              )}
+            </button>
+          </div>
+        </div>
+      </header>
+
+      {/* Painel de Menu Tela Cheia (Lusion Style) */}
       <AnimatePresence>
-        {mobile && (
+        {menuOpen && (
           <motion.div
-            id="menu-movel"
+            id="menu-fullscreen"
             role="dialog"
             aria-modal="true"
-            aria-label="Menu"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.5, ease: EASE }}
-            className="fixed inset-0 z-[70] overflow-y-auto bg-navy-ink/95 backdrop-blur-xl lg:hidden"
+            aria-label="Menu principal de navegação"
+            initial={{ opacity: 0, y: -24 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -24 }}
+            transition={{ duration: 0.55, ease: EASE }}
+            className="fixed inset-0 z-40 flex flex-col justify-between overflow-y-auto bg-[#EFF3F9]/98 backdrop-blur-2xl px-6 py-24 sm:px-12 sm:py-28 lg:px-20 lg:py-32"
           >
-            <div className="flex items-center justify-between px-5 pt-5">
-              <img src="/inet-logo-branca.png" alt="INET" className="h-7 w-auto" />
-              <button onClick={() => setMobile(false)} aria-label="Fechar menu" className="flex h-11 w-11 items-center justify-center rounded-full border border-white/15">
-                <X size={20} />
-              </button>
+            <div className="mx-auto w-full max-w-[90rem]">
+              <div className="grid gap-12 lg:grid-cols-[1.4fr_1fr_1fr]">
+                {/* Coluna 1: Serviços Principais */}
+                <div>
+                  <span className="font-display text-xs font-semibold uppercase tracking-[0.25em] text-electric">
+                    Serviços INET
+                  </span>
+                  <nav className="mt-6 flex flex-col space-y-4 sm:space-y-6">
+                    {SERVICES.map((s) => (
+                      <NavLink
+                        key={s.to}
+                        to={s.to}
+                        className={({ isActive }) =>
+                          `group flex flex-col no-underline transition-transform duration-300 hover:translate-x-2 focus-visible:outline-none ${
+                            isActive ? "text-electric" : "text-navy-ink hover:text-electric"
+                          }`
+                        }
+                      >
+                        <span className="font-display text-2xl sm:text-4xl lg:text-5xl font-light tracking-tight">
+                          {s.label}
+                        </span>
+                        <span className="mt-1 text-xs sm:text-sm text-navy-ink/60">
+                          {s.text}
+                        </span>
+                      </NavLink>
+                    ))}
+                  </nav>
+                </div>
+
+                {/* Coluna 2: Institucional & Facilidades */}
+                <div>
+                  <span className="font-display text-xs font-semibold uppercase tracking-[0.25em] text-electric">
+                    Navegação
+                  </span>
+                  <nav className="mt-6 flex flex-col space-y-3 sm:space-y-4">
+                    {NAV_LINKS.map((item) => (
+                      <NavLink
+                        key={item.to}
+                        to={item.to}
+                        className={({ isActive }) =>
+                          `font-display text-xl sm:text-2xl font-light transition-colors duration-300 hover:text-electric focus-visible:outline-none ${
+                            isActive ? "text-electric font-normal" : "text-navy-ink"
+                          }`
+                        }
+                      >
+                        {item.label}
+                      </NavLink>
+                    ))}
+                    <a
+                      href={COMPANY.clientArea}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex items-center gap-1.5 font-display text-xl sm:text-2xl font-light text-navy-ink hover:text-electric transition-colors"
+                    >
+                      Central do Cliente <ArrowUpRight size={18} aria-hidden="true" />
+                    </a>
+                  </nav>
+                </div>
+
+                {/* Coluna 3: Atendimento & Contatos Rápidos */}
+                <div className="flex flex-col justify-between">
+                  <div>
+                    <span className="font-display text-xs font-semibold uppercase tracking-[0.25em] text-electric">
+                      Central de Atendimento
+                    </span>
+                    <ul className="mt-6 space-y-3 text-sm text-navy-ink/80">
+                      {PHONES.map((p) => (
+                        <li key={p.tel}>
+                          <a
+                            href={`tel:${p.tel}`}
+                            className="inline-flex items-center gap-2 font-medium hover:text-electric transition-colors"
+                          >
+                            <Phone size={14} className="text-electric" aria-hidden="true" />
+                            {p.display}
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <div className="mt-10 border-t border-navy/10 pt-6">
+                    <p className="text-xs text-navy-ink/60 leading-relaxed">
+                      Atendimento presencial em Teófilo Otoni e Carlos Chagas.
+                      Suporte técnico 24 horas por dia, 7 dias por semana.
+                    </p>
+                  </div>
+                </div>
+              </div>
             </div>
-            <motion.nav
-              aria-label="Menu móvel"
-              initial="h"
-              animate="s"
-              transition={{ staggerChildren: 0.05, delayChildren: 0.1 }}
-              className="px-5 pb-10 pt-8"
-            >
-              {[{ to: "/", label: "Início" }, { to: "/internet#planos", label: "Ver planos" }, ...SERVICES, { to: "/eventos", label: "INET Eventos" }, ...MAIN, { to: "/suporte", label: "Suporte" }, { to: "/fale-conosco", label: "Fale conosco" }].map((l) => (
-                <motion.div key={l.to} variants={{ h: { opacity: 0, y: 14 }, s: { opacity: 1, y: 0 } }} transition={{ duration: 0.6, ease: EASE }}>
-                  <NavLink end to={l.to} className={({ isActive }) => `block border-b border-white/10 py-4 font-display text-2xl ${isActive ? "text-lime" : "text-white"}`}>
-                    {l.label}
-                  </NavLink>
-                </motion.div>
-              ))}
-              <p className="tag mt-10">Atendimento</p>
-              <div className="mt-4 grid gap-3">
-                {ATENDIMENTO.filter((o) => o.href).map((o) => (
-                  <a key={o.label} href={o.href} target="_blank" rel="noreferrer" className="btn-ghost w-full">
-                    {o.label === "Financeiro" && <UserRound size={16} />} {o.label} · {o.text}
+
+            {/* Rodapé interno do menu */}
+            <div className="mx-auto mt-16 w-full max-w-[90rem] border-t border-navy/10 pt-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-xs text-navy-ink/50">
+              <span>INET Telecomunicações · Conectando Teófilo Otoni</span>
+              <div className="flex gap-4">
+                {SOCIAL.map((s) => (
+                  <a
+                    key={s.name}
+                    href={s.url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="hover:text-electric transition-colors"
+                  >
+                    {s.name}
                   </a>
                 ))}
               </div>
-            </motion.nav>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>

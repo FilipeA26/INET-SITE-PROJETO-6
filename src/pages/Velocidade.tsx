@@ -132,7 +132,7 @@ export default function Velocidade() {
       </Section>
 
       <Section id="como-testar" tag="Antes de medir" title={["O que você precisa", "saber antes do teste."]}>
-        <div className="grid gap-4 md:grid-cols-3">
+        <div className="grid gap-6 xl:gap-8 md:grid-cols-3">
           {[
             { icon: Unplug, title: "Feche tudo", text: "Feche aplicativos e navegadores que usam a internet. Sem consumo de dados, o resultado é mais exato." },
             { icon: Wifi, title: "Wi-Fi não mede tudo", text: "Paredes, vidros e espelhos atrapalham a conexão do aparelho ao roteador. O teste por Wi-Fi pode oscilar." },

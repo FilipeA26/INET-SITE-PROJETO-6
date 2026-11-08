@@ -1,8 +1,10 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import AppsShowcase, { AutoCarousel, Dots, type Slide } from "../components/AppsShowcase";
-import { Rise } from "../components/Lines";
-import { CtaBand, PageHero, Section, usePageMeta } from "../components/ui";
+import Lines, { Rise } from "../components/Lines";
+import WorkGrid from "../components/lusion/WorkGrid";
+import WorkCard from "../components/lusion/WorkCard";
+import LusionSection from "../components/t3p/LusionSection";
 import { waLink } from "../data/inet";
 
 // Backdrops do TMDB (origem em public/moods/FONTES.md)
@@ -53,31 +55,93 @@ function MoodCard({ m, offset }: { m: (typeof MOODS)[number]; offset: number }) 
 }
 
 export default function Entretenimento() {
-  usePageMeta("Entretenimento", "Streaming e música nos planos da INET: HBO Max, Disney+ e Deezer. Confira quais planos incluem cada serviço.");
-
   return (
     <>
-      <PageHero
-        tag="Entretenimento"
-        title={["Muito conteúdo", <span className="italic text-lime">no seu plano.</span>]}
-        lead="HBO Max, Disney+ e Deezer selecionados pela equipe INET para você aproveitar filmes, séries e música com a velocidade da fibra."
-      />
-
-      <AppsShowcase tag="Apps e streaming" />
-
-      <Section tag="Para maratonar" title={["Qual é o seu", "clima de hoje?"]}>
-        <div className="grid gap-4 md:grid-cols-3">
-          {MOODS.map((m, i) => (
-            <Rise key={m.title} delay={i * 0.06}>
-              <MoodCard m={m} offset={i * 1400} />
+      {/* 1. Hero: Claro-neve (Apple) */}
+      <section className="relative isolate py-20 sm:py-28 bg-[#F0F1FA] text-[#07152D] overflow-hidden">
+        <div className="w-full px-5 sm:px-8 lg:px-[max(6vw,60px)]">
+          <div className="max-w-4xl">
+            <Rise>
+              <p className="font-display text-[11px] font-medium uppercase tracking-[0.24em] text-[#0062EC] mb-3">
+                Entretenimento
+              </p>
             </Rise>
-          ))}
+            <Lines as="h1" className="h-xl !text-[#07152D]" lines={["Muito conteúdo", <span className="italic text-[#0062EC]">no seu plano.</span>]} />
+            <Rise delay={0.2}>
+              <p className="lead mt-6 text-[#334155] leading-relaxed max-w-2xl">
+                HBO Max, Disney+ e Deezer selecionados pela equipe INET para você aproveitar filmes, séries e música com a velocidade da fibra.
+              </p>
+            </Rise>
+          </div>
         </div>
-      </Section>
+      </section>
 
-      <CtaBand title={["Monte seu plano", <span className="italic text-lime">com entretenimento.</span>]} text="Nossa equipe mostra quais planos incluem cada app.">
-        <a href={waLink("Olá! Quero um plano da INET com apps de entretenimento.")} target="_blank" rel="noreferrer" className="btn-lime">Falar no WhatsApp</a>
-      </CtaBand>
+      {/* 2. Apps Showcase: Azul-noite de contraste */}
+      <div data-contrast="dark" className="bg-[#010818] text-white">
+        <AppsShowcase tag="Apps e streaming" />
+      </div>
+
+      {/* 3. WorkGrid: Claro-neve com cards escuros de contraste (não branco sobre fundo claro) */}
+      <WorkGrid
+        id="experiencia-streaming"
+        tag="Filmes e séries"
+        title={["Cinema e música", <span className="italic text-[#0062EC]">no seu plano.</span>]}
+        variant="snow"
+      >
+        <WorkCard
+          tag="01 · Filmes e séries"
+          title="HBO Max no plano 800 Mega"
+          subtitle="Blockbusters, clássicos do cinema e originais exclusivos para maratonar."
+          imageSrc="/apps/hbo-1.webp"
+          aspect="aspect-[16/11]"
+          badge="Incluso 800 Mega"
+          theme="light"
+          href="/internet#planos"
+        />
+        <WorkCard
+          tag="02 · Música sem limites"
+          title="Deezer nos planos 700 Mega e 1 Giga"
+          subtitle="Deezer Premium sem anúncios, com download para ouvir offline."
+          imageSrc="/apps/deezer-1.webp"
+          aspect="aspect-[4/5]"
+          offsetY="md:mt-16 lg:mt-24"
+          badge="700M e 1 Giga"
+          theme="light"
+          href="/internet#planos"
+        />
+      </WorkGrid>
+
+      {/* 4. Moods: Azul-noite de contraste */}
+      <section data-contrast="dark" className="py-20 sm:py-28 bg-[#010818] text-white">
+        <div className="w-full px-5 sm:px-8 lg:px-[max(6vw,60px)]">
+          <div className="mb-12 border-b border-white/10 pb-8">
+            <p className="font-display text-[11px] font-medium uppercase tracking-[0.24em] text-lime mb-3">
+              Para maratonar
+            </p>
+            <Lines className="h-lg !text-white" lines={["Qual é o seu", "clima de hoje?"]} />
+          </div>
+          <div className="grid gap-6 md:grid-cols-3">
+            {MOODS.map((m, i) => (
+              <Rise key={m.title} delay={i * 0.06}>
+                <MoodCard m={m} offset={i * 1400} />
+              </Rise>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 5. CTA: Azul INET */}
+      <section data-contrast="dark" className="py-16 sm:py-20 bg-[#0062EC] text-white">
+        <div className="w-full px-5 sm:px-8 lg:px-[max(6vw,60px)] flex flex-col md:flex-row items-center justify-between gap-8">
+          <div>
+            <Lines className="h-md !text-white [&_span]:!text-white" lines={["Monte seu plano", <span className="italic !text-white underline decoration-lime">com entretenimento.</span>]} />
+            <p className="mt-3 !text-white/90 max-w-xl">Nossa equipe mostra quais planos incluem cada app.</p>
+          </div>
+          <a href={waLink("Olá! Quero um plano da INET com apps de entretenimento.")} target="_blank" rel="noreferrer" className="btn-lime shrink-0">
+            Falar no WhatsApp
+          </a>
+        </div>
+      </section>
     </>
   );
 }

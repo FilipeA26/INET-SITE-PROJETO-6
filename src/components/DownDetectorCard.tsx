@@ -32,7 +32,6 @@ export default function DownDetectorCard() {
   return (
     <Rise delay={0.1}>
       <div className="relative mt-6 overflow-hidden rounded-[2rem] border border-white/10 bg-[linear-gradient(135deg,#021A4A,#010818_65%)] p-7 sm:p-10">
-        <div aria-hidden="true" className="absolute -right-20 -top-24 h-72 w-72 rounded-full bg-[#ff5a3c]/10 blur-3xl" />
         <div className="relative grid gap-10 lg:grid-cols-[1.05fr_1fr]">
           <div>
             <p className="tag">Downdetector</p>
@@ -69,7 +68,7 @@ export default function DownDetectorCard() {
                     className="group flex min-h-[48px] items-center justify-between gap-2 rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3 text-sm transition-colors duration-500 hover:border-lime/60 hover:bg-white/[0.06]"
                   >
                     <span className="flex items-center gap-2.5">
-                      <span aria-hidden="true" className="h-2 w-2 rounded-full bg-[#ffb02e] shadow-[0_0_10px_#ffb02e]" />
+                      <span aria-hidden="true" className="h-2 w-2 rounded-full bg-lime" />
                       {s.name}
                     </span>
                     <ArrowUpRight size={14} aria-hidden="true" className="text-white/40 transition-transform duration-500 group-hover:translate-x-0.5 group-hover:text-lime" />

@@ -1,0 +1,4 @@
+{"width":375,"top":89.84375,"title":146.34375,"overflow":false}
+
+{"width":1440,"top":90.1875,"title":146.6875,"overflow":false}
+C:\Users\yuzzi\AppData\Local\Temp\maestri-portal-08d7ddef-4c58-4ce1-98d7-1e6e86c17b3b.png

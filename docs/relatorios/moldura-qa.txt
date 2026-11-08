@@ -1,0 +1,91 @@
+{"url":"/","w":375,"overflow":false,"h1":"A internet fibramais escolhida da cidade.","anchors":[{"id":"planos","padding":"24px","margin":"90px"},{"id":"inet-tv","padding":"24px","margin":"90px"},{"id":"servicos","padding":"24px","margin":"90px"},{"id":"por-que-inet","padding":"24px","margin":"90px"},{"id":"autoatendimento","padding":"24px","margin":"90px"},{"id":"duvidas","padding":"24px","margin":"90px"}]}
+SCREENSHOT 375 / C:\Users\yuzzi\AppData\Local\Temp\maestri-portal-c312eb52-fd78-49f5-b19e-9d9920c784d1.png
+{"url":"/internet","w":375,"overflow":false,"h1":"Internet fibrade até 1 Giga.","anchors":[{"id":"planos","padding":"24px","margin":"90px"},{"id":"wifi6","padding":"24px","margin":"90px"},{"id":"wifi-mesh","padding":"24px","margin":"90px"},{"id":"seguranca","padding":"24px","margin":"90px"},{"id":"alexa","padding":"24px","margin":"90px"}]}
+SCREENSHOT 375 /internet C:\Users\yuzzi\AppData\Local\Temp\maestri-portal-611dae80-dc6c-4ec0-bf32-da60038cd94f.png
+{"url":"/tv","w":375,"overflow":false,"h1":"O jeito mais fácilde assistir TV.","anchors":[{"id":"sugestoes","padding":"24px","margin":"90px"},{"id":"planos","padding":"24px","margin":"90px"}]}
+SCREENSHOT 375 /tv C:\Users\yuzzi\AppData\Local\Temp\maestri-portal-0093dbaa-800e-44d7-bff5-a05b0bc6b906.png
+{"url":"/telefone-fixo","w":375,"overflow":false,"h1":"Ligue à vontade,sem limite.","anchors":[{"id":"planos","padding":"24px","margin":"90px"}]}
+SCREENSHOT 375 /telefone-fixo C:\Users\yuzzi\AppData\Local\Temp\maestri-portal-0b22532e-a520-45b7-a759-31f6d975d329.png
+{"url":"/movel","w":375,"overflow":false,"h1":"Seu celularno 5G da INET.","anchors":[{"id":"planos","padding":"24px","margin":"90px"}]}
+SCREENSHOT 375 /movel 
+{"url":"/entretenimento","w":375,"overflow":false,"h1":"Muito conteúdono seu plano.","anchors":[{"id":"apps","padding":"24px","margin":"90px"}]}
+SCREENSHOT 375 /entretenimento 
+{"url":"/cobertura","w":375,"overflow":false,"h1":"Tem INETna sua casa?","anchors":[{"id":"cep","padding":"24px","margin":"90px"},{"id":"lojas","padding":"24px","margin":"90px"}]}
+SCREENSHOT 375 /cobertura 
+{"url":"/suporte","w":375,"overflow":false,"h1":"Estamos online24 horas.","anchors":[]}
+SCREENSHOT 375 /suporte 
+{"url":"/fale-conosco","w":375,"overflow":false,"h1":"Como podemosajudar você?","anchors":[{"id":"formulario","padding":"24px","margin":"90px"}]}
+SCREENSHOT 375 /fale-conosco 
+{"url":"/eventos","w":375,"overflow":false,"h1":"Cultura, esportee música ao vivo.","anchors":[{"id":"ims","padding":"24px","margin":"90px"},{"id":"music-show","padding":"24px","margin":"90px"}]}
+SCREENSHOT 375 /eventos 
+{"url":"/avaliacoes","w":375,"overflow":false,"h1":"Quem é INETnão troca.","anchors":[{"id":"depoimentos","padding":"24px","margin":"90px"},{"id":"avaliar","padding":"24px","margin":"90px"}]}
+SCREENSHOT 375 /avaliacoes 
+{"url":"/teste-de-velocidade","w":375,"overflow":false,"h1":"Teste sua velocidadeda forma correta.","anchors":[{"id":"medidor","padding":"24px","margin":"90px"},{"id":"como-testar","padding":"24px","margin":"90px"}]}
+SCREENSHOT 375 /teste-de-velocidade 
+{"url":"/nao-existe","w":375,"overflow":false,"h1":"Essa fibranão chega aqui.","anchors":[]}
+SCREENSHOT 375 /nao-existe C:\Users\yuzzi\AppData\Local\Temp\maestri-portal-ef33dd1c-ec64-4fb1-8eeb-e661d5cce205.png
+{"url":"/","w":768,"overflow":false,"h1":"A internet fibramais escolhida da cidade.","anchors":[{"id":"planos","padding":"24px","margin":"90px"},{"id":"inet-tv","padding":"24px","margin":"90px"},{"id":"servicos","padding":"24px","margin":"90px"},{"id":"por-que-inet","padding":"24px","margin":"90px"},{"id":"autoatendimento","padding":"24px","margin":"90px"},{"id":"duvidas","padding":"24px","margin":"90px"}]}
+{"url":"/internet","w":768,"overflow":false,"h1":"Internet fibrade até 1 Giga.","anchors":[{"id":"planos","padding":"24px","margin":"90px"},{"id":"wifi6","padding":"24px","margin":"90px"},{"id":"wifi-mesh","padding":"24px","margin":"90px"},{"id":"seguranca","padding":"24px","margin":"90px"},{"id":"alexa","padding":"24px","margin":"90px"}]}
+{"url":"/tv","w":768,"overflow":false,"h1":"O jeito mais fácilde assistir TV.","anchors":[{"id":"sugestoes","padding":"24px","margin":"90px"},{"id":"planos","padding":"24px","margin":"90px"}]}
+{"url":"/telefone-fixo","w":768,"overflow":false,"h1":"Ligue à vontade,sem limite.","anchors":[{"id":"planos","padding":"24px","margin":"90px"}]}
+{"url":"/movel","w":768,"overflow":false,"h1":"Seu celularno 5G da INET.","anchors":[{"id":"planos","padding":"24px","margin":"90px"}]}
+{"url":"/entretenimento","w":768,"overflow":false,"h1":"Muito conteúdono seu plano.","anchors":[{"id":"apps","padding":"24px","margin":"90px"}]}
+{"url":"/cobertura","w":768,"overflow":false,"h1":"Tem INETna sua casa?","anchors":[{"id":"cep","padding":"24px","margin":"90px"},{"id":"lojas","padding":"24px","margin":"90px"}]}
+{"url":"/suporte","w":768,"overflow":false,"h1":"Estamos online24 horas.","anchors":[]}
+{"url":"/fale-conosco","w":768,"overflow":false,"h1":"Como podemosajudar você?","anchors":[{"id":"formulario","padding":"24px","margin":"90px"}]}
+{"url":"/eventos","w":768,"overflow":false,"h1":"Cultura, esportee música ao vivo.","anchors":[{"id":"ims","padding":"24px","margin":"90px"},{"id":"music-show","padding":"24px","margin":"90px"}]}
+{"url":"/avaliacoes","w":768,"overflow":false,"h1":"Quem é INETnão troca.","anchors":[{"id":"depoimentos","padding":"24px","margin":"90px"},{"id":"avaliar","padding":"24px","margin":"90px"}]}
+{"url":"/teste-de-velocidade","w":768,"overflow":false,"h1":"Teste sua velocidadeda forma correta.","anchors":[{"id":"medidor","padding":"24px","margin":"90px"},{"id":"como-testar","padding":"24px","margin":"90px"}]}
+{"url":"/nao-existe","w":768,"overflow":false,"h1":"Essa fibranão chega aqui.","anchors":[]}
+{"url":"/","w":1024,"overflow":false,"h1":"A internet fibramais escolhida da cidade.","anchors":[{"id":"planos","padding":"24px","margin":"90px"},{"id":"inet-tv","padding":"24px","margin":"90px"},{"id":"servicos","padding":"24px","margin":"90px"},{"id":"por-que-inet","padding":"24px","margin":"90px"},{"id":"autoatendimento","padding":"24px","margin":"90px"},{"id":"duvidas","padding":"24px","margin":"90px"}]}
+{"url":"/internet","w":1024,"overflow":false,"h1":"Internet fibrade até 1 Giga.","anchors":[{"id":"planos","padding":"24px","margin":"90px"},{"id":"wifi6","padding":"24px","margin":"90px"},{"id":"wifi-mesh","padding":"24px","margin":"90px"},{"id":"seguranca","padding":"24px","margin":"90px"},{"id":"alexa","padding":"24px","margin":"90px"}]}
+{"url":"/tv","w":1024,"overflow":false,"h1":"O jeito mais fácilde assistir TV.","anchors":[{"id":"sugestoes","padding":"24px","margin":"90px"},{"id":"planos","padding":"24px","margin":"90px"}]}
+{"url":"/telefone-fixo","w":1024,"overflow":false,"h1":"Ligue à vontade,sem limite.","anchors":[{"id":"planos","padding":"24px","margin":"90px"}]}
+{"url":"/movel","w":1024,"overflow":false,"h1":"Seu celularno 5G da INET.","anchors":[{"id":"planos","padding":"24px","margin":"90px"}]}
+{"url":"/entretenimento","w":1024,"overflow":false,"h1":"Muito conteúdono seu plano.","anchors":[{"id":"apps","padding":"24px","margin":"90px"}]}
+{"url":"/cobertura","w":1024,"overflow":false,"h1":"Tem INETna sua casa?","anchors":[{"id":"cep","padding":"24px","margin":"90px"},{"id":"lojas","padding":"24px","margin":"90px"}]}
+{"url":"/suporte","w":1024,"overflow":false,"h1":"Estamos online24 horas.","anchors":[]}
+{"url":"/fale-conosco","w":1024,"overflow":false,"h1":"Como podemosajudar você?","anchors":[{"id":"formulario","padding":"24px","margin":"90px"}]}
+{"url":"/eventos","w":1024,"overflow":false,"h1":"Cultura, esportee música ao vivo.","anchors":[{"id":"ims","padding":"24px","margin":"90px"},{"id":"music-show","padding":"24px","margin":"90px"}]}
+{"url":"/avaliacoes","w":1024,"overflow":false,"h1":"Quem é INETnão troca.","anchors":[{"id":"depoimentos","padding":"24px","margin":"90px"},{"id":"avaliar","padding":"24px","margin":"90px"}]}
+{"url":"/teste-de-velocidade","w":1024,"overflow":false,"h1":"Teste sua velocidadeda forma correta.","anchors":[{"id":"medidor","padding":"24px","margin":"90px"},{"id":"como-testar","padding":"24px","margin":"90px"}]}
+{"url":"/nao-existe","w":1024,"overflow":false,"h1":"Essa fibranão chega aqui.","anchors":[]}
+{"url":"/","w":1440,"overflow":false,"h1":"A internet fibramais escolhida da cidade.","anchors":[{"id":"planos","padding":"24px","margin":"90px"},{"id":"inet-tv","padding":"24px","margin":"90px"},{"id":"servicos","padding":"24px","margin":"90px"},{"id":"por-que-inet","padding":"24px","margin":"90px"},{"id":"autoatendimento","padding":"24px","margin":"90px"},{"id":"duvidas","padding":"24px","margin":"90px"}]}
+SCREENSHOT 1440 / C:\Users\yuzzi\AppData\Local\Temp\maestri-portal-f9bac30a-9d2b-47df-9d26-af3655342659.png
+{"url":"/internet","w":1440,"overflow":false,"h1":"Internet fibrade até 1 Giga.","anchors":[{"id":"planos","padding":"24px","margin":"90px"},{"id":"wifi6","padding":"24px","margin":"90px"},{"id":"wifi-mesh","padding":"24px","margin":"90px"},{"id":"seguranca","padding":"24px","margin":"90px"},{"id":"alexa","padding":"24px","margin":"90px"}]}
+SCREENSHOT 1440 /internet C:\Users\yuzzi\AppData\Local\Temp\maestri-portal-c6938c7b-8139-4b0f-815e-c5d665d8b403.png
+{"url":"/tv","w":1440,"overflow":false,"h1":"O jeito mais fácilde assistir TV.","anchors":[{"id":"sugestoes","padding":"24px","margin":"90px"},{"id":"planos","padding":"24px","margin":"90px"}]}
+SCREENSHOT 1440 /tv C:\Users\yuzzi\AppData\Local\Temp\maestri-portal-9d157a36-f271-471f-b476-c4827522304f.png
+{"url":"/telefone-fixo","w":1440,"overflow":false,"h1":"Ligue à vontade,sem limite.","anchors":[{"id":"planos","padding":"24px","margin":"90px"}]}
+SCREENSHOT 1440 /telefone-fixo C:\Users\yuzzi\AppData\Local\Temp\maestri-portal-552a353c-357d-4373-93ba-604a14552437.png
+{"url":"/movel","w":1440,"overflow":false,"h1":"Seu celularno 5G da INET.","anchors":[{"id":"planos","padding":"24px","margin":"90px"}]}
+SCREENSHOT 1440 /movel C:\Users\yuzzi\AppData\Local\Temp\maestri-portal-e0c2bdd4-4d08-4c58-84e1-8fee7d568f24.png
+{"url":"/entretenimento","w":1440,"overflow":false,"h1":"Muito conteúdono seu plano.","anchors":[{"id":"apps","padding":"24px","margin":"90px"}]}
+SCREENSHOT 1440 /entretenimento C:\Users\yuzzi\AppData\Local\Temp\maestri-portal-6e43ee25-f891-4df5-be2f-8a84288f6569.png
+{"url":"/cobertura","w":1440,"overflow":false,"h1":"Tem INETna sua casa?","anchors":[{"id":"cep","padding":"24px","margin":"90px"},{"id":"lojas","padding":"24px","margin":"90px"}]}
+SCREENSHOT 1440 /cobertura C:\Users\yuzzi\AppData\Local\Temp\maestri-portal-6f3dc053-f33d-44f4-b40e-9cc0663f0f6b.png
+{"url":"/suporte","w":1440,"overflow":false,"h1":"Estamos online24 horas.","anchors":[]}
+SCREENSHOT 1440 /suporte C:\Users\yuzzi\AppData\Local\Temp\maestri-portal-3e2d1bc6-f5d7-42bf-aee9-17c460df2c21.png
+{"url":"/fale-conosco","w":1440,"overflow":false,"h1":"Como podemosajudar você?","anchors":[{"id":"formulario","padding":"24px","margin":"90px"}]}
+SCREENSHOT 1440 /fale-conosco C:\Users\yuzzi\AppData\Local\Temp\maestri-portal-6187fcc4-925b-4b44-b48e-9d614a83067b.png
+{"url":"/eventos","w":1440,"overflow":false,"h1":"Cultura, esportee música ao vivo.","anchors":[{"id":"ims","padding":"24px","margin":"90px"},{"id":"music-show","padding":"24px","margin":"90px"}]}
+SCREENSHOT 1440 /eventos C:\Users\yuzzi\AppData\Local\Temp\maestri-portal-85659f94-15fe-4e8c-a310-c46b53b4700d.png
+{"url":"/avaliacoes","w":1440,"overflow":false,"h1":"Quem é INETnão troca.","anchors":[{"id":"depoimentos","padding":"24px","margin":"90px"},{"id":"avaliar","padding":"24px","margin":"90px"}]}
+SCREENSHOT 1440 /avaliacoes C:\Users\yuzzi\AppData\Local\Temp\maestri-portal-657bb306-647e-4df9-a747-e0b7eba1ba2c.png
+{"url":"/teste-de-velocidade","w":1440,"overflow":false,"h1":"Teste sua velocidadeda forma correta.","anchors":[{"id":"medidor","padding":"24px","margin":"90px"},{"id":"como-testar","padding":"24px","margin":"90px"}]}
+SCREENSHOT 1440 /teste-de-velocidade C:\Users\yuzzi\AppData\Local\Temp\maestri-portal-19cd3d29-9e44-4f3f-bad0-969b87dec13b.png
+{"url":"/nao-existe","w":1440,"overflow":false,"h1":"Essa fibranão chega aqui.","anchors":[]}
+SCREENSHOT 1440 /nao-existe C:\Users\yuzzi\AppData\Local\Temp\maestri-portal-0cc36473-55d4-4282-955c-eae133699645.png
+{"url":"/","w":1920,"overflow":false,"h1":"A internet fibramais escolhida da cidade.","anchors":[{"id":"planos","padding":"24px","margin":"90px"},{"id":"inet-tv","padding":"24px","margin":"90px"},{"id":"servicos","padding":"24px","margin":"90px"},{"id":"por-que-inet","padding":"24px","margin":"90px"},{"id":"autoatendimento","padding":"24px","margin":"90px"},{"id":"duvidas","padding":"24px","margin":"90px"}]}
+{"url":"/internet","w":1920,"overflow":false,"h1":"Internet fibrade até 1 Giga.","anchors":[{"id":"planos","padding":"24px","margin":"90px"},{"id":"wifi6","padding":"24px","margin":"90px"},{"id":"wifi-mesh","padding":"24px","margin":"90px"},{"id":"seguranca","padding":"24px","margin":"90px"},{"id":"alexa","padding":"24px","margin":"90px"}]}
+{"url":"/tv","w":1920,"overflow":false,"h1":"O jeito mais fácilde assistir TV.","anchors":[{"id":"sugestoes","padding":"24px","margin":"90px"},{"id":"planos","padding":"24px","margin":"90px"}]}
+{"url":"/telefone-fixo","w":1920,"overflow":false,"h1":"Ligue à vontade,sem limite.","anchors":[{"id":"planos","padding":"24px","margin":"90px"}]}
+{"url":"/movel","w":1920,"overflow":false,"h1":"Seu celularno 5G da INET.","anchors":[{"id":"planos","padding":"24px","margin":"90px"}]}
+{"url":"/entretenimento","w":1920,"overflow":false,"h1":"Muito conteúdono seu plano.","anchors":[{"id":"apps","padding":"24px","margin":"90px"}]}
+{"url":"/cobertura","w":1920,"overflow":false,"h1":"Tem INETna sua casa?","anchors":[{"id":"cep","padding":"24px","margin":"90px"},{"id":"lojas","padding":"24px","margin":"90px"}]}
+{"url":"/suporte","w":1920,"overflow":false,"h1":"Estamos online24 horas.","anchors":[]}
+{"url":"/fale-conosco","w":1920,"overflow":false,"h1":"Como podemosajudar você?","anchors":[{"id":"formulario","padding":"24px","margin":"90px"}]}
+{"url":"/eventos","w":1920,"overflow":false,"h1":"Cultura, esportee música ao vivo.","anchors":[{"id":"ims","padding":"24px","margin":"90px"},{"id":"music-show","padding":"24px","margin":"90px"}]}
+{"url":"/avaliacoes","w":1920,"overflow":false,"h1":"Quem é INETnão troca.","anchors":[{"id":"depoimentos","padding":"24px","margin":"90px"},{"id":"avaliar","padding":"24px","margin":"90px"}]}
+{"url":"/teste-de-velocidade","w":1920,"overflow":false,"h1":"Teste sua velocidadeda forma correta.","anchors":[{"id":"medidor","padding":"24px","margin":"90px"},{"id":"como-testar","padding":"24px","margin":"90px"}]}
+{"url":"/nao-existe","w":1920,"overflow":false,"h1":"Essa fibranão chega aqui.","anchors":[]}

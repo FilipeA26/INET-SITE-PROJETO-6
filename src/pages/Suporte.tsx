@@ -28,7 +28,7 @@ export default function Suporte() {
       </PageHero>
 
       <Section tag="Suporte pelo WhatsApp" title={["Passo a passo", "do atendimento."]}>
-        <ol className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+        <ol className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
           {STEPS.map((s, i) => (
             <Rise as="li" key={i} delay={i * 0.06} className="card h-full p-6">
               <span className="font-display text-4xl font-light text-lime">{i + 1}</span>
@@ -39,7 +39,7 @@ export default function Suporte() {
       </Section>
 
       <Section tag="Antes de chamar" title={["Dicas rápidas", "para sua conexão."]}>
-        <div className="grid gap-4 md:grid-cols-3">
+        <div className="grid gap-6 xl:gap-8 md:grid-cols-3">
           {[
             { icon: Power, title: "Reinicie o roteador", text: "Desligue o roteador da tomada, aguarde alguns segundos e ligue de novo. Confira se os cabos estão bem encaixados." },
             { icon: Wifi, title: "Sinal fraco em algum cômodo?", text: "Paredes e obstáculos enfraquecem o Wi-Fi. Entenda como a rede mesh resolve isso.", to: "/internet#wifi-mesh", cta: "Entender o Wi-Fi Mesh" },
@@ -85,7 +85,7 @@ export default function Suporte() {
       </Section>
 
       <Section tag="Mais canais" title={["Outras formas", "de atendimento."]}>
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-6 xl:gap-8 sm:grid-cols-2 lg:grid-cols-3">
           <Rise className="h-full">
             <a href={COMPANY.clientArea} target="_blank" rel="noreferrer" className="card flex h-full flex-col p-7">
               <UserRound size={22} aria-hidden="true" className="card-icon text-lime" />

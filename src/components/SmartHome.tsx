@@ -1,3 +1,4 @@
+import SectionBackdrop from "./fundos/SectionBackdrop";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { motion, useScroll, useSpring, useTransform } from "framer-motion";
 import { BellRing, Eye, Lightbulb, Moon, Music, Plug, Smartphone, Thermometer, Tv, Video } from "lucide-react";
@@ -27,7 +28,8 @@ function VideoBackdrop({ src, poster, className = "" }: { src: string; poster: s
 
 function Stage({ id, video, poster, children }: { id: string; video: string; poster: string; children: ReactNode }) {
   return (
-    <section id={id} className="relative py-20 sm:py-28">
+    <section id={id} className="section-frame relative isolate">
+      <SectionBackdrop variant="ink" />
       <div className="wrap">
         <div className="relative overflow-hidden rounded-[2.5rem] border border-white/10">
           <div className="absolute inset-0">

@@ -4,7 +4,18 @@ export default {
   theme: {
     extend: {
       colors: {
-        navy: { DEFAULT: "#03256C", deep: "#020F2E", ink: "#010818" },
+        snow: {
+          DEFAULT: "#EFF3F9",
+          deep: "#E2E8F4",
+          card: "#E4EAF5",
+          light: "#F7FAFD",
+        },
+        navy: {
+          DEFAULT: "#03256C",
+          deep: "#020F2E",
+          ink: "#010818",
+          muted: "#1E3A8A",
+        },
         royal: "#003F99",
         electric: "#0062EC",
         forest: "#007200",

@@ -142,7 +142,7 @@ export default function Eventos() {
 
       {/* as duas frentes */}
       <section className="pb-6">
-        <div className="wrap grid gap-4 md:grid-cols-2">
+        <div className="wrap grid gap-6 xl:gap-8 md:grid-cols-2">
           {[
             { href: "#ims", icon: Trophy, tag: "IMS · Cultura + Esporte", title: "O talento é daqui.", text: "Atletas, artistas e projetos de formação apoiados pela INET.", tone: "#38B000" },
             { href: "#music-show", icon: Mic2, tag: "INET Music Show", title: "O palco é nosso.", text: "Shows e experiências para clientes e para a cidade.", tone: "#0062EC" },
@@ -164,7 +164,7 @@ export default function Eventos() {
       </section>
 
       {/* IMS */}
-      <section id="ims" className="relative overflow-hidden py-20 sm:py-28">
+      <section id="ims" className="section-frame relative overflow-hidden">
         <div aria-hidden="true" className="pointer-events-none absolute -left-40 top-20 h-[480px] w-[480px] rounded-full bg-leaf/15 blur-[130px]" />
         <div className="wrap relative grid items-center gap-14 lg:grid-cols-[1.1fr_0.9fr]">
           <div>
@@ -175,7 +175,7 @@ export default function Eventos() {
                 Um projeto idealizado pela INET que reúne artistas, atletas, projetos esportivos e empresas para valorizar os talentos de Teófilo Otoni. O apoio pode acontecer com recursos, produtos, serviços, divulgação e experiências na cidade.
               </p>
             </Rise>
-            <div className="mt-10 grid grid-cols-3 gap-3">
+            <div className="mt-10 grid grid-cols-1 min-[420px]:grid-cols-3 gap-3">
               {IMS_STATS.map((s, i) => (
                 <Rise key={s.label} delay={0.25 + i * 0.06} className="card p-5">
                   <p className="font-display text-4xl font-light text-lime sm:text-5xl">{s.n}</p>
@@ -193,7 +193,7 @@ export default function Eventos() {
       </section>
 
       <Section tag="Nosso time" title={["Gente com talento.", "Histórias de verdade."]}>
-        <div className="grid gap-4 lg:grid-cols-2">
+        <div className="grid gap-6 xl:gap-8 lg:grid-cols-2">
           <Rise className="card p-8">
             <Trophy size={22} aria-hidden="true" className="card-icon text-lime" />
             <h3 className="mt-5 font-display text-2xl">Atletas · 9 apoiados</h3>
@@ -216,7 +216,7 @@ export default function Eventos() {
             </ul>
           </Rise>
         </div>
-        <div className="mt-4 grid gap-4 md:grid-cols-2">
+        <div className="mt-4 grid gap-6 xl:gap-8 md:grid-cols-2">
           {IMS_PROJECTS.map((p, i) => (
             <Rise key={p.name} delay={i * 0.08} className="card p-8">
               <p className="tag">{p.sport}</p>
@@ -228,7 +228,7 @@ export default function Eventos() {
       </Section>
 
       <Section tag="Programação IMS" title={["Marque na", "sua semana."]}>
-        <ol className="grid gap-4 md:grid-cols-2">
+        <ol className="grid gap-6 xl:gap-8 md:grid-cols-2">
           {IMS_AGENDA.map((e, i) => (
             <Rise as="li" key={e.title} delay={i * 0.08} className="card flex gap-6 p-7">
               <div className="shrink-0 text-center">
@@ -250,7 +250,7 @@ export default function Eventos() {
       </Section>
 
       {/* INET MUSIC SHOW — PROVISÓRIO: todo o conteúdo abaixo é marcador até a INET enviar os dados reais */}
-      <section id="music-show" className="relative overflow-hidden py-20 sm:py-28">
+      <section id="music-show" className="section-frame relative overflow-hidden">
         <div className="wrap">
           <div className="relative overflow-hidden rounded-[2rem] border border-white/10 bg-[linear-gradient(140deg,#003F99,#03256C_45%,#010818)] p-8 sm:p-14">
             <div aria-hidden="true" className="pointer-events-none absolute -right-20 -top-28 h-96 w-96 rounded-full bg-lime/20 blur-[110px]" />
@@ -286,7 +286,7 @@ export default function Eventos() {
               </div>
               <ul className="mt-10 divide-y divide-white/10 border-y border-white/10">
                 {SHOW_LINEUP.map((a, i) => (
-                  <Rise as="li" key={a.slot} delay={i * 0.06} className="flex items-baseline justify-between gap-6 py-5">
+                  <Rise as="li" key={a.slot} delay={i * 0.06} className="flex flex-col gap-2 py-5 sm:flex-row sm:items-baseline sm:justify-between sm:gap-6">
                     <span className="text-xs uppercase tracking-[0.2em] text-white/50">{a.slot}</span>
                     <span className="font-display text-2xl font-light sm:text-4xl">{a.name}</span>
                   </Rise>
