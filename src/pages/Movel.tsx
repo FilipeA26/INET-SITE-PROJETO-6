@@ -1,10 +1,12 @@
 import { ArrowLeftRight, Coins, ExternalLink, MessageCircle, Navigation, PhoneCall, Signal } from "lucide-react";
-import { useRef, type PointerEvent } from "react";
-import { motion, useMotionValue, useReducedMotion, useScroll, useSpring, useTransform } from "framer-motion";
 import PlanCarousel from "../components/PlanCarousel";
 import Lines, { Rise, Fit } from "../components/Lines";
+import WorkGrid from "../components/lusion/WorkGrid";
+import WorkCard from "../components/lusion/WorkCard";
 import { CtaBand, Faq, FeatureCard, Note, Section, usePageMeta } from "../components/ui";
-import { SPRING } from "../motion";
+import ScrollSpin from "../components/giro/ScrollSpin";
+import InetPhone from "../components/giro/InetPhone";
+import SectionBackdrop from "../components/fundos/SectionBackdrop";
 import { waLink } from "../data/inet";
 
 const HIGHLIGHTS = [
@@ -14,77 +16,24 @@ const HIGHLIGHTS = [
   { icon: ArrowLeftRight, label: "Portabilidade +2 GB" },
 ];
 
-/** Celular com o site da INET aberto: flutua com a rolagem e inclina seguindo o mouse. */
-function SitePhone() {
-  const ref = useRef<HTMLDivElement>(null);
-  const reduce = useReducedMotion();
-  const mx = useMotionValue(0);
-  const my = useMotionValue(0);
-  const rx = useSpring(useTransform(my, [-0.5, 0.5], [8, -8]), SPRING);
-  const ry = useSpring(useTransform(mx, [-0.5, 0.5], [-16, 16]), SPRING);
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
-  const y = useSpring(useTransform(scrollYProgress, [0, 1], [70, -90]), SPRING);
-  const rz = useSpring(useTransform(scrollYProgress, [0, 1], [4, -4]), SPRING);
-  const glare = useTransform(mx, [-0.5, 0.5], ["0%", "100%"]);
-
-  const move = (e: PointerEvent<HTMLDivElement>) => {
-    if (reduce || e.pointerType !== "mouse") return;
-    const r = e.currentTarget.getBoundingClientRect();
-    mx.set((e.clientX - r.left) / r.width - 0.5);
-    my.set((e.clientY - r.top) / r.height - 0.5);
-  };
-
-  return (
-    <div ref={ref} onPointerMove={move} onPointerLeave={() => { mx.set(0); my.set(0); }} className="relative mx-auto w-full max-w-[360px] [perspective:1300px] lg:max-w-[400px]">
-      <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-1/4 mx-auto h-2/3 w-3/4 rounded-full bg-lime/20 blur-[100px]" />
-      <div aria-hidden="true" className="pointer-events-none absolute -right-10 top-10 h-72 w-72 rounded-full bg-[#021A4A] blur-[90px]" />
-      <motion.div
-        style={reduce ? undefined : { rotateX: rx, rotateY: ry, rotateZ: rz, y }}
-        className="relative rounded-[3.2rem] bg-gradient-to-b from-[#1b2a4d] to-[#060d22] p-[12px] shadow-[0_60px_120px_-30px_rgba(0,0,0,0.95),inset_0_0_0_1.5px_rgba(255,255,255,0.14)] [transform-style:preserve-3d]"
-      >
-        <span aria-hidden="true" className="absolute -left-[3px] top-28 h-10 w-[3px] rounded-l bg-[#24345a]" />
-        <span aria-hidden="true" className="absolute -left-[3px] top-44 h-16 w-[3px] rounded-l bg-[#24345a]" />
-        <span aria-hidden="true" className="absolute -right-[3px] top-36 h-20 w-[3px] rounded-r bg-[#24345a]" />
-        <div className="relative overflow-hidden rounded-[2.6rem] bg-[#010818]">
-          {/* captura 390x844 (2x) da página inicial do site */}
-          {/* barra de status com a ilha e o 5G, acima da página */}
-          <div aria-hidden="true" className="relative flex h-10 items-center justify-between px-7 text-[11px] font-semibold text-white">
-            <span>9:41</span>
-            <span className="absolute left-1/2 top-2.5 h-6 w-24 -translate-x-1/2 rounded-full bg-black" />
-            <span className="flex items-center gap-1.5">
-              <Signal size={12} />
-              <span className="rounded bg-lime px-1 text-[9px] font-bold leading-4 text-navy-ink">5G</span>
-            </span>
-          </div>
-          <img src="/movel/site-mobile.webp" alt="Site da INET aberto no celular: “A internet fibra mais escolhida da cidade.”" width={780} height={1688} className="block h-auto w-full" />
-          <motion.span
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-0 bg-[linear-gradient(115deg,transparent_35%,rgba(255,255,255,0.14)_50%,transparent_65%)] bg-[length:250%_100%]"
-            style={{ backgroundPositionX: glare }}
-          />
-        </div>
-      </motion.div>
-    </div>
-  );
-}
-
 export default function Movel() {
   usePageMeta("Chip móvel 5G", "Chip móvel INET com acesso à rede 5G, ligações ilimitadas para todo o Brasil, WhatsApp e Waze ilimitados. Faça a portabilidade e ganhe 2 Giga a mais.");
 
   return (
     <>
-      <section className="relative overflow-hidden pb-16 pt-36 sm:pt-44">
+      <section className="page-hero r7-surface relative isolate overflow-hidden">
+        <SectionBackdrop variant="mist" />
         <div aria-hidden="true" className="pointer-events-none absolute -right-40 -top-40 h-[560px] w-[560px] rounded-full bg-[#021A4A]/70 blur-[130px]" />
         <div aria-hidden="true" className="pointer-events-none absolute -left-32 top-40 h-[360px] w-[360px] rounded-full bg-lime/10 blur-[110px]" />
-        <div className="wrap relative grid items-center gap-14 lg:grid-cols-[1.1fr_0.9fr]">
-          <div>
+        <div className="wrap relative hero-split">
+          <div className="hero-copy">
             <Rise><Fit className="tag">Chip móvel</Fit></Rise>
             <Lines as="h1" className="h-xl mt-5" lines={["Seu celular", <span className="italic text-lime">no 5G da INET.</span>]} />
             <Rise delay={0.3}>
               <p className="lead mt-6 max-w-xl">Planos de internet com telefonia móvel: acesso à rede 5G, ligações ilimitadas para qualquer operadora do Brasil e WhatsApp ilimitado.</p>
             </Rise>
             <Rise delay={0.4}>
-              <ul className="mt-8 grid max-w-lg grid-cols-2 gap-3">
+              <ul className="mt-8 grid max-w-lg grid-cols-1 min-[420px]:grid-cols-2 gap-3">
                 {HIGHLIGHTS.map((h) => (
                   <li key={h.label} className="flex items-center gap-3 rounded-2xl border border-white/10 bg-[#010C22]/80 px-4 py-3 text-sm backdrop-blur">
                     <h.icon size={18} aria-hidden="true" className="shrink-0 text-lime" /> {h.label}
@@ -97,14 +46,17 @@ export default function Movel() {
               <a href={waLink("Olá! Quero saber sobre o chip móvel da INET.")} target="_blank" rel="noreferrer" className="btn-ghost">Tirar dúvidas</a>
             </Rise>
           </div>
-          <Rise delay={0.2}>
-            <SitePhone />
-          </Rise>
+          <div className="hero-object hero-phone" aria-hidden="true"><InetPhone /></div>
         </div>
       </section>
 
-      <Section tag="Vantagens" title={["Tudo o que você precisa", "em um plano móvel."]}>
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="relative isolate">
+        <SectionBackdrop variant="cinematic" />
+        <ScrollSpin variant="phone" label="Celular INET com movimento pela rolagem"><InetPhone /></ScrollSpin>
+      </div>
+
+      <Section variant="snow" tag="Vantagens" title={["Tudo o que você precisa", "em um plano móvel."]}>
+        <div className="grid gap-6 xl:gap-8 sm:grid-cols-2 lg:grid-cols-3">
           <FeatureCard icon={Signal} title="Acesso à rede 5G" text="Todos os planos de telefonia móvel podem navegar na rede 5G." />
           <FeatureCard icon={PhoneCall} title="Ligações ilimitadas" text="Fale com qualquer operadora do Brasil sem se preocupar com a duração da chamada." delay={0.06} />
           <FeatureCard icon={MessageCircle} title="WhatsApp ilimitado" text="Em todos os planos móveis, o WhatsApp é ilimitado além da franquia de dados." delay={0.12} />
@@ -114,11 +66,11 @@ export default function Movel() {
         </div>
       </Section>
 
-      <Section tag="Portabilidade" title={["Traga seu número", <span className="italic text-lime">e ganhe 2 Giga.</span>]}>
+      <Section variant="mist" layout="split" tag="Portabilidade" title={["Traga seu número", <span className="italic text-lime">e ganhe 2 Giga.</span>]}>
         <Rise>
           <div className="card flex flex-col gap-6 p-8 sm:flex-row sm:items-center sm:p-10">
-            <p className="font-display text-7xl font-light text-lime">+2<span className="text-3xl">GB</span></p>
-            <p className="lead max-w-xl">Trazendo seu número para a INET, além de todas as vantagens, você ganha mais 2 Giga de internet para navegar à vontade.</p>
+            <p className="shrink-0 whitespace-nowrap font-display text-7xl font-light text-lime">+2<span className="text-3xl">GB</span></p>
+            <p className="lead min-w-0 flex-1 max-w-xl">Trazendo seu número para a INET, além de todas as vantagens, você ganha mais 2 Giga de internet para navegar à vontade.</p>
           </div>
         </Rise>
         <Note>Condição publicada no site anterior; confirme a validade da oferta com o atendimento.</Note>
@@ -136,12 +88,40 @@ export default function Movel() {
         </div>
       </Section>
 
+      <WorkGrid
+        id="experiencia-movel"
+        tag="Experiência móvel"
+        title={["Conexão total,", <span className="italic text-lime">dentro e fora de casa.</span>]}
+        lead="Navegue na rede 5G com ligações ilimitadas e use os principais aplicativos sem consumir sua franquia."
+        variant="ink"
+      >
+        <WorkCard
+          tag="01 · Rede 5G e Apps"
+          title="WhatsApp e Waze sem limite"
+          subtitle="Em todos os planos móveis da INET, o WhatsApp e o Waze são ilimitados além da franquia de dados. Navegue e converse à vontade."
+          imageSrc="/movel/site-mobile.webp"
+          aspect="aspect-[16/11]"
+          badge="Zero franquia"
+          href="#planos"
+        />
+        <WorkCard
+          tag="02 · Portabilidade"
+          title="Traga seu número e ganhe 2 Giga"
+          subtitle="Trazendo seu número de qualquer operadora para o chip móvel 5G da INET, você ganha 2 Giga de internet a mais no seu plano."
+          imageSrc="/eventos/ims-mobile.png"
+          aspect="aspect-[4/5]"
+          offsetY="md:mt-16 lg:mt-24"
+          badge="+2 GB de bônus"
+          href={waLink("Olá! Quero fazer a portabilidade para a INET e ganhar 2 GB de bônus.")}
+        />
+      </WorkGrid>
+
       <Section id="planos" tag="Internet + chip" title={["Planos de internet", "com telefonia móvel."]}>
         <PlanCarousel groups={["movel"]} />
         <Note>O site anterior também anunciava versões com 20 Giga móveis e o plano Casa Segura com chip, mas os valores não puderam ser recuperados. Confirme os planos móveis atuais com a INET.</Note>
       </Section>
 
-      <Section tag="Dúvidas" title={["Perguntas", "frequentes."]}>
+      <Section variant="snow" layout="split" tag="Dúvidas" title={["Perguntas", "frequentes."]}>
         <Faq
           items={[
             { q: "O chip funciona na rede 5G?", a: "Sim, todos os planos de telefonia móvel podem navegar na rede 5G. A disponibilidade do sinal 5G depende da cobertura no local e da compatibilidade do aparelho." },
@@ -152,8 +132,8 @@ export default function Movel() {
         />
       </Section>
 
-      <CtaBand title={["Fale à vontade,", <span className="italic text-lime">navegue no 5G.</span>]} text="Contrate seu plano com chip móvel e faça a portabilidade com a ajuda da nossa equipe.">
-        <a href={waLink("Olá! Quero um plano com chip móvel da INET.")} target="_blank" rel="noreferrer" className="btn-lime">Falar no WhatsApp</a>
+      <CtaBand title={["Pronto para levar a INET", <span className="italic text-lime">no seu celular?</span>]} text="Consulte nossa equipe para verificar a cobertura e escolher o melhor plano com chip móvel.">
+        <a href={waLink("Olá! Quero contratar um plano de celular da INET.")} target="_blank" rel="noreferrer" className="btn-lime">Falar no WhatsApp</a>
       </CtaBand>
     </>
   );

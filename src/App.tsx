@@ -4,9 +4,9 @@ import Lenis from "lenis";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import BackToTop from "./components/BackToTop";
-import SideRails from "./components/SideRails";
 import WhatsAppButton from "./components/WhatsAppButton";
 import Home from "./pages/Home";
+import { FiberTube, ReelUnfold } from "./components/lusion";
 
 // páginas internas carregadas sob demanda (o mapa e os medidores não pesam na inicial)
 const Internet = lazy(() => import("./pages/Internet"));
@@ -20,9 +20,13 @@ const Suporte = lazy(() => import("./pages/Suporte"));
 const FaleConosco = lazy(() => import("./pages/FaleConosco"));
 const Eventos = lazy(() => import("./pages/Eventos"));
 const Avaliacoes = lazy(() => import("./pages/Avaliacoes"));
+const Combo = lazy(() => import("./pages/Combo"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 let lenis: Lenis | null = null;
+
+// altura do menu flutuante + respiro: toda âncora pousa com o título logo abaixo dele
+const HEADER_OFFSET = -90;
 
 /** Rolagem suave com inércia; âncoras "#" deslizam com a mesma curva. */
 function useSmoothScroll() {
@@ -39,7 +43,7 @@ function useSmoothScroll() {
       const el = document.querySelector(a.getAttribute("href")!);
       if (!el) return;
       e.preventDefault();
-      lenis?.scrollTo(el as HTMLElement, { duration: 1.8, easing: (x) => 1 - Math.pow(1 - x, 4) });
+      lenis?.scrollTo(el as HTMLElement, { offset: HEADER_OFFSET, duration: 1.8, easing: (x) => 1 - Math.pow(1 - x, 4) });
     };
     document.addEventListener("click", onClick);
     return () => {
@@ -55,13 +59,39 @@ function useSmoothScroll() {
 function ScrollManager() {
   const { pathname, hash } = useLocation();
   useEffect(() => {
-    const go = () => {
-      const el = hash ? document.querySelector(hash) : null;
-      if (el) lenis ? lenis.scrollTo(el as HTMLElement, { offset: -90 }) : el.scrollIntoView();
-      else lenis ? lenis.scrollTo(0, { immediate: true }) : window.scrollTo(0, 0);
+    if (!hash) {
+      lenis ? lenis.scrollTo(0, { immediate: true }) : window.scrollTo(0, 0);
+      return;
+    }
+    // páginas internas carregam sob demanda: espera a seção existir (até ~3 s) antes de rolar
+    let tries = 0;
+    let t = 0;
+    let ro: ResizeObserver | null = null;
+    const scrollTo = (el: HTMLElement) => (lenis ? lenis.scrollTo(el, { offset: HEADER_OFFSET }) : el.scrollIntoView());
+    // blocos que montam depois (globo, Wi-Fi 6, mapa) mudam a altura da página: durante ~3 s
+    // o destino é recalculado a cada mudança, até a pessoa rolar por conta própria
+    const stop = () => {
+      ro?.disconnect();
+      ro = null;
+      ["wheel", "touchstart", "keydown"].forEach((ev) => window.removeEventListener(ev, stop));
     };
-    const t = window.setTimeout(go, hash ? 250 : 0);
-    return () => window.clearTimeout(t);
+    const go = () => {
+      const el = document.querySelector<HTMLElement>(hash);
+      if (!el) {
+        if (tries++ < 30) t = window.setTimeout(go, 100);
+        return;
+      }
+      scrollTo(el);
+      ro = new ResizeObserver(() => scrollTo(el));
+      ro.observe(document.body);
+      ["wheel", "touchstart", "keydown"].forEach((ev) => window.addEventListener(ev, stop, { passive: true }));
+      t = window.setTimeout(stop, 3000);
+    };
+    t = window.setTimeout(go, 150);
+    return () => {
+      window.clearTimeout(t);
+      stop();
+    };
   }, [pathname, hash]);
   return null;
 }
@@ -69,16 +99,18 @@ function ScrollManager() {
 function Layout() {
   useSmoothScroll();
   return (
-    <div id="top" className="min-h-screen bg-navy-ink">
+    <div id="top" className="relative isolate min-h-screen bg-navy-ink">
       <ScrollManager />
       <Header />
-      <main id="conteudo" tabIndex={-1} className="outline-none">
+      <FiberTube />
+      <main id="conteudo" tabIndex={-1} className="relative z-10 outline-none">
         <Suspense fallback={<div className="min-h-screen" aria-busy="true" />}>
           <Outlet />
         </Suspense>
       </main>
-      <Footer />
-      <SideRails />
+      <div className="relative z-10">
+        <Footer />
+      </div>
       <BackToTop />
       <WhatsAppButton />
     </div>
@@ -101,6 +133,8 @@ export default function App() {
         <Route path="fale-conosco" element={<FaleConosco />} />
         <Route path="eventos" element={<Eventos />} />
         <Route path="avaliacoes" element={<Avaliacoes />} />
+        <Route path="monte-seu-combo" element={<Combo />} />
+        <Route path="reel" element={<ReelUnfold />} />
         <Route path="*" element={<NotFound />} />
       </Route>
     </Routes>

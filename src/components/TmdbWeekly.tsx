@@ -1,3 +1,4 @@
+import SectionBackdrop from "./fundos/SectionBackdrop";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { AnimatePresence, motion } from "framer-motion";
@@ -504,7 +505,8 @@ export default function TmdbWeekly({ id = "sugestoes" }: { id?: string }) {
   }
 
   return (
-    <section id={id} className="relative overflow-hidden py-20 sm:py-28">
+    <section id={id} className="section-frame relative isolate overflow-hidden">
+      <SectionBackdrop variant="ink" />
       <div aria-hidden="true" className="pointer-events-none absolute -right-40 top-0 h-[480px] w-[480px] rounded-full bg-[#021A4A]/50 blur-[130px]" />
       <div className="wrap relative">
         <Weekly onOpen={setOpen} />

@@ -7,7 +7,7 @@ const icons = { Instagram, Facebook, YouTube: Youtube } as const;
 
 export default function Footer() {
   return (
-    <footer className="relative border-t border-white/10 bg-navy-ink">
+    <footer data-lateral="lojas" className="relative border-t border-white/10 bg-navy-ink/70">
       <div className="wrap py-16">
         <div className="flex flex-col items-start justify-between gap-6 border-b border-white/10 pb-12 sm:flex-row sm:items-center">
           <img src="/inet-logo-branca.png" alt="INET Internet Fibra Óptica" width={120} height={42} className="h-10 w-auto" />

@@ -1,11 +1,12 @@
-﻿import { Clapperboard, Radio, Router, Tv as TvIcon } from "lucide-react";
+import { Clapperboard, Radio, Tv as TvIcon } from "lucide-react";
 import PlanCarousel from "../components/PlanCarousel";
-import ProductShot from "../components/ProductShot";
-import { Rise } from "../components/Lines";
+import SideToCenter from "../components/giro/SideToCenter";
+import SectionBackdrop from "../components/fundos/SectionBackdrop";
+import WorkGrid from "../components/lusion/WorkGrid";
+import WorkCard from "../components/lusion/WorkCard";
 import { CtaBand, Faq, FeatureCard, Note, PageHero, Section, usePageMeta } from "../components/ui";
 import { INET_TV, waLink } from "../data/inet";
 import TmdbWeekly from "../components/TmdbWeekly";
-
 
 export default function Tv() {
   usePageMeta("INET TV", "INET TV: canais de TV aberta ao vivo, rádios e filmes on demand na sua TV com o receptor INET TV, mesmo que ela não seja smart. Receptor em comodato.");
@@ -13,6 +14,7 @@ export default function Tv() {
   return (
     <>
       <PageHero
+        media={<img src="/inet-tv-receptor.webp" alt="" width={760} height={732} className="block h-auto w-full object-contain" />}
         tag="INET TV"
         title={["O jeito mais fácil", <span className="italic text-lime">de assistir TV.</span>]}
         lead="Canais de TV aberta ao vivo, estações de rádio e filmes on demand na sua TV com o receptor INET TV, mesmo que ela não seja smart."
@@ -21,8 +23,15 @@ export default function Tv() {
         <a href="#planos" className="btn-ghost">Planos com TV</a>
       </PageHero>
 
-      <Section tag="O que você tem" title={["TV, rádio e filmes", "em qualquer tela."]}>
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="relative isolate">
+        <SectionBackdrop variant="cinematic" />
+        <SideToCenter variant="box" side="right" label="Receptor INET TV da lateral ao centro">
+          <img src="/inet-tv-receptor.webp" width={760} height={732} alt="Receptor INET TV com controle remoto" loading="lazy" decoding="async" className="mx-auto block max-h-[65svh] h-auto w-full object-contain" />
+        </SideToCenter>
+      </div>
+
+      <Section variant="snow" tag="O que você tem" title={["TV, rádio e filmes", "em qualquer tela."]}>
+        <div className="grid gap-6 xl:gap-8 sm:grid-cols-2 lg:grid-cols-3">
           <FeatureCard icon={TvIcon} title="Canais de TV" text="Os principais canais de TV aberta ao vivo." />
           <FeatureCard icon={Radio} title="Canais de rádio" text="Mais de 30 estações de rádio no seu dispositivo." delay={0.05} />
           <FeatureCard icon={Clapperboard} title="On demand" text="Centenas de filmes para assistir à vontade." delay={0.1} />
@@ -34,34 +43,39 @@ export default function Tv() {
 
       <TmdbWeekly />
 
-      <Section tag="Receptor INET TV" title={["Funciona até em", "TV que não é smart."]}>
-        <div className="grid items-center gap-10 lg:grid-cols-2">
-          <ProductShot src="/inet-tv-receptor.webp" alt="Receptor INET TV com controle remoto" width={760} height={732} glow="#38B000" className="mx-auto w-full max-w-[460px] lg:order-2" />
-          <div>
-            <Rise>
-              <p className="lead">
-                O receptor INET TV traz mais conforto para usar em qualquer tipo de TV, mesmo quando ela não é smart. Leve o receptor para onde quiser: basta conectá-lo a uma rede Wi-Fi, pegar o controle remoto e curtir a programação.
-              </p>
-            </Rise>
-            <Rise delay={0.1}>
-              <div className="card mt-8 flex items-center gap-6 p-7">
-                <Router size={36} aria-hidden="true" className="card-icon shrink-0 text-lime" />
-                <div>
-                  <p className="text-sm text-white/60">Receptor em comodato</p>
-                  <p className="font-display text-4xl">R$ {INET_TV.receiverPrice}<span className="text-base text-white/50">/mês</span></p>
-                  <p className="mt-1 text-xs text-white/45">Valor do site anterior; confirme com o atendimento.</p>
-                </div>
-              </div>
-            </Rise>
-          </div>
-        </div>
-      </Section>
+      <WorkGrid
+        id="experiencia-tv"
+        tag="Experiência INET TV"
+        title={["Sua TV completa,", <span className="italic text-lime">ao vivo e on demand.</span>]}
+        lead="Canais de TV aberta ao vivo, estações de rádio e filmes on demand na sua TV com o receptor INET TV, mesmo que ela não seja smart."
+        variant="ink"
+      >
+        <WorkCard
+          tag="01 · Filmes e Séries On Demand"
+          title="Centenas de títulos para maratonar"
+          subtitle="O catálogo on demand traz grandes produções para curtir em até 2 dispositivos simultâneos com a fibra da INET."
+          imageSrc="/moods/fantasia-1.webp"
+          aspect="aspect-[16/11]"
+          badge="Multitela"
+          href="#planos"
+        />
+        <WorkCard
+          tag="02 · Receptor em comodato"
+          title="Funciona até em TV que não é smart"
+          subtitle={`Leve o receptor para onde quiser: conecte ao Wi-Fi pelo HDMI, pegue o controle remoto e curta a programação. R$ ${INET_TV.price}/mês em comodato.`}
+          imageSrc="/inet-tv-receptor.webp"
+          aspect="aspect-[4/5]"
+          offsetY="md:mt-16 lg:mt-24"
+          badge={`R$ ${INET_TV.price}/mês`}
+          href={waLink("Olá! Quero assinar o plano com receptor INET TV.")}
+        />
+      </WorkGrid>
 
-      <Section id="planos" tag="Planos" title={["Internet fibra", "para assistir sem travar."]}>
+      <Section variant="ink" id="planos" tag="Planos" title={["Internet fibra", "para assistir sem travar."]}>
         <PlanCarousel />
       </Section>
 
-      <Section tag="Dúvidas" title={["Perguntas", "frequentes."]}>
+      <Section variant="snow" layout="split" tag="Dúvidas" title={["Perguntas", "frequentes."]}>
         <Faq
           items={[
             { q: "Em quantos aparelhos posso assistir ao mesmo tempo?", a: "Com o recurso multitela, em até 2 dispositivos simultâneos." },

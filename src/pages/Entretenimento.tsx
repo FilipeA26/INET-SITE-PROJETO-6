@@ -2,6 +2,8 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import AppsShowcase, { AutoCarousel, Dots, type Slide } from "../components/AppsShowcase";
 import { Rise } from "../components/Lines";
+import WorkGrid from "../components/lusion/WorkGrid";
+import WorkCard from "../components/lusion/WorkCard";
 import { CtaBand, PageHero, Section, usePageMeta } from "../components/ui";
 import { waLink } from "../data/inet";
 
@@ -64,6 +66,34 @@ export default function Entretenimento() {
       />
 
       <AppsShowcase tag="Apps e streaming" />
+
+      <WorkGrid
+        id="experiencia-streaming"
+        tag="Filmes e séries"
+        title={["Cinema e música", <span className="italic text-lime">no seu plano.</span>]}
+        lead="HBO Max, Disney+ e Deezer selecionados pela equipe INET para você aproveitar filmes, séries e música com a velocidade da fibra."
+        variant="ink"
+      >
+        <WorkCard
+          tag="01 · Filmes e séries"
+          title="HBO Max no plano 800 Mega"
+          subtitle="Blockbusters, clássicos do cinema e originais exclusivos para maratonar sem travar."
+          imageSrc="/apps/hbo-1.webp"
+          aspect="aspect-[16/11]"
+          badge="Incluso 800 Mega"
+          href="/internet#planos"
+        />
+        <WorkCard
+          tag="02 · Música sem limites"
+          title="Deezer nos planos 700 Mega e 1 Giga"
+          subtitle="Deezer Premium sem anúncios, com download para ouvir offline."
+          imageSrc="/apps/deezer-1.webp"
+          aspect="aspect-[4/5]"
+          offsetY="md:mt-16 lg:mt-24"
+          badge="700M e 1 Giga"
+          href="/internet#planos"
+        />
+      </WorkGrid>
 
       <Section tag="Para maratonar" title={["Qual é o seu", "clima de hoje?"]}>
         <div className="grid gap-4 md:grid-cols-3">

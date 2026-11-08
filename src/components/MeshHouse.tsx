@@ -1,3 +1,4 @@
+import SectionBackdrop from "./fundos/SectionBackdrop";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { motion, useInView, useReducedMotion } from "framer-motion";
 import { Router, Share2, Smartphone } from "lucide-react";
@@ -310,7 +311,8 @@ export default function MeshHouse({ id = "mesh", tag = "Wi-Fi na casa toda", def
     : `Planta de uma casa com um único roteador no quarto 1. As ondas clareiam ao atravessar cada parede; ${offline.length ? `ficam sem sinal: ${offline.join(", ")}.` : "alguns cômodos ficam com sinal fraco."}`;
 
   return (
-    <section id={id} className="relative overflow-hidden py-20 sm:py-28">
+    <section id={id} className="section-frame relative isolate overflow-hidden">
+      <SectionBackdrop variant="ink" />
       <div aria-hidden="true" className="pointer-events-none absolute -left-40 top-20 h-[460px] w-[460px] rounded-full bg-[#021A4A]/60 blur-[130px]" />
       <div className="wrap relative">
         <Rise><Fit className="tag">{tag}</Fit></Rise>

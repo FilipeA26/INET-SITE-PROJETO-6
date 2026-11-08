@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { QRCodeSVG } from "qrcode.react";
 import { ArrowUpRight, Quote, Star } from "lucide-react";
 import { Rise } from "../components/Lines";
@@ -9,6 +9,7 @@ import { GOOGLE_REVIEW_URL, TESTIMONIALS, waLink } from "../data/inet";
 const STEPS = ["Aponte a câmera do celular para o QR code", "Escolha de 1 a 5 estrelas", "Conte como é a sua internet INET"];
 
 export default function Avaliacoes() {
+  const reduce = useReducedMotion();
   usePageMeta("Depoimentos e avaliações", "O que os clientes falam da INET e como avaliar a INET no Google: aponte a câmera para o QR code e deixe sua opinião.");
 
   return (
@@ -21,8 +22,8 @@ export default function Avaliacoes() {
         <a href="#avaliar" className="btn-lime">Avaliar no Google</a>
       </PageHero>
 
-      <Section tag="Depoimentos" title={["O que dizem", "nossos clientes."]}>
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <Section id="depoimentos" tag="Depoimentos" title={["O que dizem", "nossos clientes."]}>
+        <div className="grid gap-6 xl:gap-8 sm:grid-cols-2 lg:grid-cols-3">
           {TESTIMONIALS.map((t, i) => (
             <Rise key={t.handle} delay={(i % 3) * 0.06} className="h-full">
               <figure className="card flex h-full flex-col p-7">
@@ -56,7 +57,7 @@ export default function Avaliacoes() {
             </div>
 
             <motion.div
-              initial={{ opacity: 0, scale: 0.92, rotate: -3 }}
+              initial={reduce ? false : { opacity: 0, scale: 0.92, rotate: -3 }}
               whileInView={{ opacity: 1, scale: 1, rotate: 0 }}
               viewport={{ once: true, margin: "-10% 0px" }}
               transition={{ duration: DUR, ease: EASE }}
@@ -64,7 +65,7 @@ export default function Avaliacoes() {
             >
               <div aria-hidden="true" className="absolute -inset-6 rounded-[2.5rem] bg-lime/20 blur-2xl" />
               <div className="relative rounded-[2rem] bg-white p-5 shadow-[0_30px_60px_-20px_rgba(0,0,0,0.8)]">
-                <QRCodeSVG value={GOOGLE_REVIEW_URL} size={208} level="M" fgColor="#010818" title="QR code para avaliar a INET no Google" />
+                <QRCodeSVG value={GOOGLE_REVIEW_URL} size={208} className="h-auto max-w-full" level="M" fgColor="#010818" title="QR code para avaliar a INET no Google" />
                 <p className="mt-3 flex items-center justify-center gap-1.5 text-sm font-semibold text-[#010818]">
                   <Star size={15} aria-hidden="true" className="fill-[#38B000] text-[#38B000]" /> Avalie no Google
                 </p>

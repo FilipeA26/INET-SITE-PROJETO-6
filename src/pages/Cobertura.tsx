@@ -9,7 +9,7 @@ export default function Cobertura() {
   return (
     <>
       <PageHero
-        tag="Cobertura · Teófilo Otoni e Carlos Chagas – MG"
+        tag="Cobertura · Teófilo Otoni e Carlos Chagas"
         title={["Tem INET", <span className="italic text-lime">na sua casa?</span>]}
         lead="Digite seu CEP e veja se a fibra da INET chega até você. Depois, encontre a loja mais perto no mapa."
       >
@@ -17,18 +17,18 @@ export default function Cobertura() {
         <a href={`tel:${PHONES[0].tel}`} className="btn-ghost">Ligar {PHONES[0].display}</a>
       </PageHero>
 
-      <Section id="cep" tag="Consulta de cobertura" title={["Verifique pelo", <span className="italic text-lime">seu CEP.</span>]}>
+      <Section variant="mist" layout="split" id="cep" tag="Consulta de cobertura" title={["Verifique pelo", <span className="italic text-lime">seu CEP.</span>]}>
         <CepCheck />
       </Section>
 
-      <Section id="lojas" tag="Lojas" title={["Quatro lojas", "perto de você."]}>
+      <Section variant="ink" className="r7-map-section" id="lojas" tag="Lojas" title={["Quatro lojas", "perto de você."]}>
         <CityMap />
         <Note>
           O mapa mostra a cidade e as lojas da INET; ele não representa a área técnica de cobertura. As posições dos marcadores são aproximadas: use “Como chegar” para a localização exata. Mapa © colaboradores do OpenStreetMap.
         </Note>
       </Section>
 
-      <Section tag="Dúvidas" title={["Cobertura", "e atendimento."]}>
+      <Section variant="snow" layout="split" tag="Dúvidas" title={["Cobertura", "e atendimento."]}>
         <Faq
           items={[
             { q: "Como saber se tem INET na minha rua?", a: "Use a consulta por CEP acima: ela mostra se a INET atende a sua cidade e já abre o WhatsApp com o seu endereço para a equipe confirmar a rua e o número." },

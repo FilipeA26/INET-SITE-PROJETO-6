@@ -9,7 +9,7 @@ import { PHONES, waLink } from "../data/inet";
 function VideoHero() {
   const reduce = useReducedMotion();
   return (
-    <section className="relative isolate flex min-h-[88svh] items-end overflow-hidden pb-16 pt-36 sm:pb-24 sm:pt-44">
+    <section className="page-hero relative isolate flex min-h-[88svh] items-end overflow-hidden">
       {reduce ? (
         <img src="/fixo/telefone-poster.webp" alt="" aria-hidden="true" className="absolute inset-0 -z-10 h-full w-full object-cover" />
       ) : (
@@ -52,7 +52,7 @@ export default function Fixo() {
       <VideoHero />
 
       <Section tag="Vantagens" title={["Tudo o que você precisa", "em um plano de telefonia."]}>
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-6 xl:gap-8 sm:grid-cols-2 lg:grid-cols-4">
           <FeatureCard icon={PhoneCall} title="Ligue à vontade" text="Ligações ilimitadas para qualquer lugar do Brasil." />
           <FeatureCard icon={ShieldCheck} title="Segurança" text="Segurança e estabilidade em suas ligações." delay={0.06} />
           <FeatureCard icon={AudioLines} title="Alta tecnologia" text="Seu telefone fixo usando o poder da fibra óptica, com áudio digital." delay={0.12} />
@@ -61,7 +61,7 @@ export default function Fixo() {
       </Section>
 
       <Section tag="Para casa e empresa" title={["Uma linha para", "cada necessidade."]}>
-        <div className="grid gap-4 lg:grid-cols-2">
+        <div className="grid gap-6 xl:gap-8 lg:grid-cols-2">
           <Rise className="h-full">
             <article className="card h-full p-8">
               <HomeIcon size={24} aria-hidden="true" className="card-icon text-lime" />
@@ -83,7 +83,7 @@ export default function Fixo() {
 
       <Section id="planos" tag="Internet + telefone" title={["Planos de internet", "com telefonia inclusa."]}>
         <PlanCarousel groups={["fixo"]} />
-        <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-12 grid gap-6 xl:gap-8 sm:grid-cols-2 lg:grid-cols-4">
           <FeatureCard icon={Server} title="Melhor infraestrutura" text="Estrutura de última geração para garantir o melhor serviço." />
           <FeatureCard icon={AudioLines} title="Áudio digital" text="Ligações pela fibra óptica com áudio digital." delay={0.06} />
           <FeatureCard icon={Coins} title="Melhor custo" text="A melhor telefonia pelo melhor custo." delay={0.12} />

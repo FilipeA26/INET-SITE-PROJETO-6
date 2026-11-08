@@ -4,13 +4,14 @@ import { Gauge } from "lucide-react";
 import PlanCarousel from "../components/PlanCarousel";
 import Wifi6 from "../components/Wifi6";
 import MeshHouse from "../components/MeshHouse";
-import { AlexaHome, HomeSecurity } from "../components/SmartHome";
+import WorkGrid from "../components/lusion/WorkGrid";
+import WorkCard from "../components/lusion/WorkCard";
 import SlideToSubscribe from "../components/SlideToSubscribe";
 import { CtaBand, Faq, PageHero, Section, usePageMeta } from "../components/ui";
 import { waLink, type Plan } from "../data/inet";
 
 export default function Internet() {
-  usePageMeta("Internet fibra óptica e Wi-Fi", "Planos de internet fibra óptica da INET em Teófilo Otoni, de 50 Mega a 1 Giga, com Wi-Fi grátis. Entenda o Wi-Fi Mesh e leve sinal para a casa toda.");
+  usePageMeta("Internet fibra óptica e Wi-Fi", "Planos de internet fibra óptica da INET em Teófilo Otoni, de 700 Mega a 1 Giga, com Wi-Fi grátis. Entenda o Wi-Fi Mesh e leve sinal para a casa toda.");
   const [plan, setPlan] = useState<Plan | null>(null);
 
   return (
@@ -24,7 +25,7 @@ export default function Internet() {
         <a href={waLink("Olá! Quero saber se a internet da INET atende o meu endereço.")} target="_blank" rel="noreferrer" className="btn-ghost">Consultar disponibilidade</a>
       </PageHero>
 
-      <Section id="planos" tag="Planos de internet" title={["Escolha pelo seu", "jeito de usar."]}>
+      <Section variant="mist" id="planos" tag="Planos de internet" title={["Escolha pelo seu", "jeito de usar."]}>
         <PlanCarousel selected={plan} onSelect={setPlan} />
         <div className="mt-14"><SlideToSubscribe plan={plan} /></div>
       </Section>
@@ -33,12 +34,39 @@ export default function Internet() {
 
       <MeshHouse id="wifi-mesh" />
 
-      <div id="casa-inteligente">
-        <HomeSecurity />
-        <AlexaHome />
-      </div>
+      <WorkGrid
+        id="casa-inteligente"
+        tag="Casa inteligente"
+        title={["Sua casa conectada", <span className="italic text-lime">em cada detalhe.</span>]}
+        lead="Segurança, automação e múltiplos dispositivos conectados à fibra óptica de alta estabilidade."
+        variant="ink"
+      >
+        <WorkCard
+          tag="01 · Automação residencial"
+          title="Controle por voz com Alexa"
+          subtitle="Lâmpadas, TV e rotinas conectadas na rede Wi-Fi da INET para responder aos seus comandos de voz."
+          videoSrc="/casa/alexa.mp4"
+          posterSrc="/casa/alexa-poster.webp"
+          imageSrc="/casa-inteligente.webp"
+          aspect="aspect-[16/11]"
+          badge="Automação Wi-Fi"
+          href={waLink("Olá! Quero saber mais sobre automação e Wi-Fi na INET.")}
+        />
+        <WorkCard
+          tag="02 · Segurança residencial"
+          title="Câmera Wi-Fi Intelbras Mibo"
+          subtitle="Acompanhe tudo ao vivo no celular com imagem nítida, visão noturna e gravação sem travar com a fibra da INET."
+          videoSrc="/casa/seg.mp4"
+          posterSrc="/casa/seg-poster.webp"
+          imageSrc="/casa/mibo.webp"
+          aspect="aspect-[4/5]"
+          offsetY="md:mt-16 lg:mt-24"
+          badge="Ao vivo no celular"
+          href={waLink("Olá! Quero saber sobre a câmera Intelbras Mibo e fibra INET.")}
+        />
+      </WorkGrid>
 
-      <Section tag="Dúvidas" title={["Perguntas", "frequentes."]}>
+      <Section variant="snow" layout="split" tag="Dúvidas" title={["Perguntas", "frequentes."]}>
         <Faq
           items={[
             { q: "O Wi-Fi está incluído nos planos?", a: "Sim. Os planos publicados pela INET incluem roteador Wi-Fi grátis; alguns incluem Wi-Fi premium, roteador Wi-Fi 6 ou 2 roteadores mesh." },
