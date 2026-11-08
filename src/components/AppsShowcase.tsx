@@ -1,3 +1,4 @@
+import SectionBackdrop from "./fundos/SectionBackdrop";
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion, useInView, useReducedMotion } from "framer-motion";
 import { ArrowUpRight, Hand } from "lucide-react";
@@ -180,7 +181,8 @@ function AppCard({ app, delay, offset }: { app: App; delay: number; offset: numb
 /** Seção "Aplicativos para clientes INET": cards que ganham vida no hover/toque. */
 export default function AppsShowcase({ id = "apps", tag = "Aplicativos para clientes INET" }: { id?: string; tag?: string }) {
   return (
-    <section id={id} className="relative py-20 sm:py-28">
+    <section id={id} className="section-frame relative isolate">
+      <SectionBackdrop variant="mist" />
       <div aria-hidden="true" className="pointer-events-none absolute -left-40 top-24 h-[420px] w-[420px] rounded-full bg-[#021A4A]/50 blur-[120px]" />
       <div className="wrap relative">
         <Rise><Fit className="tag">{tag}</Fit></Rise>

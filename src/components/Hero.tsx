@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { motion, useScroll, useSpring, useTransform } from "framer-motion";
+import { motion, useReducedMotion, useScroll, useSpring, useTransform } from "framer-motion";
 import { Hand } from "lucide-react";
 import PluckFibers from "./PluckFibers";
 import GestureHint from "./GestureHint";
@@ -8,6 +8,7 @@ import Lines, { Rise, Fit } from "./Lines";
 import { SPRING } from "../motion";
 
 export default function Hero() {
+  const reduce = useReducedMotion();
   const ref = useRef<HTMLElement>(null);
   const [hint, setHint] = useState(true);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
@@ -17,15 +18,16 @@ export default function Hero() {
   const textY = useTransform(p, [0, 1], ["0%", "22%"]);
 
   return (
-    <section ref={ref} className="relative min-h-[100svh] overflow-hidden bg-navy-ink">
-      <motion.div style={{ opacity: fade, y: lift }} className="absolute inset-0">
+    <section data-sem-fundo ref={ref} className="relative min-h-[100svh] overflow-hidden bg-navy-ink">
+      <motion.div style={reduce ? undefined : { opacity: fade, y: lift }} className="absolute inset-0">
         <PluckFibers className="absolute inset-0" onFirstPluck={() => setHint(false)} />
       </motion.div>
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-navy-ink via-navy-ink/50 to-transparent" />
 
-      <motion.div style={{ y: textY }} className="wrap pointer-events-none relative z-10 flex min-h-[100svh] flex-col justify-end pb-20">
+      <motion.div style={reduce ? undefined : { y: textY }} className="wrap hero-content hero-split pointer-events-none relative z-10 flex min-h-[100svh] flex-col justify-end pb-20 pt-32">
+        <div className="hero-copy">
         <Rise><Fit className="tag">Internet 100% fibra óptica · Teófilo Otoni</Fit></Rise>
-        <Lines as="h1" delay={0.1} className="h-xl mt-5 max-w-5xl" lines={["A internet fibra", <span className="italic text-lime">mais escolhida da cidade.</span>]} />
+        <Lines as="h1" delay={0.1} className="h-xl mt-5 w-full" lines={["A internet fibra", <span className="italic text-lime">mais escolhida da cidade.</span>]} />
         <Rise delay={0.45}>
           <p className="lead mt-6 max-w-xl">
             Planos de até 1 Giga com Wi-Fi grátis, TV, telefone fixo e chip 5G. Suporte técnico 24 horas pelo WhatsApp.
@@ -35,6 +37,10 @@ export default function Hero() {
           <a href="#planos" className="btn-lime">Ver planos</a>
           <Link to="/cobertura" className="btn-ghost">Lojas e cobertura</Link>
         </Rise>
+        </div>
+        <div className="hero-object" aria-hidden="true">
+          <img src="/casa-inteligente.webp" alt="" width={900} height={616} className="block h-auto w-full object-contain" />
+        </div>
       </motion.div>
 
       <GestureHint icon={Hand} kind="drag" label="Passe o dedo pelas fibras" visible={hint} className="absolute right-5 top-24 z-10 hidden sm:inline-flex sm:right-12" />

@@ -97,18 +97,18 @@ export type PlanGroup = { id: string; label: string; plans: Plan[] };
 const STD = ["Clube de Vantagens INET", "Sem custo de instalação", "Wi-Fi grátis"];
 
 /**
- * Planos de internet: a INET pediu só três velocidades (700, 800 e 1000 Mega).
- * 700 Mega e 1 Giga vêm do site anterior. validar: preço e composição do 800 Mega
- * (sem preço, o card mostra "Consulte").
+ * Planos de internet: o Filipe pediu (26/10/2026) para mostrar só 700, 800 e 1000 Mega.
+ * Preços da tabela dele (nota "precos" no Maestri, atualizada em 26/10/2026). A tabela também
+ * traz 100 Mega R$ 79,90 e 350 Mega R$ 84,90, fora do site por decisão dele.
  */
 export const PLAN_GROUPS: PlanGroup[] = [
   {
     id: "principais",
     label: "Internet fibra",
     plans: [
-      { id: "700", name: "INET 700 Mega", price: "119,90", speed: "700", unit: "Mega", includes: ["Roteador Wi-Fi", "App Deezer"], perks: STD, description: "Internet rápida para a família toda navegar, estudar e ouvir música ao mesmo tempo." },
-      { id: "800", name: "INET 800 Mega", price: "", speed: "800", unit: "Mega", includes: ["Roteador Wi-Fi", "HBO Max"], perks: STD, description: "Mais velocidade para maratonar em várias telas sem travar.", note: "Valor a confirmar com a equipe comercial." },
-      { id: "1000", name: "INET 1 Giga", price: "199,90", speed: "1", unit: "Giga", includes: ["Roteador Wi-Fi 6", "App Deezer", "Cabeamento de 1 dispositivo"], perks: ["Clube de Vantagens INET", "Sem custo de instalação", "Wi-Fi premium grátis"], description: "1 Giga com Wi-Fi 6 para jogos, streaming em 4K e casa conectada. Chega de lag." },
+      { id: "700", name: "INET 700 Mega", price: "99,90", speed: "700", unit: "Mega", includes: ["Roteador Wi-Fi", "App Deezer"], perks: STD, description: "Internet rápida para a família toda navegar, estudar e ouvir música ao mesmo tempo." },
+      { id: "800", name: "INET 800 Mega", price: "119,90", speed: "800", unit: "Mega", includes: ["Roteador Wi-Fi", "HBO Max"], perks: STD, description: "Mais velocidade para maratonar em várias telas sem travar." },
+      { id: "1000", name: "INET 1 Giga", price: "149,90", speed: "1", unit: "Giga", includes: ["Roteador Wi-Fi 6", "App Deezer", "Cabeamento de 1 dispositivo"], perks: ["Clube de Vantagens INET", "Sem custo de instalação", "Wi-Fi premium grátis"], description: "1 Giga com Wi-Fi 6 para jogos, streaming em 4K e casa conectada. Chega de lag." },
     ],
   },
   {
@@ -141,7 +141,24 @@ export const TESTIMONIALS = [
 ];
 
 export const INET_TV = {
-  receiverPrice: "19,90", // validar
+  price: "29,90", // tabela de 26/10/2026
+};
+
+/** Adicionais avulsos — tabela de preços enviada pelo Filipe em 26/10/2026. */
+export const ADDONS = {
+  streaming: [
+    { name: "Disney+", price: "29,90" },
+    { name: "HBO Max", price: "29,90" },
+    { name: "GloboPlay Premium", price: "29,90" },
+    { name: "Deezer", price: "14,90" },
+  ],
+  smartHome: [
+    { name: "Câmera interna", price: "19,90" },
+    { name: "Câmera externa", price: "29,90" },
+    { name: "Alexa", price: "49,90" },
+  ],
+  fixo: { price: "49,90", portabilityDays: 10 },
+  movel: { price: "44,90", portabilityDays: 5 },
 };
 
 export const ANYDESK_URL = "https://download.anydesk.com/AnyDesk.exe";

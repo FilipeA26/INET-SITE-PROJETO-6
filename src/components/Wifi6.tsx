@@ -1,3 +1,4 @@
+import SectionBackdrop from "./fundos/SectionBackdrop";
 import { Component, lazy, Suspense, useEffect, useRef, useState, type ReactNode } from "react";
 import { useInView } from "framer-motion";
 import { Gauge, Move3d, Radar, Smartphone, Timer } from "lucide-react";
@@ -80,12 +81,13 @@ export default function Wifi6({ id = "wifi6", tag = "Wi-Fi 6" }: { id?: string; 
   const still = <RouterStill />;
 
   return (
-    <section id={id} className="relative overflow-hidden py-20 sm:py-28">
+    <section id={id} className="section-frame relative isolate overflow-hidden">
+      <SectionBackdrop variant="mist" />
       <div aria-hidden="true" className="pointer-events-none absolute -right-40 top-10 h-[520px] w-[520px] rounded-full bg-navy/40 blur-[130px]" />
       <div aria-hidden="true" className="pointer-events-none absolute -left-24 bottom-0 h-[320px] w-[320px] rounded-full bg-lime/10 blur-[110px]" />
-      <div className="wrap relative grid items-center gap-12 lg:grid-cols-[1fr_1.05fr]">
+      <div className="wrap relative grid items-center gap-12 lg:grid-cols-[.85fr_1.15fr]">
         <div>
-          <Rise><Fit className="tag">{tag}</Fit></Rise>
+          <Rise><Fit className="font-display text-base text-lime">{tag}</Fit></Rise>
           <Lines className="h-lg mt-4" lines={["A fibra chega inteira", <span className="italic text-lime">em cada cômodo.</span>]} />
           <Rise delay={0.2}>
             <p className="lead mt-5 max-w-xl">
@@ -105,7 +107,7 @@ export default function Wifi6({ id = "wifi6", tag = "Wi-Fi 6" }: { id?: string; 
         </div>
 
         <Rise delay={0.15}>
-          <div ref={stage} className="relative aspect-square w-full overflow-hidden rounded-[2rem] border border-white/10 bg-[radial-gradient(80%_70%_at_50%_40%,#020F2E,#010818_75%)]">
+          <div ref={stage} data-menu-escuro className="relative aspect-square w-full overflow-hidden rounded-[2rem] border border-white/10 bg-[radial-gradient(80%_70%_at_50%_40%,#020F2E,#010818_75%)]">
             <div aria-hidden="true" className="pointer-events-none absolute inset-x-10 bottom-10 h-24 rounded-full bg-lime/10 blur-3xl" />
             <div className="absolute inset-0">
               {near && gl ? (
@@ -123,7 +125,7 @@ export default function Wifi6({ id = "wifi6", tag = "Wi-Fi 6" }: { id?: string; 
                 <Move3d size={14} aria-hidden="true" className="text-lime" /> Arraste para girar
               </p>
             )}
-            <span className="absolute left-5 top-5 rounded-full bg-lime px-3 py-1 font-display text-xs font-semibold uppercase tracking-[0.18em] text-navy-ink">Wi-Fi 6</span>
+            <span className="absolute left-5 top-5 rounded-full bg-lime px-3 py-1 font-display text-sm font-semibold text-navy-ink">Wi-Fi 6</span>
             <p className="absolute right-5 top-5 text-right text-xs leading-tight text-white/60">Roteador<br /><span className="font-display text-sm text-white">HUAWEI WiFi AX2S</span></p>
           </div>
         </Rise>

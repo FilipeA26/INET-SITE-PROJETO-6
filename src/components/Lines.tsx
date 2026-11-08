@@ -2,11 +2,15 @@ import { useCallback, useEffect, useLayoutEffect, useRef, type ReactNode } from 
 import { motion } from "framer-motion";
 import { DUR, EASE, STAGGER } from "../motion";
 
+/** Menor tamanho de letra que ainda se lê; abaixo disso a linha quebra em vez de encolher. */
+const MIN_PX = 11;
+
 /**
  * Encaixa o título na largura disponível: cada linha escrita no código continua sendo
  * uma linha só (nunca quebra sozinha nem sai da tela) e, quando a maior delas não cabe,
- * o título todo diminui na mesma proporção. Roda na montagem, ao carregar as fontes e
- * a cada mudança de tamanho.
+ * o título todo diminui na mesma proporção — até o mínimo legível, de onde em diante
+ * a linha passa a quebrar. Roda na montagem, ao carregar as fontes e a cada mudança
+ * de tamanho.
  */
 function useFit(ref: React.RefObject<HTMLElement>) {
   const raf = useRef(0);
@@ -15,17 +19,26 @@ function useFit(ref: React.RefObject<HTMLElement>) {
     const node = ref.current;
     if (!node) return;
     node.style.fontSize = ""; // volta ao tamanho da classe antes de medir
+    const lines = [...node.querySelectorAll<HTMLElement>("[data-line]")];
+    lines.forEach((line) => (line.style.whiteSpace = "")); // mede sempre em uma linha só
     const avail = node.clientWidth;
     if (!avail) return;
     let widest = 0;
-    node.querySelectorAll<HTMLElement>("[data-line]").forEach((line) => {
+    lines.forEach((line) => {
       const range = document.createRange();
       range.selectNodeContents(line);
       widest = Math.max(widest, range.getBoundingClientRect().width);
     });
     if (widest <= avail) return;
     const base = parseFloat(getComputedStyle(node).fontSize);
-    node.style.fontSize = `${((base * (avail - 1)) / widest).toFixed(2)}px`;
+    const wanted = (base * (avail - 1)) / widest;
+    if (wanted >= MIN_PX) {
+      node.style.fontSize = `${wanted.toFixed(2)}px`;
+      return;
+    }
+    // não cabe nem no mínimo: mantém o tamanho legível e deixa o texto quebrar
+    if (base > MIN_PX) node.style.fontSize = `${MIN_PX}px`;
+    lines.forEach((line) => (line.style.whiteSpace = "normal"));
   }, [ref]);
 
   const schedule = useCallback(() => {

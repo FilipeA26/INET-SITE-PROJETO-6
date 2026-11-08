@@ -1,0 +1,100 @@
+{
+ "m": {
+  "sw": 1440,
+  "iw": 1440,
+  "sh": 10256,
+  "footerBottom": 10256,
+  "finale": {
+   "top": 9157,
+   "h": 495,
+   "w": 1440,
+   "l": 0
+  },
+  "h2fs": "80px",
+  "h2txt": "Vamos nos conectar?",
+  "cards": [
+   {
+    "top": 6404,
+    "h": 300,
+    "w": 411,
+    "l": 67,
+    "sw": 395,
+    "cw": 395,
+    "sh": 278,
+    "ch": 278,
+    "txt": "01Internet e Wi-FiAté 1 Giga e Wi-Fi 6 na casa toda."
+   },
+   {
+    "top": 6414,
+    "h": 280,
+    "w": 397,
+    "l": 522,
+    "sw": 395,
+    "cw": 395,
+    "sh": 278,
+    "ch": 278,
+    "txt": "02INET TVTV ao vivo e filmes com o TV Box."
+   },
+   {
+    "top": 6404,
+    "h": 300,
+    "w": 411,
+    "l": 962,
+    "sw": 395,
+    "cw": 395,
+    "sh": 278,
+    "ch": 278,
+    "txt": "03Telefone fixoLigações ilimitadas para todo o Brasil."
+   },
+   {
+    "top": 6740,
+    "h": 300,
+    "w": 411,
+    "l": 67,
+    "sw": 395,
+    "cw": 395,
+    "sh": 278,
+    "ch": 278,
+    "txt": "04Chip móvel5G com WhatsApp e Waze ilimitados."
+   },
+   {
+    "top": 6750,
+    "h": 280,
+    "w": 397,
+    "l": 522,
+    "sw": 395,
+    "cw": 395,
+    "sh": 278,
+    "ch": 278,
+    "txt": "05EntretenimentoHBO Max, Disney+ e Deezer."
+   },
+   {
+    "top": 6740,
+    "h": 300,
+    "w": 411,
+    "l": 962,
+    "sw": 395,
+    "cw": 395,
+    "sh": 278,
+    "ch": 278,
+    "txt": "06Teste de velocidadeMeça no servidor oficial INET."
+   }
+  ],
+  "svg": {
+   "top": 0,
+   "h": 10256,
+   "w": 1440,
+   "l": 0
+  },
+  "footerZ": "auto",
+  "footerPos": "relative"
+ },
+ "probe": {
+  "len": 19168,
+  "vis": {
+   "n": 763,
+   "on": 0
+  },
+  "hits": []
+ }
+}

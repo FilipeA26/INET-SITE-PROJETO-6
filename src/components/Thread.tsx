@@ -1,134 +1,140 @@
-import { useEffect, useRef, type RefObject } from "react";
+import { useEffect, useRef, type RefObject } from 'react';
+import { createPortal } from 'react-dom';
 
-/**
- * Um único fio de fibra que atravessa a página inteira e liga as seções.
- * Ele se desenha acompanhando a rolagem (com inércia), tem um ponto de luz
- * na ponta e pulsos de dados correndo pelo trecho já aceso.
- * Cada seção marca um nó com <span data-node="left|right|center" />.
- */
+/** Luz sobre o conteúdo, com geometria invisível e deslocamento limitado na tela. */
 export default function Thread({ container }: { container: RefObject<HTMLElement> }) {
   const svgRef = useRef<SVGSVGElement>(null);
-  const baseRef = useRef<SVGPathElement>(null);
-  const litRef = useRef<SVGPathElement>(null);
+  const pathRef = useRef<SVGPathElement>(null);
   const headRef = useRef<SVGGElement>(null);
-  const pulsesRef = useRef<SVGGElement>(null);
-  const nodesRef = useRef<SVGGElement>(null);
 
   useEffect(() => {
-    const main = container.current!;
-    const svg = svgRef.current!;
-    const base = baseRef.current!;
-    const lit = litRef.current!;
-    let total = 1, raf = 0, shown = 0;
-    let nodeLens: number[] = [];
+    const main = container.current, svg = svgRef.current, path = pathRef.current, head = headRef.current;
+    if (!main || !svg || !path || !head) return;
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+    let total = 0, raf = 0, previous = 0, lastHit = 0;
+    let firstY = 0, lastY = 0, inView = true, covered = false, nearControls = false;
+    let position: { x: number; y: number } | null = null;
+    let opacity = .55, blur = 0;
 
-    // comprimento do fio cuja altura é y (o fio sempre desce, então dá para buscar)
     const lengthAtY = (y: number) => {
       let lo = 0, hi = total;
       for (let i = 0; i < 22; i++) {
         const mid = (lo + hi) / 2;
-        if (base.getPointAtLength(mid).y < y) lo = mid;
+        if (path.getPointAtLength(mid).y < y) lo = mid;
         else hi = mid;
       }
-      return lo;
+      return (lo + hi) / 2;
     };
-
+    const paint = () => {
+      if (!position) return;
+      head.setAttribute('transform', `translate(${position.x} ${position.y})`);
+      head.style.opacity = String(opacity);
+      head.style.filter = `blur(${blur}px)`;
+    };
     const build = () => {
-      const w = main.clientWidth, h = main.scrollHeight;
-      svg.setAttribute("viewBox", `0 0 ${w} ${h}`);
-      svg.style.height = `${h}px`;
-      // fica na faixa livre fora do texto (o conteúdo começa em 20px no celular, 40px+ no resto)
-      const margin = w < 640 ? 8 : 26;
-      const top = main.getBoundingClientRect().top + window.scrollY;
-      const pts = [...main.querySelectorAll<HTMLElement>("[data-node]")].map((el) => {
-        const side = el.dataset.node;
-        const y = el.getBoundingClientRect().top + window.scrollY - top;
-        const x = side === "left" ? margin : side === "right" ? w - margin : w / 2;
-        return { x, y };
-      });
-      if (pts.length < 2) return;
-      let d = `M ${pts[0].x} ${pts[0].y}`;
-      for (let i = 1; i < pts.length; i++) {
-        const a = pts[i - 1], b = pts[i];
-        const dy = b.y - a.y;
-        d += ` C ${a.x} ${a.y + dy * 0.55}, ${b.x} ${b.y - dy * 0.55}, ${b.x} ${b.y}`;
+      const w = main.clientWidth;
+      svg.setAttribute('viewBox', `0 0 ${document.documentElement.clientWidth} ${innerHeight}`);
+      const top = main.getBoundingClientRect().top + scrollY;
+      const margin = w < 640 ? 18 : 26;
+      const points = [...main.querySelectorAll<HTMLElement>('[data-node]')].map(el => ({
+        x: el.dataset.node === 'left' ? margin : el.dataset.node === 'right' ? w - margin : w / 2,
+        y: el.getBoundingClientRect().top + scrollY - top,
+      })).sort((a, b) => a.y - b.y);
+      if (points.length < 2) { total = 0; head.style.opacity = '0'; return; }
+      let d = `M ${points[0].x} ${points[0].y}`;
+      for (let i = 1; i < points.length; i++) {
+        const a = points[i - 1], b = points[i], dy = b.y - a.y;
+        d += ` C ${a.x} ${a.y + dy * .55}, ${b.x} ${b.y - dy * .55}, ${b.x} ${b.y}`;
       }
-      base.setAttribute("d", d);
-      lit.setAttribute("d", d);
-      total = base.getTotalLength();
-      lit.style.strokeDasharray = `${total}`;
-      nodeLens = pts.map((p) => lengthAtY(p.y));
-      nodesRef.current!.innerHTML = pts
-        .map((p) => `<circle cx="${p.x}" cy="${p.y}" r="5" fill="#010818" stroke="rgba(255,255,255,0.35)" stroke-width="1.5" />`)
-        .join("");
+      path.setAttribute('d', d);
+      total = path.getTotalLength();
+      firstY = points[0].y;
+      lastY = points[points.length - 1].y;
+      // Inicialização única; reconstruir a curva nunca reposiciona uma luz já visível.
+      if (!position) position = { x: points[0].x, y: Math.max(112, Math.min(innerHeight - 24, points[0].y + main.getBoundingClientRect().top)) };
+      paint();
     };
-
+    const sampleContent = (now: number) => {
+      if (!position || now - lastHit < 120) return;
+      lastHit = now;
+      // Os HUDs podem usar pointer-events:none: proximidade por ret?ngulos, al?m do hit test.
+      nearControls = position.y < 112 || [...document.querySelectorAll<Element>('nav,header,[class*="fixed"]')].some(el => {
+        if (el === svg || svg.contains(el)) return false;
+        const style = getComputedStyle(el);
+        if (!el.matches('nav,header') && !(style.position === 'fixed' && Number(style.zIndex) >= 40)) return false;
+        const r = el.getBoundingClientRect();
+        return r.width > 0 && r.height > 0 && position!.x >= r.left - 24 && position!.x <= r.right + 24 && position!.y >= r.top - 24 && position!.y <= r.bottom + 24;
+      });
+      // pointer-events:none exclui a decoração do hit test. Testa também a vizinhança do núcleo.
+      covered = [[0, 0], [-12, 0], [12, 0], [0, -12], [0, 12]].some(([dx, dy]) =>
+        document.elementsFromPoint(position!.x + dx, position!.y + dy).some(el =>
+          !svg.contains(el) && !!el.closest('h1,h2,h3,h4,p,a,button,label,input,select,textarea,img,video,canvas,article,.card,[role="button"]'),
+        ),
+      );
+    };
     const frame = (now: number) => {
-      const top = main.getBoundingClientRect().top + window.scrollY;
-      const targetY = window.scrollY + window.innerHeight * 0.6 - top;
-      const target = Math.max(0, Math.min(total, lengthAtY(targetY)));
-      shown += (target - shown) * 0.07; // inércia: a luz "alcança" a rolagem com suavidade
-      lit.style.strokeDashoffset = `${total - shown}`;
-
-      const p = base.getPointAtLength(shown);
-      headRef.current!.setAttribute("transform", `translate(${p.x} ${p.y})`);
-
-      // pulsos de dados correndo do início até a ponta
-      const pulses = pulsesRef.current!.children;
-      for (let i = 0; i < pulses.length; i++) {
-        const k = ((now / 1000) * 0.18 + i / pulses.length) % 1;
-        const q = base.getPointAtLength(k * shown);
-        pulses[i].setAttribute("transform", `translate(${q.x} ${q.y})`);
-        (pulses[i] as SVGElement).style.opacity = shown > 40 ? String(Math.sin(k * Math.PI)) : "0";
-      }
-      // nós acendem quando a luz passa por eles
-      const nodes = nodesRef.current!.children;
-      for (let i = 0; i < nodes.length; i++) {
-        const on = shown >= nodeLens[i] - 2;
-        nodes[i].setAttribute("fill", on ? "#70E000" : "#010818");
-        nodes[i].setAttribute("stroke", on ? "rgba(112,224,0,0.6)" : "rgba(255,255,255,0.35)");
-      }
+      raf = 0;
+      if (document.hidden || !inView || reduced.matches || !total || !position) { previous = 0; return; }
+      const dt = previous ? Math.min(50, Math.max(0, now - previous)) : 1000 / 60;
+      previous = now;
+      const top = main.getBoundingClientRect().top;
+      const targetY = Math.max(firstY, Math.min(lastY, innerHeight * .6 - top));
+      const point = path.getPointAtLength(lengthAtY(targetY));
+      const target = { x: point.x, y: Math.max(112, Math.min(innerHeight - 24, point.y + top)) };
+      // 0,035 a 60 Hz; limite vetorial de 480 px/s inclusive em saltos de âncora.
+      const alpha = 1 - Math.pow(1 - .035, dt / (1000 / 60));
+      const dx = (target.x - position.x) * alpha, dy = (target.y - position.y) * alpha;
+      const distance = Math.hypot(dx, dy), step = 480 * dt / 1000;
+      const scale = distance > step ? step / distance : 1;
+      position.x += dx * scale;
+      position.y += dy * scale;
+      sampleContent(now);
+      const soften = 1 - Math.exp(-dt / 240);
+      opacity += ((nearControls ? .01 : covered ? .16 : .55) - opacity) * soften;
+      blur += ((nearControls ? 4 : covered ? 3 : 0) - blur) * soften;
+      paint();
       raf = requestAnimationFrame(frame);
     };
-
+    const wake = () => {
+      cancelAnimationFrame(raf);
+      raf = 0;
+      previous = 0;
+      if (!document.hidden && inView && total && !reduced.matches) raf = requestAnimationFrame(frame);
+    };
+    const rebuild = () => { build(); wake(); };
     build();
-    const ro = new ResizeObserver(() => build());
-    ro.observe(main);
-    window.addEventListener("load", build);
-    raf = requestAnimationFrame(frame);
+    const resize = new ResizeObserver(rebuild);
+    resize.observe(main);
+    const intersection = new IntersectionObserver(([entry]) => { inView = entry.isIntersecting; head.style.visibility = inView ? 'visible' : 'hidden'; wake(); });
+    intersection.observe(main);
+    window.addEventListener('resize', rebuild);
+    window.addEventListener('load', rebuild);
+    document.addEventListener('visibilitychange', wake);
+    reduced.addEventListener('change', wake);
+    wake();
     return () => {
       cancelAnimationFrame(raf);
-      ro.disconnect();
-      window.removeEventListener("load", build);
+      resize.disconnect();
+      intersection.disconnect();
+      window.removeEventListener('resize', rebuild);
+      window.removeEventListener('load', rebuild);
+      document.removeEventListener('visibilitychange', wake);
+      reduced.removeEventListener('change', wake);
     };
   }, [container]);
 
-  return (
-    <svg ref={svgRef} className="pointer-events-none absolute left-0 top-0 z-0 w-full" aria-hidden="true">
-      <defs>
-        <linearGradient id="thread-g" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#70E000" />
-          <stop offset="0.5" stopColor="#5CC8FF" />
-          <stop offset="1" stopColor="#70E000" />
-        </linearGradient>
-        <radialGradient id="head-g">
-          <stop offset="0" stopColor="#fff" />
-          <stop offset="0.25" stopColor="#B6FF6A" stopOpacity="0.8" />
-          <stop offset="1" stopColor="#70E000" stopOpacity="0" />
-        </radialGradient>
-      </defs>
-      <path ref={baseRef} fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth="1.5" />
-      <path ref={litRef} fill="none" stroke="url(#thread-g)" strokeWidth="2" strokeLinecap="round" style={{ filter: "drop-shadow(0 0 6px rgba(112,224,0,0.7))" }} />
-      <g ref={nodesRef} />
-      <g ref={pulsesRef}>
-        {[0, 1, 2, 3].map((i) => (
-          <circle key={i} r="3" fill="#fff" style={{ filter: "drop-shadow(0 0 6px #70E000)" }} />
-        ))}
-      </g>
-      <g ref={headRef}>
-        <circle r="26" fill="url(#head-g)" />
-        <circle r="3.5" fill="#fff" />
-      </g>
-    </svg>
-  );
+  return createPortal(<svg ref={svgRef} className="pointer-events-none fixed inset-0 z-30 h-full w-full overflow-hidden" aria-hidden="true">
+    <defs>
+      <path ref={pathRef} fill="none" />
+      <radialGradient id="head-g">
+        <stop offset="0" stopColor="#fff" />
+        <stop offset="0.25" stopColor="#B6FF6A" stopOpacity="0.8" />
+        <stop offset="1" stopColor="#70E000" stopOpacity="0" />
+      </radialGradient>
+    </defs>
+    <g ref={headRef} style={{ opacity: 0 }}>
+      <circle r="16" fill="url(#head-g)" />
+      <circle r="2.2" fill="#fff" />
+    </g>
+  </svg>, document.body);
 }

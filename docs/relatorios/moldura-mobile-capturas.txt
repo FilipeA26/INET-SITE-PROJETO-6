@@ -1,0 +1,8 @@
+/movel C:\Users\yuzzi\AppData\Local\Temp\maestri-portal-c1103f61-81fe-4350-889a-c59005d7b5dd.png
+/entretenimento C:\Users\yuzzi\AppData\Local\Temp\maestri-portal-17a59928-deb8-43d6-bb3f-5f8d015b3148.png
+/cobertura 
+/suporte 
+/fale-conosco 
+/eventos 
+/avaliacoes 
+/teste-de-velocidade 

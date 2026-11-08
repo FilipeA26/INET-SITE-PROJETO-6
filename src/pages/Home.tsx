@@ -1,6 +1,5 @@
 import { useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { motion, useScroll, useSpring, useTransform } from "framer-motion";
 import {
   AppWindow, Gauge, Headset, Music, Phone, ShieldCheck, Smartphone, Tv, UserRound, Wifi, Zap, ArrowUpRight,
 } from "lucide-react";
@@ -9,28 +8,44 @@ import Thread from "../components/Thread";
 import PlanCarousel from "../components/PlanCarousel";
 import SlideToSubscribe from "../components/SlideToSubscribe";
 import ProductShot from "../components/ProductShot";
+import SmartHomeMedia from "../components/SmartHomeMedia";
 import Lines, { Rise, Fit } from "../components/Lines";
 import { FeatureCard, Faq, LinkCard, usePageMeta } from "../components/ui";
-import { SPRING } from "../motion";
+import SectionBackdrop from "../components/fundos/SectionBackdrop";
+import CinematicCanvas from "../components/fundos/CinematicCanvas";
+import { ExpandMedia } from "../components/expandir";
 import { COMPANY, INET_TV, PHONES, STORES, waLink, type Plan } from "../data/inet";
 
 export default function Home() {
   usePageMeta("", "INET: internet fibra óptica em Teófilo Otoni com planos de até 1 Giga, Wi-Fi grátis, TV, telefone fixo e chip 5G. Atendimento (33) 3536-3939.");
   const [plan, setPlan] = useState<Plan | null>(null);
   const homeRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({ target: homeRef, offset: ["start start", "end end"] });
-  const p = useSpring(scrollYProgress, SPRING);
-  // fundo escuro contínuo, só com os azuis profundos do manual da marca
-  const bg = useTransform(p, [0, 0.3, 0.55, 0.8, 1], ["#010818", "#010C22", "#02163D", "#010C22", "#010818"]);
 
   return (
-    <motion.div ref={homeRef} style={{ backgroundColor: bg }} className="relative">
+    <div ref={homeRef} className="r7-home relative">
       <Thread container={homeRef} />
       <div className="relative z-10">
         <Hero />
+        <ExpandMedia
+          media={<CinematicCanvas intensity={1.1} className="h-full w-full" />}
+          alt="Cena viva de fibra óptica da INET"
+          splitWords={["FIBRA", "INET"]}
+
+          title="Internet fibra de até 1 Giga."
+          subtitle="Planos de até 1 Giga com Wi-Fi grátis, TV, telefone fixo e chip 5G."
+          overlayTitle="Fibra de ponta a ponta."
+          overlayDescription="Internet com Wi-Fi grátis e suporte técnico 24 horas pelo WhatsApp."
+          overlayPerks={[
+            "Wi-Fi grátis",
+            "Sem custo de instalação",
+            "Suporte técnico 24 horas pelo WhatsApp",
+          ]}
+          cta={{ label: "Ver planos", href: "#planos" }}
+        />
 
         {/* planos */}
-        <section id="planos" className="relative py-24 sm:py-32">
+        <section data-lateral="planos" id="planos" className="section-frame relative r7-surface isolate tone-mist">
+          <SectionBackdrop variant="mist" />
           <span data-node="left" className="absolute top-12" />
           <span data-node="left" className="absolute bottom-12" />
           <div className="wrap">
@@ -43,15 +58,16 @@ export default function Home() {
         </section>
 
         {/* propaganda INET TV */}
-        <section id="inet-tv" className="relative py-24 sm:py-32">
+        <section id="inet-tv" className="section-frame relative r7-surface isolate tone-snow">
+          <SectionBackdrop variant="snow" />
           <span data-node="right" className="absolute top-12" />
           <span data-node="right" className="absolute bottom-12" />
           <div className="wrap">
             <Rise><Fit className="tag">02 — INET TV Box</Fit></Rise>
             <Rise delay={0.1}>
-              <div className="relative mt-6 overflow-hidden rounded-[2.5rem] border border-white/10 bg-[radial-gradient(120%_120%_at_85%_30%,#0062EC30,transparent_55%),linear-gradient(135deg,#021A4A,#010818_70%)] p-8 sm:p-14">
+              <div className="card r7-product-panel relative mt-6">
                 <div aria-hidden="true" className="absolute -right-24 -top-24 h-80 w-80 rounded-full bg-lime/10 blur-3xl" />
-                <div className="relative grid items-center gap-10 lg:grid-cols-[1.1fr_1fr]">
+                <div className="home-product relative grid items-center gap-10 lg:grid-cols-[1.1fr_1fr]">
                   <div>
                     <Lines className="h-lg max-w-xl" lines={["A TV que vai", <span className="italic text-lime">aonde você vai.</span>]} />
                     <p className="lead mt-5 max-w-lg">TV ao vivo, rádios e filmes em qualquer TV, até nas que não são smart.</p>
@@ -65,9 +81,9 @@ export default function Home() {
                       <a href={waLink("Olá! Quero assinar a INET TV.")} target="_blank" rel="noreferrer" className="btn-ghost">Assinar pelo WhatsApp</a>
                     </div>
                     {/* validar: valor do receptor (site anterior) */}
-                    <p className="mt-6 text-sm text-white/55">Receptor em comodato por R$ {INET_TV.receiverPrice}/mês.</p>
+                    <p className="mt-6 text-sm text-white/55">INET TV por R$ {INET_TV.price}/mês.</p>
                   </div>
-                  <ProductShot src="/inet-tv-receptor.webp" alt="Receptor INET TV com controle remoto" width={760} height={732} glow="#38B000" className="mx-auto w-full max-w-[440px]" />
+                  <ProductShot src="/inet-tv-receptor.webp" alt="Receptor INET TV com controle remoto" width={760} height={732} glow="#38B000" className="r7-media-bleed mx-auto w-full" />
                 </div>
               </div>
             </Rise>
@@ -75,31 +91,42 @@ export default function Home() {
         </section>
 
         {/* o que a INET oferece */}
-        <section className="relative py-24 sm:py-32">
+        <section id="servicos" className="section-frame relative r7-surface isolate tone-cinematic">
+          <SectionBackdrop variant="cinematic" />
           <span data-node="left" className="absolute top-12" />
           <span data-node="left" className="absolute bottom-12" />
           <div className="wrap">
             <Rise><Fit className="tag">03 — Serviços</Fit></Rise>
             <Lines className="h-lg mt-4 max-w-4xl" lines={["Tudo o que conecta", "a sua casa."]} />
-            <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              <LinkCard to="/internet" icon={Wifi} title="Internet e Wi-Fi" text="Até 1 Giga e Wi-Fi 6 na casa toda." tone="#0062EC" />
-              <LinkCard to="/tv" icon={Tv} title="INET TV" text="TV ao vivo e filmes com o TV Box." tone="#003F99" delay={0.06} />
-              <LinkCard to="/telefone-fixo" icon={Phone} title="Telefone fixo" text="Ligações ilimitadas para todo o Brasil." tone="#38B000" delay={0.12} />
-              <LinkCard to="/movel" icon={Smartphone} title="Chip móvel" text="5G com WhatsApp e Waze ilimitados." tone="#0062EC" delay={0.18} />
-              <LinkCard to="/entretenimento" icon={Music} title="Entretenimento" text="HBO Max, Disney+ e Deezer." tone="#7a2cff" delay={0.24} />
-              <LinkCard to="/teste-de-velocidade" icon={Gauge} title="Teste de velocidade" text="Meça no servidor oficial INET." cta="Testar agora" tone="#70E000" delay={0.3} />
+            <div className="mt-12"><SmartHomeMedia /></div>
+            <div className="mt-14 grid gap-x-10 sm:grid-cols-2 lg:grid-cols-3">
+              {[
+                { to: "/internet", icon: Wifi, title: "Internet e Wi-Fi", text: "Até 1 Giga e Wi-Fi 6 na casa toda." },
+                { to: "/tv", icon: Tv, title: "INET TV", text: "TV ao vivo e filmes com o TV Box." },
+                { to: "/telefone-fixo", icon: Phone, title: "Telefone fixo", text: "Ligações ilimitadas para todo o Brasil." },
+                { to: "/movel", icon: Smartphone, title: "Chip móvel", text: "5G com WhatsApp e Waze ilimitados." },
+                { to: "/entretenimento", icon: Music, title: "Entretenimento", text: "HBO Max, Disney+ e Deezer." },
+                { to: "/teste-de-velocidade", icon: Gauge, title: "Teste de velocidade", text: "Meça no servidor oficial INET." },
+              ].map(({ to, icon: Icon, title, text }) => (
+                <Link key={to} to={to} className="flex items-start gap-4 border-t border-white/20 py-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-lime">
+                  <Icon size={22} className="mt-1 shrink-0 text-lime" aria-hidden="true" />
+                  <div className="min-w-0"><h3 className="font-display text-xl">{title}</h3><p className="mt-2 text-sm text-white/70">{text}</p></div>
+                  <ArrowUpRight size={18} className="ml-auto mt-1 shrink-0" aria-hidden="true" />
+                </Link>
+              ))}
             </div>
           </div>
         </section>
 
         {/* por que INET — conteúdo do site anterior */}
-        <section className="relative py-24 sm:py-32">
+        <section id="por-que-inet" className="section-frame relative r7-surface isolate tone-snow">
+          <SectionBackdrop variant="snow" />
           <span data-node="right" className="absolute top-12" />
           <span data-node="right" className="absolute bottom-12" />
           <div className="wrap">
             <Rise><Fit className="tag">04 — Por que INET</Fit></Rise>
             <Lines className="h-lg mt-4 max-w-4xl" lines={["Fibra óptica,", "wi-fi grátis e muito conteúdo."]} />
-            <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="home-benefits mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
               <FeatureCard icon={Zap} title="Internet ultrarrápida" text="Filmes e jogos sem travar." />
               <FeatureCard icon={AppWindow} title="Streaming incluso" text="HBO Max, Disney+ e Deezer nos planos." delay={0.06} />
               <FeatureCard icon={ShieldCheck} title="Estabilidade" text="Fibra de ponta a ponta." delay={0.12} />
@@ -109,7 +136,8 @@ export default function Home() {
         </section>
 
         {/* autoatendimento */}
-        <section id="autoatendimento" className="relative py-24 sm:py-32">
+        <section id="autoatendimento" className="section-frame relative r7-surface isolate tone-ink">
+          <SectionBackdrop variant="ink" />
           <span data-node="left" className="absolute top-12" />
           <span data-node="left" className="absolute bottom-12" />
           <div className="wrap">
@@ -132,7 +160,8 @@ export default function Home() {
         </section>
 
         {/* dúvidas — do site anterior */}
-        <section className="relative py-24 sm:py-32">
+        <section id="duvidas" className="section-frame relative r7-surface isolate tone-mist">
+          <SectionBackdrop variant="mist" />
           <span data-node="right" className="absolute top-12" />
           <span data-node="center" className="absolute bottom-0 left-1/2" />
           <div className="wrap">
@@ -151,6 +180,6 @@ export default function Home() {
           </div>
         </section>
       </div>
-    </motion.div>
+    </div>
   );
 }

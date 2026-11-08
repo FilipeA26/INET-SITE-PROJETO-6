@@ -199,7 +199,7 @@ export default function FaleConosco() {
             <Rise as="li" key={e.email} delay={(i % 4) * 0.05}>
               <a href={`mailto:${e.email}`} className="card flex items-center gap-3 p-5">
                 <Mail size={18} aria-hidden="true" className="card-icon shrink-0 text-lime" />
-                <span className="min-w-0"><span className="block text-sm font-semibold">{e.area}</span><span className="block truncate text-xs text-white/55">{e.email}</span></span>
+                <span className="min-w-0"><span className="block text-sm font-semibold">{e.area}</span><span className="block break-all text-xs text-white/55">{e.email}</span></span>
               </a>
             </Rise>
           ))}

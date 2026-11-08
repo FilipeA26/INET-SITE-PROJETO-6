@@ -1,3 +1,4 @@
+import SectionBackdrop from "./fundos/SectionBackdrop";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { motion, useScroll, useSpring, useTransform } from "framer-motion";
 import { BellRing, Eye, Lightbulb, Moon, Music, Plug, Smartphone, Thermometer, Tv, Video } from "lucide-react";
@@ -5,39 +6,12 @@ import Lines, { Rise, Fit } from "./Lines";
 import { DUR, EASE, SPRING } from "../motion";
 import { waLink } from "../data/inet";
 
-/** Vídeo de fundo mudo em loop; com "reduzir movimento" fica só o pôster. Só toca quando está na tela. */
-function VideoBackdrop({ src, poster, className = "" }: { src: string; poster: string; className?: string }) {
-  const ref = useRef<HTMLVideoElement>(null);
-  const [still] = useState(() => window.matchMedia("(prefers-reduced-motion: reduce)").matches);
-
-  useEffect(() => {
-    const v = ref.current;
-    if (!v || still) return;
-    const io = new IntersectionObserver(([e]) => (e.isIntersecting ? v.play().catch(() => {}) : v.pause()), { threshold: 0.1 });
-    io.observe(v);
-    return () => io.disconnect();
-  }, [still]);
-
-  return still ? (
-    <img src={poster} alt="" aria-hidden="true" className={`h-full w-full object-cover ${className}`} />
-  ) : (
-    <video ref={ref} src={src} poster={poster} muted loop playsInline preload="none" aria-hidden="true" className={`h-full w-full object-cover ${className}`} />
-  );
-}
-
-function Stage({ id, video, poster, children }: { id: string; video: string; poster: string; children: ReactNode }) {
+/** Product details stay separate from the expanding photographic overview. */
+function Stage({ id, children }: { id: string; children: ReactNode }) {
   return (
-    <section id={id} className="relative py-20 sm:py-28">
-      <div className="wrap">
-        <div className="relative overflow-hidden rounded-[2.5rem] border border-white/10">
-          <div className="absolute inset-0">
-            <VideoBackdrop src={video} poster={poster} className="scale-105" />
-            <div className="absolute inset-0 bg-[linear-gradient(100deg,#010818_8%,#010818e6_42%,#01081899_70%,#01081855)]" />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#010818] via-transparent to-transparent" />
-          </div>
-          <div className="relative p-8 sm:p-14">{children}</div>
-        </div>
-      </div>
+    <section id={id} className="section-frame relative isolate">
+      <SectionBackdrop variant="ink" />
+      <div className="wrap">{children}</div>
     </section>
   );
 }
@@ -58,10 +32,10 @@ export function HomeSecurity() {
   const rotate = useTransform(p, [0, 1], [-6, 4]);
 
   return (
-    <Stage id="seguranca" video="/casa/seg.mp4" poster="/casa/seg-poster.webp">
+    <Stage id="seguranca">
       <div ref={ref} className="grid items-center gap-10 lg:grid-cols-[1.1fr_1fr]">
         <div>
-          <Rise><Fit className="tag">Segurança</Fit></Rise>
+          <Rise><Fit className="font-display text-base text-lime">Segurança</Fit></Rise>
           <Lines className="h-lg mt-4 max-w-xl" lines={["Sua casa", <span className="italic text-lime">sempre à vista.</span>]} />
           <Rise delay={0.15}>
             <p className="lead mt-5 max-w-lg">Com a câmera Wi-Fi Intelbras Mibo e a fibra da INET, você acompanha tudo pelo celular, com imagem estável e sem travar.</p>
@@ -129,10 +103,10 @@ export function AlexaHome() {
   }, []);
 
   return (
-    <Stage id="alexa" video="/casa/alexa.mp4" poster="/casa/alexa-poster.webp">
+    <Stage id="alexa">
       <div className="grid items-center gap-12 lg:grid-cols-[1fr_1fr]">
         <div>
-          <Rise><Fit className="tag">Casa inteligente com Alexa</Fit></Rise>
+          <Rise><Fit className="font-display text-base text-lime">Casa inteligente com Alexa</Fit></Rise>
           <Lines className="h-lg mt-4 max-w-xl" lines={["Fale e a casa", <span className="italic text-lime">obedece.</span>]} />
           <Rise delay={0.15}>
             <p className="lead mt-5 max-w-lg">A Alexa se conecta pelo Wi-Fi a lâmpadas, tomadas, TV e câmeras compatíveis. Você comanda tudo pela voz ou pelo app, e cria rotinas que funcionam sozinhas.</p>

@@ -2,13 +2,51 @@ import { useEffect, useState, type ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ArrowRight, ChevronDown, type LucideIcon } from "lucide-react";
-import Lines, { Rise, Fit } from "./Lines";
+import Lines, { Rise } from "./Lines";
 import { DUR, EASE } from "../motion";
+import SectionBackdrop, { type SectionBackdropVariant } from "./fundos/SectionBackdrop";
 
 const BASE = "INET – Internet Fibra Óptica em Teófilo Otoni";
 
+export function useCardGlow() {
+  useEffect(() => {
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
+    let frame = 0;
+    let active: HTMLElement | null = null;
+    const move = (event: PointerEvent) => {
+      if (reduce.matches || event.pointerType !== "mouse") return;
+      const card = (event.target as Element).closest<HTMLElement>('.card[data-card-glow="on"]');
+      if (!card) return;
+      active = card;
+      const { clientX, clientY } = event;
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => {
+        const bounds = card.getBoundingClientRect();
+        card.style.setProperty("--mx", `${clientX - bounds.left}px`);
+        card.style.setProperty("--my", `${clientY - bounds.top}px`);
+      });
+    };
+    const reset = () => {
+      cancelAnimationFrame(frame);
+      active?.style.removeProperty("--mx");
+      active?.style.removeProperty("--my");
+      active = null;
+    };
+    document.addEventListener("pointermove", move, { passive: true });
+    document.addEventListener("pointercancel", reset);
+    window.addEventListener("blur", reset);
+    return () => {
+      reset();
+      document.removeEventListener("pointermove", move);
+      document.removeEventListener("pointercancel", reset);
+      window.removeEventListener("blur", reset);
+    };
+  }, []);
+}
+
 /** Título e descrição por página (SEO). */
 export function usePageMeta(title: string, description: string) {
+  useCardGlow();
   useEffect(() => {
     document.title = title ? `${title} | INET Teófilo Otoni` : BASE;
     document.querySelector('meta[name="description"]')?.setAttribute("content", description);
@@ -18,29 +56,34 @@ export function usePageMeta(title: string, description: string) {
 }
 
 /** Cabeçalho padrão das páginas internas, com uma aura de fibra ao fundo. */
-export function PageHero({ tag, title, lead, children }: { tag: string; title: ReactNode[]; lead: string; children?: ReactNode }) {
+export function PageHero({ tag, title, lead, children, media }: { tag: string; title: ReactNode[]; lead: string; children?: ReactNode; media?: ReactNode }) {
   return (
-    <section className="relative overflow-hidden pb-16 pt-36 sm:pt-44">
+    <section aria-label={tag} className="page-hero r7-surface tone-ink relative isolate overflow-hidden">
+      <SectionBackdrop variant="mist" glowPosition="top-right" glowIntensity={0.18} />
       <div aria-hidden="true" className="pointer-events-none absolute -right-40 -top-40 h-[520px] w-[520px] rounded-full bg-electric/10 blur-[120px]" />
       <div aria-hidden="true" className="pointer-events-none absolute -left-32 top-40 h-[360px] w-[360px] rounded-full bg-lime/10 blur-[110px]" />
-      <div className="wrap relative">
-        <Rise><Fit className="tag">{tag}</Fit></Rise>
+      <div className={`wrap relative ${media ? "hero-split" : ""}`}>
+        <div className="hero-copy">
         <Lines as="h1" className="h-xl mt-5 max-w-5xl" lines={title} />
         <Rise delay={0.3}><p className="lead mt-6 max-w-2xl">{lead}</p></Rise>
         {children && <Rise delay={0.45} className="mt-9 flex flex-wrap gap-3">{children}</Rise>}
+        </div>
+        {media && <div className="hero-object" aria-hidden="true">{media}</div>}
       </div>
     </section>
   );
 }
 
-export function Section({ id, tag, title, lead, children, className = "" }: { id?: string; tag?: string; title?: ReactNode[]; lead?: string; children: ReactNode; className?: string }) {
+export function Section({ id, tag, title, lead, children, className = "", variant = "ink", layout = "stack" }: { id?: string; tag?: string; title?: ReactNode[]; lead?: string; children: ReactNode; className?: string; variant?: SectionBackdropVariant; layout?: "stack" | "split" }) {
   return (
-    <section id={id} className={`relative py-20 sm:py-28 ${className}`}>
-      <div className="wrap">
-        {tag && <Rise><Fit className="tag">{tag}</Fit></Rise>}
-        {title && <Lines className="h-lg mt-4 max-w-4xl" lines={title} />}
-        {lead && <Rise delay={0.2}><p className="lead mt-5 max-w-2xl">{lead}</p></Rise>}
-        <div className={title || lead ? "mt-12" : ""}>{children}</div>
+    <section id={id} aria-label={tag} className={`section-frame r7-surface tone-${variant} relative isolate ${className}`}>
+      <SectionBackdrop variant={variant} glowPosition="top-right" glowIntensity={0.16} />
+      <div className={`wrap relative z-10 section-layout-${layout}`}>
+        {(title || lead) && <div className="section-heading">
+          {title && <Lines className="h-lg" lines={title} />}
+          {lead && <Rise delay={0.2}><p className="lead mt-5">{lead}</p></Rise>}
+        </div>}
+        <div className={`section-body ${title || lead ? "mt-10 sm:mt-14" : ""}`}>{children}</div>
       </div>
     </section>
   );
@@ -122,9 +165,10 @@ export function Faq({ items }: { items: QA[] }) {
 /** Faixa de chamada para ação no fim das páginas. */
 export function CtaBand({ title, text, children }: { title: ReactNode[]; text: string; children: ReactNode }) {
   return (
-    <section className="py-20 sm:py-28">
+    <section className="section-frame cta-band r7-surface tone-mist relative isolate">
+      <SectionBackdrop variant="mist" glowPosition="bottom" glowIntensity={0.17} />
       <div className="wrap">
-        <div className="relative overflow-hidden rounded-[2rem] border border-white/10 bg-[linear-gradient(135deg,#021A4A,#010C22_60%)] p-8 sm:p-14">
+        <div className="r7-cta-panel relative overflow-hidden rounded-[2rem] border border-white/10 bg-navy-deep/70 p-8 sm:p-14">
           <div aria-hidden="true" className="pointer-events-none absolute -right-24 -top-24 h-80 w-80 rounded-full bg-lime/15 blur-[90px]" />
           <Lines className="h-lg relative max-w-3xl" lines={title} />
           <Rise delay={0.2}><p className="lead relative mt-5 max-w-xl">{text}</p></Rise>

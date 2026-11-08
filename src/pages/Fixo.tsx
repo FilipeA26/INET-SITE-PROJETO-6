@@ -9,7 +9,7 @@ import { PHONES, waLink } from "../data/inet";
 function VideoHero() {
   const reduce = useReducedMotion();
   return (
-    <section className="relative isolate flex min-h-[88svh] items-end overflow-hidden pb-16 pt-36 sm:pb-24 sm:pt-44">
+    <section className="page-hero relative isolate flex min-h-[88svh] items-end overflow-hidden">
       {reduce ? (
         <img src="/fixo/telefone-poster.webp" alt="" aria-hidden="true" className="absolute inset-0 -z-10 h-full w-full object-cover" />
       ) : (
@@ -30,7 +30,7 @@ function VideoHero() {
       <div aria-hidden="true" className="absolute inset-x-0 bottom-0 -z-10 h-48 bg-gradient-to-t from-[#010818] to-transparent" />
       <div aria-hidden="true" className="pointer-events-none absolute -left-32 top-40 -z-10 h-[360px] w-[360px] rounded-full bg-lime/10 blur-[110px]" />
       <div className="wrap">
-        <Rise><Fit className="tag">Telefone fixo</Fit></Rise>
+        <Rise><Fit className="font-display text-base text-lime">Telefone fixo</Fit></Rise>
         <Lines as="h1" className="h-xl mt-5 max-w-5xl" lines={["Ligue à vontade,", <span className="italic text-lime">sem limite.</span>]} />
         <Rise delay={0.3}>
           <p className="lead mt-6 max-w-2xl">Telefonia fixa usando a fibra óptica como base: áudio digital, livre de interferências ou chiados, e ligações ilimitadas para qualquer fixo ou celular do país.</p>
@@ -52,7 +52,7 @@ export default function Fixo() {
       <VideoHero />
 
       <Section tag="Vantagens" title={["Tudo o que você precisa", "em um plano de telefonia."]}>
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-6 xl:gap-8 sm:grid-cols-2 lg:grid-cols-4">
           <FeatureCard icon={PhoneCall} title="Ligue à vontade" text="Ligações ilimitadas para qualquer lugar do Brasil." />
           <FeatureCard icon={ShieldCheck} title="Segurança" text="Segurança e estabilidade em suas ligações." delay={0.06} />
           <FeatureCard icon={AudioLines} title="Alta tecnologia" text="Seu telefone fixo usando o poder da fibra óptica, com áudio digital." delay={0.12} />
@@ -61,7 +61,7 @@ export default function Fixo() {
       </Section>
 
       <Section tag="Para casa e empresa" title={["Uma linha para", "cada necessidade."]}>
-        <div className="grid gap-4 lg:grid-cols-2">
+        <div className="grid gap-6 xl:gap-8 lg:grid-cols-2">
           <Rise className="h-full">
             <article className="card h-full p-8">
               <HomeIcon size={24} aria-hidden="true" className="card-icon text-lime" />
@@ -83,7 +83,7 @@ export default function Fixo() {
 
       <Section id="planos" tag="Internet + telefone" title={["Planos de internet", "com telefonia inclusa."]}>
         <PlanCarousel groups={["fixo"]} />
-        <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-12 grid gap-6 xl:gap-8 sm:grid-cols-2 lg:grid-cols-4">
           <FeatureCard icon={Server} title="Melhor infraestrutura" text="Estrutura de última geração para garantir o melhor serviço." />
           <FeatureCard icon={AudioLines} title="Áudio digital" text="Ligações pela fibra óptica com áudio digital." delay={0.06} />
           <FeatureCard icon={Coins} title="Melhor custo" text="A melhor telefonia pelo melhor custo." delay={0.12} />
